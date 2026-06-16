@@ -41,6 +41,7 @@ export const blockAttributes = {
   shortcode: { type: 'string' },
   infoTitle: { type: 'string' },
   infoText: { type: 'string' },
+  infoBody: { type: 'string' },
   methodTitle: { type: 'string' },
   noteText: { type: 'string' },
   noteLinkLabel: { type: 'string' },
@@ -171,18 +172,8 @@ export const blockDefinitions = [
     name: 'constructly/calculator-estimator',
     title: 'Constructly Calculator Estimator',
     fields: [
-      textField('shortcode', 'Шорткод'),
-      textField('infoTitle', 'Заголовок справки'),
-      textareaField('infoText', 'Текст справки'),
-      textField('methodTitle', 'Заголовок методики'),
-      {
-        type: 'repeater',
-        name: 'methodItems',
-        label: 'Пункты методики',
-        itemFields: [
-          textareaField('text', 'Текст'),
-        ],
-      },
+      textField('infoTitle', 'Заголовок'),
+      textareaField('infoBody', 'Контент'),
       textField('noteText', 'Текст примечания'),
       textField('noteLinkLabel', 'Текст ссылки'),
       textField('noteLinkUrl', 'URL ссылки'),

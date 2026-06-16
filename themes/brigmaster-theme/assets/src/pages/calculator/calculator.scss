@@ -298,9 +298,323 @@
 }
 
 .brigmaster-estimator__error {
-  min-height: 1.25rem;
   font-size: var(--bm-text-sm);
   color: var(--bm-color-danger);
+}
+
+/* Reserve no space until there is an actual message (constructly-core sets textContent
+   on error and clears it on success), so empty error slots don't add vertical gaps. */
+.brigmaster-estimator__error:empty {
+  display: none;
+}
+
+/* constructly-core emits these classes; the theme skins them to the calculator.html design. */
+
+.brigmaster-estimator__field-group {
+  min-width: 0;
+}
+
+.brigmaster-estimator__field-group--hidden,
+.brigmaster-estimator__tooltip-anchor--hidden {
+  display: none;
+}
+
+.brigmaster-estimator__accordions {
+  display: grid;
+  gap: var(--bm-space-5);
+}
+
+.brigmaster-estimator__accordion {
+  overflow: hidden;
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-md);
+  background: var(--bm-color-surface);
+
+  /* Enables animating the native <details> open/close to a keyword height. */
+  interpolate-size: allow-keywords;
+}
+
+.brigmaster-estimator__accordion-summary {
+  display: flex;
+  gap: var(--bm-space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--bm-space-4) var(--bm-space-5);
+  font-size: var(--bm-text-base);
+  font-weight: var(--bm-font-semibold);
+  line-height: 1.3;
+  color: var(--bm-color-text-strong);
+  cursor: pointer;
+  list-style: none;
+  background: var(--bm-color-surface-muted);
+  transition: background var(--bm-transition-fast);
+}
+
+.brigmaster-estimator__accordion-summary::-webkit-details-marker {
+  display: none;
+}
+
+.brigmaster-estimator__accordion-summary:hover {
+  background: var(--bm-color-brand-soft);
+}
+
+.brigmaster-estimator__accordion-chevron {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--bm-color-text-muted);
+  transition: transform var(--bm-transition-fast);
+}
+
+.brigmaster-estimator__accordion[open] .brigmaster-estimator__accordion-chevron {
+  transform: rotate(180deg);
+}
+
+.brigmaster-estimator__accordion-body {
+  display: grid;
+  gap: var(--bm-space-5);
+  padding: var(--bm-space-5);
+  border-top: 1px solid var(--bm-color-border);
+}
+
+/* Smooth open/close for the native <details> accordions (progressive enhancement). */
+.brigmaster-estimator__accordion::details-content {
+  overflow: hidden;
+  block-size: 0;
+  transition:
+    block-size var(--bm-transition-slow),
+    content-visibility var(--bm-transition-slow) allow-discrete;
+}
+
+.brigmaster-estimator__accordion[open]::details-content {
+  block-size: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brigmaster-estimator__accordion::details-content {
+    transition: none;
+  }
+}
+
+.brigmaster-estimator__mode-hint {
+  margin: 0;
+  font-size: var(--bm-text-xs);
+  line-height: 1.45;
+  color: var(--bm-color-text-muted);
+}
+
+.brigmaster-estimator__mode-hint:empty {
+  display: none;
+}
+
+.brigmaster-estimator__notice {
+  padding: var(--bm-space-3) var(--bm-space-4);
+  border: 1px solid var(--bm-color-warning);
+  border-radius: var(--bm-radius-md);
+  font-size: var(--bm-text-sm);
+  line-height: 1.5;
+  color: var(--bm-color-text-muted);
+  background: var(--bm-color-warning-soft);
+}
+
+.brigmaster-estimator__validation-summary {
+  padding: var(--bm-space-4);
+  border: 1px solid var(--bm-color-danger);
+  border-radius: var(--bm-radius-md);
+  font-size: var(--bm-text-sm);
+  line-height: 1.5;
+  color: var(--bm-color-danger);
+  background: var(--bm-color-danger-soft);
+}
+
+.brigmaster-estimator__tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.brigmaster-estimator__tooltip-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  padding: 0;
+  border: 1px solid var(--bm-color-border-strong);
+  border-radius: var(--bm-radius-full);
+  font-size: 0.6875rem;
+  font-weight: var(--bm-font-bold);
+  line-height: 1;
+  color: var(--bm-color-text-muted);
+  cursor: pointer;
+  background: var(--bm-color-surface);
+  transition:
+    color var(--bm-transition-fast),
+    border-color var(--bm-transition-fast);
+}
+
+.brigmaster-estimator__tooltip-trigger:hover,
+.brigmaster-estimator__tooltip-trigger[aria-expanded='true'] {
+  border-color: var(--bm-color-brand);
+  color: var(--bm-color-brand-emphasis);
+}
+
+.brigmaster-estimator__tooltip {
+  position: absolute;
+  bottom: calc(100% + var(--bm-space-2));
+  left: 50%;
+  z-index: 20;
+  width: max-content;
+  max-width: 16rem;
+  padding: var(--bm-space-3) var(--bm-space-4);
+  border-radius: var(--bm-radius-md);
+  font-size: var(--bm-text-xs);
+  font-weight: var(--bm-font-regular);
+  line-height: 1.45;
+  color: var(--bm-color-surface);
+  background: var(--bm-color-cta-dark);
+  box-shadow: var(--bm-shadow-md);
+  transform: translateX(-50%);
+}
+
+.brigmaster-estimator__tooltip-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+}
+
+.brigmaster-estimator__segment-list {
+  display: grid;
+  gap: var(--bm-space-5);
+}
+
+.brigmaster-estimator__segment-card {
+  display: grid;
+  gap: var(--bm-space-5);
+  padding: var(--bm-space-5);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-md);
+  background: var(--bm-color-surface-muted);
+}
+
+.brigmaster-estimator__segment-head {
+  display: flex;
+  gap: var(--bm-space-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brigmaster-estimator__segment-title {
+  margin: 0;
+  font-size: var(--bm-text-base);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+.brigmaster-estimator__segment-remove {
+  padding: var(--bm-space-1) var(--bm-space-3);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-sm);
+  font: inherit;
+  font-size: var(--bm-text-sm);
+  color: var(--bm-color-danger);
+  cursor: pointer;
+  background: var(--bm-color-surface);
+}
+
+.brigmaster-estimator__segment-remove:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.brigmaster-estimator__segment-section,
+.brigmaster-estimator__segment-toggles,
+.brigmaster-estimator__mixture-block {
+  display: grid;
+  gap: var(--bm-space-4);
+}
+
+.brigmaster-estimator__segment-add {
+  justify-self: start;
+  padding: var(--bm-space-3) var(--bm-space-5);
+  border: 1px dashed var(--bm-color-border-strong);
+  border-radius: var(--bm-radius-md);
+  font: inherit;
+  font-size: var(--bm-text-sm);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-brand-emphasis);
+  cursor: pointer;
+  background: var(--bm-color-surface);
+  transition:
+    border-color var(--bm-transition-fast),
+    background var(--bm-transition-fast);
+}
+
+.brigmaster-estimator__segment-add:hover {
+  border-color: var(--bm-color-brand);
+  background: var(--bm-color-brand-soft);
+}
+
+.brigmaster-estimator__result {
+  display: grid;
+  gap: var(--bm-space-5);
+  margin-top: var(--bm-space-8);
+}
+
+.brigmaster-estimator__result[hidden] {
+  display: none;
+}
+
+.brigmaster-estimator__result-stale-notice {
+  margin: 0;
+  padding: var(--bm-space-3) var(--bm-space-4);
+  border-radius: var(--bm-radius-md);
+  font-size: var(--bm-text-sm);
+  color: var(--bm-color-warning);
+  background: var(--bm-color-warning-soft);
+}
+
+.brigmaster-estimator__result-grid {
+  display: grid;
+  gap: var(--bm-space-4);
+}
+
+.brigmaster-estimator__result-card {
+  display: grid;
+  gap: var(--bm-space-2);
+  padding: var(--bm-space-5);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-md);
+  background: var(--bm-color-surface);
+}
+
+.brigmaster-estimator__result-card[hidden] {
+  display: none;
+}
+
+.brigmaster-estimator__result-card h3 {
+  margin: 0;
+  font-size: var(--bm-text-sm);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.brigmaster-estimator__result-card p {
+  margin: 0;
+  font-size: var(--bm-text-sm);
+  line-height: 1.6;
+  color: var(--bm-color-text);
+}
+
+.brigmaster-estimator__result-card p strong {
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+@media (width <= 767px) {
+  .brigmaster-estimator__tooltip-backdrop {
+    background: rgb(28 36 48 / 0.45);
+  }
 }
 
 .bm-calculator-result {
@@ -416,6 +730,13 @@
   padding-top: var(--bm-space-1);
 }
 
+/* Self-mix components (cement / sand / gravel): separate each block with an underline
+   and breathing room so the per-material weight → purchase → cost is read as one group. */
+.bm-calculator-result__material--component {
+  padding-bottom: var(--bm-space-3);
+  border-bottom: 1px solid var(--bm-color-border);
+}
+
 .bm-calculator-result__note {
   display: flex;
   gap: var(--bm-space-3);
@@ -506,6 +827,94 @@
   line-height: 1.45;
   color: var(--bm-color-text-muted);
   text-align: center;
+}
+
+/* Entered-parameters summary for the printed estimate; injected by constructly-core
+   next to the (print-hidden) form and revealed only inside @media print. */
+.bm-print-params {
+  display: none;
+}
+
+/* Plugin result relocated into the sticky aside; gets the panel chrome there. */
+.bm-calculator-layout__aside > .brigmaster-estimator__result {
+  margin-top: 0;
+  padding: var(--bm-space-5);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-lg);
+  background: var(--bm-color-surface);
+  box-shadow: var(--bm-shadow-sm);
+}
+
+/* Show the static placeholder only until the calculated result becomes visible. */
+.bm-calculator-layout__aside:has(.brigmaster-estimator__result:not([hidden])) > .bm-calculator-result {
+  display: none;
+}
+
+@media (width <= 767px) {
+  .bm-calculator-layout__aside > .brigmaster-estimator__result {
+    min-height: calc(100dvh - 2.5rem);
+    border-radius: var(--bm-radius-lg) var(--bm-radius-lg) 0 0;
+    box-shadow: var(--bm-shadow-lg);
+    transform: translateY(100%);
+    transition: transform var(--bm-transition-slow);
+  }
+
+  .bm-calculator-layout__aside.is-open > .brigmaster-estimator__result {
+    transform: translateY(0);
+  }
+}
+
+/* Strip result panel structured to the calculator.html reference (Step 1 polish). */
+.bm-calculator-result__sections {
+  display: grid;
+}
+
+.brigmaster-estimator__result .bm-calculator-result__breakdown {
+  margin-top: var(--bm-space-4);
+}
+
+.bm-calculator-result__sections > .bm-calculator-result__breakdown:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Reinforcement & mixture sections are filled by constructly-core JS (legacy classes). */
+.brigmaster-estimator__result .bm-calculator-result__section-title {
+  font-size: var(--bm-text-base);
+}
+
+.brigmaster-estimator__result .bm-calculator-result__breakdown > h3 {
+  margin: 0;
+  font-size: var(--bm-text-base);
+  font-weight: var(--bm-font-semibold);
+  line-height: 1.4;
+  color: var(--bm-color-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.brigmaster-estimator__rebar-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--bm-space-4);
+}
+
+.brigmaster-estimator__rebar-column-title {
+  margin: 0 0 var(--bm-space-1);
+  font-size: var(--bm-text-xs);
+  color: var(--bm-color-text-muted);
+}
+
+.brigmaster-estimator__result-list {
+  display: grid;
+  gap: var(--bm-space-1);
+  padding: 0;
+  margin: 0;
+  font-size: var(--bm-text-sm);
+  line-height: 1.5;
+  color: var(--bm-color-text);
+  list-style: none;
 }
 
 .bm-calculator-info-card {
@@ -662,7 +1071,13 @@
   }
 
   .bm-calculator-result__actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
+  }
+
+  /* On phones, "Распечатать" only reaches the OS print dialog whose practical use is
+     "Save as PDF" — the same outcome as "Скачать результат" — so it is desktop-only. */
+  .bm-calculator-result__actions [data-result-action="print"] {
+    display: none;
   }
 
   .bm-calculator-result__actions .bm-button {
@@ -748,3 +1163,189 @@
     align-self: start;
   }
 }
+
+/* Print / Save as PDF: keep the calculator title and the result panel only. */
+/* stylelint-disable selector-class-pattern -- legacy constructly-core .brigmaster-* hooks */
+
+/* Visual layout for the printed estimate. Shared between real print (@media print) and the
+   on-screen html2canvas snapshot used by "Скачать результат", which adds .bm-pdf-export to
+   <body>. Pagination-only rules (@page, html/body resets, break-inside) live in @media
+   print below — they have no effect on a single-element snapshot. */
+@mixin estimate-print-layout {
+  .bm-header,
+  .bm-footer,
+  .bm-breadcrumbs,
+  .bm-calculator-hero,
+  .bm-calculator-info-card,
+  .brigmaster-estimate-form,
+  .bm-calculator-sticky-result,
+  .bm-calculator-result__actions,
+  .bm-calculator-result__save,
+  section[aria-labelledby='calculator-faq-title'],
+  section[aria-labelledby='related-calculators-title'] {
+    display: none !important;
+  }
+
+  /* Collapse the screen layout's large empty bands so the estimate stays tight. */
+  .bm-calculator-layout {
+    display: block !important;
+    gap: 0 !important;
+  }
+
+  .bm-calculator-layout__aside {
+    position: static !important;
+    inset: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: none !important;
+  }
+
+  .brigmaster-estimator {
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .brigmaster-estimator__title {
+    margin: 0 0 var(--bm-space-2) !important;
+  }
+
+  /* Reveal the entered-parameters summary (hidden on screen). */
+  .bm-print-params {
+    display: block !important;
+    margin: 0 0 var(--bm-space-2) !important;
+  }
+
+  /* Lay the parameters across two columns so they use the width, not the height. */
+  .bm-print-params .bm-calculator-result__list {
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 2.5rem !important;
+  }
+
+  .brigmaster-estimator__result {
+    padding: var(--bm-space-2) !important;
+    margin: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  /* The narrow print/snapshot width is below the 767px mobile breakpoint, so the mobile
+     full-height drawer styles otherwise apply and inflate the panel. Neutralize them. */
+  .bm-calculator-layout__aside > .brigmaster-estimator__result {
+    min-height: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  /* Compact every row/gap/heading. */
+  .bm-calculator-result__list {
+    gap: 1px !important;
+  }
+
+  .bm-calculator-result__material {
+    gap: 0 !important;
+  }
+
+  /* Tooltip trigger icons are interactive-only; drop them from the estimate. */
+  .bm-tooltip {
+    display: none !important;
+  }
+
+  /* Results across two columns too, so the panel uses width instead of height. */
+  .bm-calculator-result__sections {
+    grid-template-columns: 1fr 1fr !important;
+    gap: var(--bm-space-2) 2.5rem !important;
+    align-items: start;
+  }
+
+  .bm-calculator-result__breakdown {
+    gap: var(--bm-space-1) !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    border-top: 0 !important;
+  }
+
+  /* Tighten the result heading: minimal space above/below, drop the "Готово" badge. */
+  .bm-calculator-result__head {
+    margin-bottom: 0 !important;
+  }
+
+  .bm-calculator-result__status {
+    display: none !important;
+  }
+
+  /* Drop result rows that merely echo the entered parameters (shown once in the params
+     summary above): the concrete "Общая длина ленты" and the mixture "Тип". */
+  .bm-calculator-result__material:has([data-result-strip-concrete-length]),
+  .bm-calculator-result__material--mixture-type {
+    display: none !important;
+  }
+
+  /* Show only the practical "to purchase" (rounded) cost; the exact figure is screen-only. */
+  .bm-calculator-result__cost-exact {
+    display: none !important;
+  }
+
+  /* Drop the self-mix methodology footnote (bulk densities / W-C ratio) — screen-only context. */
+  .bm-calculator-result__mixture-note {
+    display: none !important;
+  }
+
+  .bm-calculator-result__note {
+    margin-top: var(--bm-space-2) !important;
+    padding: var(--bm-space-3) !important;
+  }
+}
+
+@media print {
+  /* Keep room in the margins for the browser's own header/footer (date / title / URL /
+     page number) — its text size is browser-controlled and not stylable from CSS. */
+  @page {
+    margin: 14mm 12mm;
+  }
+
+  /* The site wrapper stretches to min-height:100vh for a sticky footer. In print, 100vh
+     equals the FULL page height, which exceeds the printable area and spills a blank page.
+     Let the document size to its content, and drop the fixed-header offset (body padding)
+     and the muted section padding that leave a big empty band under the browser header. */
+  html,
+  body {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+  }
+
+  .bm-section {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Avoid splitting a section across a page break. */
+  .bm-print-params,
+  .bm-calculator-result__breakdown,
+  .bm-calculator-result__material,
+  .bm-calculator-result__note {
+    break-inside: avoid;
+  }
+
+  @include estimate-print-layout;
+}
+
+/* On-screen snapshot state used by the html2canvas-based "Скачать результат" PDF export. */
+.bm-pdf-export {
+  @include estimate-print-layout;
+
+  /* html2canvas cannot resolve <use href="#sprite"> SVG icons, so the note's info-circle
+     renders blank in the PDF. Hide it and drop the leading gap so the text is not indented.
+     (Real @media print keeps the icon — the browser renders the sprite fine there.) */
+  .bm-calculator-result__note-icon {
+    display: none !important;
+  }
+
+  .bm-calculator-result__note {
+    gap: 0 !important;
+  }
+}
+/* stylelint-enable selector-class-pattern */

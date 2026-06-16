@@ -4,8 +4,16 @@ import './calculator.scss';
 const resultPanel = document.querySelector('[data-result-panel]');
 const resultOpenButton = document.querySelector('[data-result-open]');
 const stickyResult = document.querySelector('.bm-calculator-sticky-result');
-const estimatorForm = document.querySelector('.brigmaster-estimate-form');
 const schemeCanvas = document.querySelector('.bm-calculator-scheme__canvas');
+
+// The plugin renders its result block inside .brigmaster-estimator (left column).
+// Relocate it into the themed sticky aside so results live in the right column.
+// constructly-core finds it via getEstimatorShell() -> .bm-calculator-layout, so the
+// move does not break result population, stale tracking, or focus handling.
+const pluginResult = document.querySelector('.brigmaster-estimator [data-result]');
+if (resultPanel && pluginResult && !resultPanel.contains(pluginResult)) {
+  resultPanel.appendChild(pluginResult);
+}
 
 const closeResultPanel = () => {
   if (!resultPanel || !resultOpenButton) {
@@ -38,9 +46,13 @@ if (resultPanel && resultOpenButton) {
   });
 }
 
-if (stickyResult && estimatorForm) {
-  estimatorForm.addEventListener('submit', () => {
-    stickyResult.classList.add('is-visible');
+// Reveal the mobile sticky "show results" bar only while a successful result exists.
+// constructly-core fires brigmaster:result-change (bubbling to document) whenever a
+// calculation succeeds or the result is cleared, so the bar tracks the real result
+// state instead of the submit event — it never flashes on a validation error.
+if (stickyResult) {
+  document.addEventListener('brigmaster:result-change', (event) => {
+    stickyResult.classList.toggle('is-visible', Boolean(event.detail?.success));
   });
 }
 

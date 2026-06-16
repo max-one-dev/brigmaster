@@ -22,9 +22,12 @@ final class Constructly_Foundation_Strip_Migration
 
         $content = self::build_foundation_strip_page_content();
 
+        // wp_update_post() runs wp_unslash() on its input, which would strip the backslash
+        // from JSON-escaped block attributes (e.g. < in the infoBody HTML, turning it
+        // into a literal "u003c"). Pre-slash so the original content survives.
         wp_update_post([
             'ID' => $page_id,
-            'post_content' => $content,
+            'post_content' => wp_slash($content),
         ]);
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
@@ -60,13 +63,13 @@ final class Constructly_Foundation_Strip_Migration
                 'shortcodeTag' => 'brigmaster_strip_foundation_estimator',
                 'shortcodeTitle' => 'Параметры фундамента',
                 'infoTitle' => 'Как работает калькулятор',
-                'infoText' => 'Калькулятор использует инженерные формулы для расчёта ленточного фундамента с учётом выбранных параметров.',
-                'methodTitle' => 'Методика расчёта',
-                'methodItems' => [
-                    'Объём бетона вычисляется как произведение длины ленты, ширины и суммарной высоты. К результату автоматически добавляется технологический запас.',
-                    'Арматурный каркас рассчитывается по минимальному проценту армирования сечения фундамента и выбранному шагу хомутов.',
-                    'Площадь опалубки принимается равной площади боковых поверхностей фундамента с запасом на раскрой материалов.',
-                ],
+                'infoBody' => '<p>Калькулятор использует инженерные формулы для расчёта ленточного фундамента с учётом выбранных параметров.</p>'
+                    . '<h3>Методика расчёта</h3>'
+                    . '<ol>'
+                    . '<li>Объём бетона вычисляется как произведение длины ленты, ширины и суммарной высоты. К результату автоматически добавляется технологический запас.</li>'
+                    . '<li>Арматурный каркас рассчитывается по минимальному проценту армирования сечения фундамента и выбранному шагу хомутов.</li>'
+                    . '<li>Площадь опалубки принимается равной площади боковых поверхностей фундамента с запасом на раскрой материалов.</li>'
+                    . '</ol>',
                 'noteText' => 'Узнайте больше в Базе Знаний.',
                 'noteLinkLabel' => 'Подробное руководство по проектированию ленточных фундаментов',
                 'noteLinkUrl' => '/baza-znaniy/lentochnyy-fundament/',

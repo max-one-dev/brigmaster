@@ -1056,25 +1056,80 @@ final class EstimateShortcode
                     </div>
                     <div class="brigmaster-estimator__scheme" data-slab-scheme></div>
                 <?php elseif ($calculator === 'strip_foundation') : ?>
-                    <div class="brigmaster-estimator__result-grid">
-                        <section class="brigmaster-estimator__result-card" data-result-card="strip-concrete">
-                            <h3>Бетон</h3>
-                            <p><strong>Общая длина ленты:</strong> <span data-result-strip-concrete-length>-</span> м</p>
-                            <p><strong>Объем бетона:</strong> <span data-result-strip-concrete-volume>-</span> м3</p>
-                        </section>
-                        <section class="brigmaster-estimator__result-card" data-result-card="strip-reinforcement" hidden>
-                            <h3>Арматура</h3>
-                            <p><strong>Продольная:</strong> <span data-result-strip-rebar-longitudinal-mass>-</span> кг</p>
-                            <p><strong>Поперечная:</strong> <span data-result-strip-rebar-transverse-mass>-</span> кг</p>
-                            <p><strong>Итого:</strong> <span data-result-strip-rebar-total-mass>-</span> кг</p>
-                        </section>
-                        <section class="brigmaster-estimator__result-card" data-result-card="strip-formwork" hidden>
-                            <h3>Опалубка</h3>
-                            <p><strong>Суммарная площадь щитов:</strong> <span data-result-strip-formwork-area>-</span> м2</p>
-                            <p><strong>Погонные метры:</strong> <span data-result-strip-formwork-linear>-</span> м</p>
-                        </section>
-                        <section class="brigmaster-estimator__result-card" data-result-card="mixture" hidden></section>
+                    <div class="bm-calculator-result__head">
+                        <h2 class="bm-calculator-result__title">Результаты расчёта</h2>
+                        <span class="bm-calculator-result__status">Готово</span>
                     </div>
+                    <div class="bm-calculator-result__sections">
+                        <section class="bm-calculator-result__breakdown" data-result-card="strip-concrete">
+                            <h3 class="bm-calculator-result__section-title">Бетон</h3>
+                            <div class="bm-calculator-result__list">
+                                <div class="bm-calculator-result__material">
+                                    <span class="bm-calculator-result__material-head">
+                                        <span>Общая длина ленты</span>
+                                        <strong><span data-result-strip-concrete-length>-</span> м</strong>
+                                    </span>
+                                </div>
+                                <div class="bm-calculator-result__material">
+                                    <span class="bm-calculator-result__material-head">
+                                        <span>Объём бетона
+                                            <button class="bm-tooltip" type="button" data-tooltip="Объём с учётом технологического запаса на потери при заливке." aria-label="Подсказка: объём бетона">
+                                                <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-info-circle"></use></svg>
+                                            </button>
+                                        </span>
+                                        <strong><span data-result-strip-concrete-volume>-</span> м³</strong>
+                                    </span>
+                                </div>
+                                <div data-result-card="mixture" hidden></div>
+                            </div>
+                        </section>
+                        <section class="bm-calculator-result__breakdown" data-result-card="strip-reinforcement" hidden></section>
+                        <section class="bm-calculator-result__breakdown" data-result-card="strip-formwork" hidden>
+                            <h3 class="bm-calculator-result__section-title">Опалубка</h3>
+                            <div class="bm-calculator-result__list">
+                                <div class="bm-calculator-result__material">
+                                    <span class="bm-calculator-result__material-head">
+                                        <span>Суммарная площадь щитов
+                                            <button class="bm-tooltip" type="button" data-tooltip="Площадь боковых поверхностей ленты с запасом на раскрой пиломатериала." aria-label="Подсказка: площадь опалубки">
+                                                <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-info-circle"></use></svg>
+                                            </button>
+                                        </span>
+                                        <strong><span data-result-strip-formwork-area>-</span> м²</strong>
+                                    </span>
+                                </div>
+                                <div class="bm-calculator-result__material">
+                                    <span class="bm-calculator-result__material-head">
+                                        <span>Погонные метры</span>
+                                        <strong><span data-result-strip-formwork-linear>-</span> м</strong>
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="bm-calculator-result__note">
+                        <span class="bm-calculator-result__note-icon" aria-hidden="true">
+                            <svg class="bm-icon"><use href="#bm-icon-info-circle"></use></svg>
+                        </span>
+                        <span class="bm-calculator-result__note-content">
+                            <strong>Расчёт ориентировочный</strong>
+                            <span>Для точного проектирования выполните проект и геологические изыскания.</span>
+                        </span>
+                    </div>
+                    <div class="bm-calculator-result__actions">
+                        <button type="button" class="bm-button bm-button--primary" data-result-action="download">
+                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-download"></use></svg>
+                            <span>Открыть PDF</span>
+                        </button>
+                        <button type="button" class="bm-button bm-button--secondary" data-result-action="copy-link">
+                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-link"></use></svg>
+                            <span>Скопировать ссылку</span>
+                        </button>
+                        <button type="button" class="bm-button bm-button--secondary" data-result-action="print">
+                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-print"></use></svg>
+                            <span>Распечатать</span>
+                        </button>
+                    </div>
+                    <p class="bm-calculator-result__save">Сохранение результата в проект появится позже.</p>
                 <?php elseif ($calculator === 'pile_foundation') : ?>
                     <div class="brigmaster-estimator__result-grid brigmaster-estimator__result-grid--pile-foundation">
                         <div class="brigmaster-estimator__result-section" data-result-section="pile-header" hidden>

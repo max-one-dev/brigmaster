@@ -37,6 +37,25 @@ final class Constructly_Assets
     {
         add_action('wp_enqueue_scripts', [self::class, 'disable_frontend_global_styles'], 0);
         add_action('enqueue_block_editor_assets', [self::class, 'enqueue_block_editor_assets'], 20);
+        add_filter('script_loader_tag', [self::class, 'set_module_script_type'], 10, 2);
+    }
+
+    /**
+     * Theme bundles are built by Vite as ES modules, so their <script> tags must carry
+     * type="module" or the browser refuses to execute them. Scoped to handles flagged
+     * in {@see self::enqueue_entry_script()}.
+     */
+    public static function set_module_script_type(string $tag, string $handle): string
+    {
+        if (!wp_scripts()->get_data($handle, 'bm_module_script')) {
+            return $tag;
+        }
+
+        if (str_contains($tag, ' type="module"')) {
+            return $tag;
+        }
+
+        return (string) preg_replace('/<script(?=\s)/', '<script type="module"', $tag, 1);
     }
 
     public static function disable_frontend_global_styles(): void
@@ -314,6 +333,7 @@ final class Constructly_Assets
                 (string) filemtime($script_path),
                 $in_footer
             );
+            wp_script_add_data($handle, 'bm_module_script', true);
         }
     }
 

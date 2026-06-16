@@ -218,6 +218,7 @@ final class Constructly_Blocks
             'shortcodeTitle' => ['type' => 'string'],
             'infoTitle' => ['type' => 'string'],
             'infoText' => ['type' => 'string'],
+            'infoBody' => ['type' => 'string'],
             'methodTitle' => ['type' => 'string'],
             'noteText' => ['type' => 'string'],
             'noteLinkLabel' => ['type' => 'string'],

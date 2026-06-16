@@ -9,5 +9,8 @@
   },
   "devDependencies": {
     "vite": "latest"
+  },
+  "dependencies": {
+    "html2pdf.js": "^0.14.0"
   }
 }

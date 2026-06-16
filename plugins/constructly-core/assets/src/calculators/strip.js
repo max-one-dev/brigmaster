@@ -48,7 +48,8 @@ import { initEstimateForms } from "../core/bootstrap.js";
         renderMixtureCard(
             resultNode.querySelector('[data-result-card="mixture"]'),
             payload?.mixture,
-            "Смесь и материалы"
+            "",
+            { omitVolume: true }
         );
 
         syncResultGridLayout(resultNode);

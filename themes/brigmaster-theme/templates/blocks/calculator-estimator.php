@@ -9,6 +9,7 @@ $shortcode_tag = sanitize_key((string) ($attributes['shortcodeTag'] ?? ''));
 $shortcode_title = (string) ($attributes['shortcodeTitle'] ?? '');
 $info_title = (string) ($attributes['infoTitle'] ?? '');
 $info_text = (string) ($attributes['infoText'] ?? '');
+$info_body = (string) ($attributes['infoBody'] ?? '');
 $method_title = (string) ($attributes['methodTitle'] ?? '');
 $method_items = is_array($attributes['methodItems'] ?? null) ? $attributes['methodItems'] : [];
 $note_text = (string) ($attributes['noteText'] ?? '');
@@ -30,23 +31,28 @@ $result_text = (string) ($attributes['resultText'] ?? '');
                     <?php if ($info_title !== '') : ?>
                         <h2 id="how-calculator-works-title" class="bm-calculator-info-card__title"><?php echo esc_html($info_title); ?></h2>
                     <?php endif; ?>
-                    <?php if ($info_text !== '') : ?>
-                        <p><?php echo esc_html($info_text); ?></p>
-                    <?php endif; ?>
-                    <?php if ($method_title !== '') : ?>
-                        <h3><?php echo esc_html($method_title); ?></h3>
-                    <?php endif; ?>
-                    <?php if ($method_items !== []) : ?>
-                        <ol>
-                            <?php foreach ($method_items as $item) : ?>
-                                <?php
-                                $item_text = is_array($item) ? (string) ($item['text'] ?? '') : (string) $item;
-                                ?>
-                                <?php if ($item_text !== '') : ?>
-                                    <li><?php echo esc_html($item_text); ?></li>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </ol>
+                    <?php if ($info_body !== '') : ?>
+                        <?php echo wp_kses_post($info_body); ?>
+                    <?php else : ?>
+                        <?php /* Legacy fallback for blocks authored before the single HTML field. */ ?>
+                        <?php if ($info_text !== '') : ?>
+                            <p><?php echo esc_html($info_text); ?></p>
+                        <?php endif; ?>
+                        <?php if ($method_title !== '') : ?>
+                            <h3><?php echo esc_html($method_title); ?></h3>
+                        <?php endif; ?>
+                        <?php if ($method_items !== []) : ?>
+                            <ol>
+                                <?php foreach ($method_items as $item) : ?>
+                                    <?php
+                                    $item_text = is_array($item) ? (string) ($item['text'] ?? '') : (string) $item;
+                                    ?>
+                                    <?php if ($item_text !== '') : ?>
+                                        <li><?php echo esc_html($item_text); ?></li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </ol>
+                        <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($note_text !== '' || ($note_link_label !== '' && $note_link_url !== '')) : ?>
                         <aside class="bm-info-block">
@@ -91,6 +97,21 @@ $result_text = (string) ($attributes['resultText'] ?? '');
                         <?php endif; ?>
                     </div>
                 </aside>
+
+                <?php /* Mobile-only control that opens the result drawer; it belongs with the
+                         result panel and is a sibling of the aside (not inside it, so its fixed
+                         position is not clipped by the drawer transform). Hidden on desktop. */ ?>
+                <div class="bm-calculator-sticky-result">
+                    <button
+                        type="button"
+                        class="bm-button bm-button--primary bm-calculator-sticky-result__button"
+                        aria-controls="calculator-result-panel"
+                        aria-expanded="false"
+                        data-result-open
+                    >
+                        Показать результаты
+                    </button>
+                </div>
             <?php endif; ?>
         </div>
     </div>

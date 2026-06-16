@@ -1,3 +1,4 @@
+import { clearPrintParamsSummary, updatePrintParamsSummary } from "../ui/params-summary.js";
 
 
 const MODE_HINTS_SLAB = {
@@ -67,7 +68,14 @@ const MODE_HINTS_DRYWALL = {
 
 
     export function getEstimatorShell(form) {
-        return form.closest(".brigmaster-estimator") ?? form.parentElement;
+        // Prefer the theme calculator layout so result lookups keep working when the
+        // theme relocates [data-result] into the sticky aside (outside .brigmaster-estimator).
+        // Falls back to the estimator widget when the plugin renders standalone.
+        return (
+            form.closest(".bm-calculator-layout") ??
+            form.closest(".brigmaster-estimator") ??
+            form.parentElement
+        );
     }
 
 
@@ -115,6 +123,22 @@ const MODE_HINTS_DRYWALL = {
     }
 
 
+    // Notify the surrounding UI (e.g. the theme's mobile sticky-result bar) that the
+    // result state changed, so it can react without watching DOM classes. Bubbles to
+    // document; detail.success is true once a calculation succeeds, false when cleared.
+    function notifyResultChange(resultNode, success) {
+        if (!resultNode) {
+            return;
+        }
+        resultNode.dispatchEvent(
+            new CustomEvent("brigmaster:result-change", {
+                bubbles: true,
+                detail: { success },
+            })
+        );
+    }
+
+
     export function finalizeSuccessfulResult(form) {
         const shell = getEstimatorShell(form);
         const resultNode = shell?.querySelector("[data-result]");
@@ -143,6 +167,9 @@ const MODE_HINTS_DRYWALL = {
         window.setTimeout(() => {
             delete form.dataset.suspendStaleTracking;
         }, 0);
+
+        updatePrintParamsSummary(form);
+        notifyResultChange(resultNode, true);
     }
 
 
@@ -415,6 +442,8 @@ const MODE_HINTS_DRYWALL = {
         }
         resultNode.hidden = true;
         resultNode.classList.remove("is-success");
+        clearPrintParamsSummary(form);
+        notifyResultChange(resultNode, false);
     }
 
 

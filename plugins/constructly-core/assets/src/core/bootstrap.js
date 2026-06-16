@@ -13,6 +13,7 @@ import {
   updateValidationSummary,
 } from "./form-state.js";
 import { initMixtureFields } from "./mixture.js";
+import { initResultActions } from "../ui/result-actions.js";
 
 async function onSubmit(event, calculatorModule) {
   event.preventDefault();
@@ -120,6 +121,7 @@ function initForm(form, calculatorModule) {
   initMixtureFields(form);
   initTooltips(form);
   form.addEventListener("submit", (event) => onSubmit(event, calculatorModule));
+  initResultActions(form);
 }
 
 export function initEstimateForms(calculatorModule) {
