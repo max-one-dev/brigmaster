@@ -7,9 +7,9 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Migration_Helpers
 {
-    public static function block(string $block_name, array $attributes): string
+    public static function block(string $block_name, array $attributes, string $inner_content = ''): string
     {
-        return (string) get_comment_delimited_block_content($block_name, $attributes, '');
+        return (string) get_comment_delimited_block_content($block_name, $attributes, $inner_content);
     }
 
     /**

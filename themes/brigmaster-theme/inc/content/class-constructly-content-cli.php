@@ -17,6 +17,9 @@ final class Constructly_Content_Cli
         WP_CLI::add_command('constructly page foundation-hub migrate', [self::class, 'migrate_foundation_hub_page']);
         WP_CLI::add_command('constructly page foundation-strip migrate', [self::class, 'migrate_foundation_strip_page']);
         WP_CLI::add_command('constructly page about migrate', [self::class, 'migrate_about_page']);
+        WP_CLI::add_command('constructly page contacts migrate', [self::class, 'migrate_contacts_page']);
+        WP_CLI::add_command('constructly page methodology migrate', [self::class, 'migrate_methodology_page']);
+        WP_CLI::add_command('constructly page privacy migrate', [self::class, 'migrate_privacy_page']);
     }
 
     private static function resolve_front_page_id(): int
@@ -213,6 +216,138 @@ final class Constructly_Content_Cli
         WP_CLI::success(
             sprintf(
                 'About page content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the contacts page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /kontakty/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page contacts migrate
+     *     wp constructly page contacts migrate --dry-run
+     *     wp constructly page contacts migrate --page_id=123
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_contacts_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['kontakty', 'contacts', 'kontakt']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_contacts_page_content());
+            WP_CLI::success(sprintf('Dry run completed for contacts page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_contacts_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Contacts page content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the methodology page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /metodologiya/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page methodology migrate
+     *     wp constructly page methodology migrate --dry-run
+     *     wp constructly page methodology migrate --page_id=123
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_methodology_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['metodologiya', 'metodologiya-raschetov', 'methodology']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_methodology_page_content());
+            WP_CLI::success(sprintf('Dry run completed for methodology page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_methodology_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Methodology page content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the privacy policy page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /privacy-policy/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page privacy migrate
+     *     wp constructly page privacy migrate --dry-run
+     *     wp constructly page privacy migrate --page_id=123
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_privacy_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['privacy-policy', 'politika-konfidencialnosti', 'privacy']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_privacy_page_content());
+            WP_CLI::success(sprintf('Dry run completed for privacy page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_privacy_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Privacy page content migrated for page ID %d using %s.',
                 $result['post_id'],
                 $result['migration']
             )

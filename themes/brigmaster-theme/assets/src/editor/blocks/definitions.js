@@ -17,6 +17,8 @@ export const blockAttributes = {
   lead: { type: 'string' },
   subtitle: { type: 'string' },
   text: { type: 'string' },
+  sidebarTitle: { type: 'string' },
+  sidebarText: { type: 'string' },
   anchor: { type: 'string' },
   anchorId: { type: 'string' },
   sectionId: { type: 'string' },
@@ -56,6 +58,7 @@ export const blockAttributes = {
   steps: { type: 'array', default: [] },
   methodItems: { type: 'array', default: [] },
   paragraphs: { type: 'array', default: [] },
+  channels: { type: 'array', default: [] },
   demo: { type: 'object', default: {} },
 };
 
@@ -119,6 +122,18 @@ export const blockDefinitions = [
           textareaField('text', 'Текст'),
         ],
       },
+      textField('columns', 'Колонки преимуществ (напр. 4)'),
+      textField('variant', 'Вариант преимуществ (small-title)'),
+      {
+        type: 'repeater',
+        name: 'features',
+        label: 'Преимущества',
+        itemFields: [
+          textField('icon', 'Иконка'),
+          textField('title', 'Заголовок'),
+          textareaField('text', 'Текст'),
+        ],
+      },
     ],
   },
   {
@@ -159,6 +174,32 @@ export const blockDefinitions = [
         ],
       },
     ],
+  },
+  {
+    name: 'constructly/contact-form',
+    title: 'Constructly Contact Form',
+    fields: [
+      textField('titleId', 'ID заголовка'),
+      textField('sectionTitle', 'Заголовок'),
+      textareaField('text', 'Текст'),
+      textField('shortcode', 'Шорткод формы (CF7)'),
+      {
+        type: 'repeater',
+        name: 'channels',
+        label: 'Каналы связи',
+        itemFields: [
+          textField('icon', 'Иконка'),
+          textField('title', 'Заголовок'),
+          textField('value', 'Значение'),
+          textareaField('note', 'Примечание'),
+        ],
+      },
+    ],
+  },
+  {
+    name: 'constructly/content-layout',
+    title: 'Constructly Content Layout',
+    innerBlocks: true,
   },
   {
     name: 'constructly/foundation-hub-hero',

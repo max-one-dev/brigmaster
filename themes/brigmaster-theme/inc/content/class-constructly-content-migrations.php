@@ -62,4 +62,43 @@ final class Constructly_Content_Migrations
     {
         return Constructly_About_Migration::build_about_page_content();
     }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_contacts_page(int $page_id): array
+    {
+        return Constructly_Contacts_Migration::migrate_contacts_page($page_id);
+    }
+
+    public static function build_contacts_page_content(): string
+    {
+        return Constructly_Contacts_Migration::build_contacts_page_content();
+    }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_methodology_page(int $page_id): array
+    {
+        return Constructly_Methodology_Migration::migrate_methodology_page($page_id);
+    }
+
+    public static function build_methodology_page_content(): string
+    {
+        return Constructly_Methodology_Migration::build_methodology_page_content();
+    }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_privacy_page(int $page_id): array
+    {
+        return Constructly_Privacy_Migration::migrate_privacy_page($page_id);
+    }
+
+    public static function build_privacy_page_content(): string
+    {
+        return Constructly_Privacy_Migration::build_privacy_page_content();
+    }
 }

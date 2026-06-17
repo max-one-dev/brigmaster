@@ -98,6 +98,9 @@ require_once __DIR__ . '/content/migrations/page-home.php';
 require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament.php';
 require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament-lentochnyj.php';
 require_once __DIR__ . '/content/migrations/page-about.php';
+require_once __DIR__ . '/content/migrations/page-contacts.php';
+require_once __DIR__ . '/content/migrations/page-methodology.php';
+require_once __DIR__ . '/content/migrations/page-privacy.php';
 require_once __DIR__ . '/content/class-constructly-content-migrations.php';
 require_once __DIR__ . '/content/class-constructly-content-cli.php';
 

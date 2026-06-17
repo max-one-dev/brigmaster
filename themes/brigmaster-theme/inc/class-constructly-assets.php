@@ -36,6 +36,10 @@ final class Constructly_Assets
     public static function init(): void
     {
         add_action('wp_enqueue_scripts', [self::class, 'disable_frontend_global_styles'], 0);
+        add_action('wp_enqueue_scripts', [self::class, 'disable_frontend_core_block_styles'], 100);
+        // Funnel core block CSS into the single wp-block-library handle (instead of
+        // per-block inline styles) so it can be reliably dequeued on the frontend.
+        add_filter('should_load_separate_core_block_assets', '__return_false');
         add_action('enqueue_block_editor_assets', [self::class, 'enqueue_block_editor_assets'], 20);
         add_filter('script_loader_tag', [self::class, 'set_module_script_type'], 10, 2);
     }
@@ -70,6 +74,23 @@ final class Constructly_Assets
         wp_deregister_style('global-styles');
         wp_dequeue_style('core-block-supports');
         wp_deregister_style('core-block-supports');
+    }
+
+    /**
+     * Core blocks (e.g. core/table inside .bm-prose) are styled by the theme, so the
+     * default WordPress block stylesheets are redundant on the frontend. With separate
+     * core block assets disabled (see init()), all of that CSS lives in the
+     * wp-block-library / wp-block-library-theme handles, which we drop here. The editor
+     * keeps these styles (this runs on wp_enqueue_scripts, not in admin).
+     */
+    public static function disable_frontend_core_block_styles(): void
+    {
+        if (is_admin()) {
+            return;
+        }
+
+        wp_dequeue_style('wp-block-library');
+        wp_dequeue_style('wp-block-library-theme');
     }
 
     /**

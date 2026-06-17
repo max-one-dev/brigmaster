@@ -98,6 +98,16 @@ final class Constructly_Blocks
                 'title' => 'Constructly Text Media',
                 'template' => 'text-media',
             ],
+            'contact-form' => [
+                'name' => 'constructly/contact-form',
+                'title' => 'Constructly Contact Form',
+                'template' => 'contact-form',
+            ],
+            'content-layout' => [
+                'name' => 'constructly/content-layout',
+                'title' => 'Constructly Content Layout',
+                'template' => 'content-layout',
+            ],
             'foundation-hub-hero' => [
                 'name' => 'constructly/foundation-hub-hero',
                 'title' => 'Constructly Foundation Hub Hero',
@@ -207,6 +217,8 @@ final class Constructly_Blocks
             'lead' => ['type' => 'string'],
             'subtitle' => ['type' => 'string'],
             'text' => ['type' => 'string'],
+            'sidebarTitle' => ['type' => 'string'],
+            'sidebarText' => ['type' => 'string'],
             'anchor' => ['type' => 'string'],
             'anchorId' => ['type' => 'string'],
             'sectionId' => ['type' => 'string'],
@@ -269,6 +281,10 @@ final class Constructly_Blocks
                 'default' => [],
             ],
             'paragraphs' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'channels' => [
                 'type' => 'array',
                 'default' => [],
             ],
