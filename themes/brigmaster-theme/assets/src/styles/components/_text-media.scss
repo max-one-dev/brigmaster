@@ -1,0 +1,51 @@
+@use '../abstracts/media' as media;
+
+.bm-text-media {
+  display: grid;
+  gap: var(--bm-space-8);
+  align-items: center;
+}
+
+.bm-text-media__title {
+  margin: 0 0 var(--bm-space-4);
+  font-size: var(--bm-text-2xl);
+  font-weight: var(--bm-font-semibold);
+  line-height: 1.2;
+  color: var(--bm-color-text-strong);
+}
+
+.bm-text-media__text {
+  max-width: 34rem;
+  margin: 0;
+  font-size: var(--bm-text-base);
+  line-height: 1.6;
+  color: var(--bm-color-text-muted);
+}
+
+.bm-text-media__text + .bm-text-media__text {
+  margin-top: var(--bm-space-3);
+}
+
+.bm-text-media__image {
+  width: 100%;
+  min-height: 16rem;
+  border-radius: var(--bm-radius-lg);
+  object-fit: cover;
+  box-shadow: var(--bm-shadow-sm);
+}
+
+@include media.bp(md) {
+  .bm-text-media {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  // Default: content left, image right (source order). When media is on the
+  // left, swap the visual order while keeping content first in the DOM.
+  .bm-text-media--media-left .bm-text-media__content {
+    order: 2;
+  }
+
+  .bm-text-media--media-left .bm-text-media__image {
+    order: 1;
+  }
+}

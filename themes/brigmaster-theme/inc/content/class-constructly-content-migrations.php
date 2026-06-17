@@ -49,4 +49,17 @@ final class Constructly_Content_Migrations
     {
         return Constructly_Foundation_Strip_Migration::build_foundation_strip_page_content();
     }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_about_page(int $page_id): array
+    {
+        return Constructly_About_Migration::migrate_about_page($page_id);
+    }
+
+    public static function build_about_page_content(): string
+    {
+        return Constructly_About_Migration::build_about_page_content();
+    }
 }

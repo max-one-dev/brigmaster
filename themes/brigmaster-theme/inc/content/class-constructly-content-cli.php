@@ -16,6 +16,7 @@ final class Constructly_Content_Cli
         WP_CLI::add_command('constructly page home migrate', [self::class, 'migrate_home_page']);
         WP_CLI::add_command('constructly page foundation-hub migrate', [self::class, 'migrate_foundation_hub_page']);
         WP_CLI::add_command('constructly page foundation-strip migrate', [self::class, 'migrate_foundation_strip_page']);
+        WP_CLI::add_command('constructly page about migrate', [self::class, 'migrate_about_page']);
     }
 
     private static function resolve_front_page_id(): int
@@ -168,6 +169,50 @@ final class Constructly_Content_Cli
         WP_CLI::success(
             sprintf(
                 'Strip foundation content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the about page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /o-proekte/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page about migrate
+     *     wp constructly page about migrate --dry-run
+     *     wp constructly page about migrate --page_id=123
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_about_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['o-proekte', 'about', 'o-nas']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_about_page_content());
+            WP_CLI::success(sprintf('Dry run completed for about page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_about_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'About page content migrated for page ID %d using %s.',
                 $result['post_id'],
                 $result['migration']
             )

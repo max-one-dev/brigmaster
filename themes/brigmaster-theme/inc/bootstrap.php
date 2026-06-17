@@ -97,6 +97,7 @@ require_once __DIR__ . '/content/migrations/class-constructly-migration-helpers.
 require_once __DIR__ . '/content/migrations/page-home.php';
 require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament.php';
 require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament-lentochnyj.php';
+require_once __DIR__ . '/content/migrations/page-about.php';
 require_once __DIR__ . '/content/class-constructly-content-migrations.php';
 require_once __DIR__ . '/content/class-constructly-content-cli.php';
 

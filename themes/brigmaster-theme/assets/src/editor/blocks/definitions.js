@@ -23,6 +23,9 @@ export const blockAttributes = {
   sectionTitle: { type: 'string' },
   titleId: { type: 'string' },
   variant: { type: 'string' },
+  columns: { type: 'string' },
+  mediaPosition: { type: 'string' },
+  imageAlt: { type: 'string' },
   primaryLabel: { type: 'string' },
   primaryUrl: { type: 'string' },
   secondaryLabel: { type: 'string' },
@@ -52,6 +55,7 @@ export const blockAttributes = {
   items: { type: 'array', default: [] },
   steps: { type: 'array', default: [] },
   methodItems: { type: 'array', default: [] },
+  paragraphs: { type: 'array', default: [] },
   demo: { type: 'object', default: {} },
 };
 
@@ -86,6 +90,72 @@ export const blockDefinitions = [
           textField('resultLabel', 'Метка результата'),
           textField('resultSummary', 'Описание результата'),
           textField('resultValue', 'Значение результата'),
+        ],
+      },
+    ],
+  },
+  {
+    name: 'constructly/page-hero',
+    title: 'Constructly Page Hero',
+    fields: [
+      textField('titleId', 'ID заголовка'),
+      imageField('image', 'Фоновое изображение'),
+      {
+        type: 'repeater',
+        name: 'breadcrumbs',
+        label: 'Хлебные крошки',
+        itemFields: [
+          textField('label', 'Текст'),
+          textField('url', 'URL'),
+        ],
+      },
+      textField('title', 'Заголовок'),
+      textareaField('lead', 'Лид'),
+      {
+        type: 'repeater',
+        name: 'paragraphs',
+        label: 'Абзацы',
+        itemFields: [
+          textareaField('text', 'Текст'),
+        ],
+      },
+    ],
+  },
+  {
+    name: 'constructly/feature-cards',
+    title: 'Constructly Feature Cards',
+    fields: [
+      textField('titleId', 'ID заголовка'),
+      textField('sectionTitle', 'Заголовок секции'),
+      textField('columns', 'Колонки (3 или 4)'),
+      textField('variant', 'Вариант (stacked)'),
+      {
+        type: 'repeater',
+        name: 'items',
+        label: 'Карточки',
+        itemFields: [
+          textField('icon', 'Иконка'),
+          textField('title', 'Заголовок'),
+          textareaField('text', 'Текст'),
+        ],
+      },
+    ],
+  },
+  {
+    name: 'constructly/text-media',
+    title: 'Constructly Text Media',
+    fields: [
+      textField('titleId', 'ID заголовка'),
+      textField('title', 'Заголовок'),
+      textField('mediaPosition', 'Позиция изображения (left/right)'),
+      imageField('image', 'Изображение'),
+      textField('imageAlt', 'Alt изображения'),
+      {
+        type: 'repeater',
+        name: 'paragraphs',
+        label: 'Абзацы',
+        itemFields: [
+          textareaField('text', 'Текст'),
         ],
       },
     ],

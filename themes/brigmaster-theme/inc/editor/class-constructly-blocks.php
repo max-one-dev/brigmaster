@@ -83,6 +83,21 @@ final class Constructly_Blocks
                 'title' => 'Constructly FAQ',
                 'template' => 'faq',
             ],
+            'page-hero' => [
+                'name' => 'constructly/page-hero',
+                'title' => 'Constructly Page Hero',
+                'template' => 'page-hero',
+            ],
+            'feature-cards' => [
+                'name' => 'constructly/feature-cards',
+                'title' => 'Constructly Feature Cards',
+                'template' => 'feature-cards',
+            ],
+            'text-media' => [
+                'name' => 'constructly/text-media',
+                'title' => 'Constructly Text Media',
+                'template' => 'text-media',
+            ],
             'foundation-hub-hero' => [
                 'name' => 'constructly/foundation-hub-hero',
                 'title' => 'Constructly Foundation Hub Hero',
@@ -198,6 +213,9 @@ final class Constructly_Blocks
             'sectionTitle' => ['type' => 'string'],
             'titleId' => ['type' => 'string'],
             'variant' => ['type' => 'string'],
+            'columns' => ['type' => 'string'],
+            'mediaPosition' => ['type' => 'string'],
+            'imageAlt' => ['type' => 'string'],
             'primaryLabel' => ['type' => 'string'],
             'primaryUrl' => ['type' => 'string'],
             'secondaryLabel' => ['type' => 'string'],
@@ -247,6 +265,10 @@ final class Constructly_Blocks
                 'default' => [],
             ],
             'methodItems' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'paragraphs' => [
                 'type' => 'array',
                 'default' => [],
             ],

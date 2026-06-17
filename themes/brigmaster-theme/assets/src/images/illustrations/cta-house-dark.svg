@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="cta house placeholder">
-  <g fill="none" stroke="rgb(255 255 255 / 0.65)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M80 210 L200 90 L320 210"/>
-    <path d="M120 210 V250 H280 V210"/>
-    <path d="M175 250 V175 H225 V250"/>
-    <path d="M60 210 H340"/>
-  </g>
-  <text x="200" y="280" font-family="ui-monospace, monospace" font-size="11" fill="rgb(255 255 255 / 0.45)" text-anchor="middle">cta-house-dark</text>
-</svg>

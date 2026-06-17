@@ -5,7 +5,7 @@ $title = (string) ($attributes['title'] ?? '');
 $text = (string) ($attributes['text'] ?? '');
 $button_label = (string) ($attributes['buttonLabel'] ?? '');
 $button_url = (string) ($attributes['buttonUrl'] ?? '#calculators');
-$image = array_key_exists('image', $attributes) ? (string) $attributes['image'] : 'assets/src/images/illustrations/cta-house-dark.svg';
+$image = array_key_exists('image', $attributes) ? (string) $attributes['image'] : 'assets/src/images/illustrations/cta-house-dark.jpg';
 $variant = (string) ($attributes['variant'] ?? 'dark');
 $title_id = trim((string) ($attributes['titleId'] ?? 'final-cta-title'));
 

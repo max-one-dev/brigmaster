@@ -315,7 +315,7 @@ final class Constructly_Homepage_Migration
                 'text' => 'Выберите нужный калькулятор и получите результат за несколько минут.',
                 'buttonLabel' => 'Открыть калькуляторы',
                 'buttonUrl' => '#calculators',
-                'image' => 'assets/src/images/illustrations/cta-house-dark.svg',
+                'image' => 'assets/src/images/illustrations/cta-house-dark.jpg',
             ]),
         ];
 
