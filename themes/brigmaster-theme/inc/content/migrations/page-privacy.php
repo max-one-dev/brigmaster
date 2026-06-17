@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Privacy_Migration
 {
-    private const MIGRATION_VERSION = 'privacy-v1';
+    private const MIGRATION_VERSION = 'privacy-v4';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -58,6 +58,7 @@ final class Constructly_Privacy_Migration
                     'sidebarText' => 'Если что-то непонятно, напишите нам через страницу контактов.',
                     'buttonLabel' => 'Перейти к контактам',
                     'buttonUrl' => '/kontakty/',
+                    'sidebarImage' => 'assets/src/images/illustrations/question_bg.jpg',
                 ],
                 self::prose_blocks()
             ),
@@ -130,14 +131,8 @@ final class Constructly_Privacy_Migration
 <p>Данные хранятся столько, сколько необходимо для целей обработки, ответа на запросы и соблюдения применимых требований. Технические журналы и аналитические данные могут храниться ограниченный срок в обезличенном или агрегированном виде.</p>
 <!-- /wp:paragraph -->
 
-<!-- wp:html -->
-<div class="bm-info-block">
-<span class="bm-info-block__icon" aria-hidden="true">
-<svg class="bm-icon bm-info-block__icon-svg"><use href="#bm-icon-info-circle"></use></svg>
-</span>
-<p class="bm-info-block__text">Данные расчётов, введённые в публичных калькуляторах, используются для показа результата в текущей сессии и не являются проектной документацией.</p>
-</div>
-<!-- /wp:html -->
+<!-- wp:constructly/info-block {"text":"Данные расчётов, введённые в публичных калькуляторах, используются для показа результата в текущей сессии и не являются проектной документацией."} /-->
+
 
 <!-- wp:heading {"anchor":"privacy-rights"} -->
 <h2 class="wp-block-heading" id="privacy-rights">6. Ваши права</h2>

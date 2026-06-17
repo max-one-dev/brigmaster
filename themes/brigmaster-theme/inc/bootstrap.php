@@ -101,7 +101,9 @@ require_once __DIR__ . '/content/migrations/page-about.php';
 require_once __DIR__ . '/content/migrations/page-contacts.php';
 require_once __DIR__ . '/content/migrations/page-methodology.php';
 require_once __DIR__ . '/content/migrations/page-privacy.php';
+require_once __DIR__ . '/content/migrations/page-user-agreement.php';
 require_once __DIR__ . '/content/class-constructly-content-migrations.php';
+require_once __DIR__ . '/content/class-constructly-articles-seed.php';
 require_once __DIR__ . '/content/class-constructly-content-cli.php';
 
 Constructly_Theme_Setup::init();

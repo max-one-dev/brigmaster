@@ -20,6 +20,33 @@ final class Constructly_Content_Cli
         WP_CLI::add_command('constructly page contacts migrate', [self::class, 'migrate_contacts_page']);
         WP_CLI::add_command('constructly page methodology migrate', [self::class, 'migrate_methodology_page']);
         WP_CLI::add_command('constructly page privacy migrate', [self::class, 'migrate_privacy_page']);
+        WP_CLI::add_command('constructly page user-agreement migrate', [self::class, 'migrate_user_agreement_page']);
+        WP_CLI::add_command('constructly seed articles', [self::class, 'seed_articles']);
+    }
+
+    /**
+     * Seeds demo knowledge-base content: categories, the /stati/ posts page and
+     * demo articles. Idempotent.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly seed articles
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function seed_articles(array $args, array $assoc_args): void
+    {
+        $result = Constructly_Articles_Seed::seed();
+
+        WP_CLI::success(
+            sprintf(
+                'Seeded %d categories, posts page ID %d, %d demo posts.',
+                $result['categories'],
+                $result['posts_page_id'],
+                $result['posts']
+            )
+        );
     }
 
     private static function resolve_front_page_id(): int
@@ -348,6 +375,50 @@ final class Constructly_Content_Cli
         WP_CLI::success(
             sprintf(
                 'Privacy page content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the user agreement page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /polzovatelskoe-soglashenie/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page user-agreement migrate
+     *     wp constructly page user-agreement migrate --dry-run
+     *     wp constructly page user-agreement migrate --page_id=123
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_user_agreement_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['polzovatelskoe-soglashenie', 'user-agreement', 'polzovatelskoe-soglasenie']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_user_agreement_page_content());
+            WP_CLI::success(sprintf('Dry run completed for user agreement page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_user_agreement_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'User agreement page content migrated for page ID %d using %s.',
                 $result['post_id'],
                 $result['migration']
             )

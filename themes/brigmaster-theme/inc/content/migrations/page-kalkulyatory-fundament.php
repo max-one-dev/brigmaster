@@ -135,7 +135,7 @@ final class Constructly_Foundation_Hub_Migration
                 'title' => 'Как выбрать фундамент?',
                 'subtitle' => 'Краткие рекомендации по выбору типа фундамента',
                 'linkLabel' => 'Подробнее о выборе фундамента',
-                'linkUrl' => '/stati/fundament/',
+                'linkUrl' => '/baza-znaniy/fundament/',
                 'items' => [
                     [
                         'icon' => 'measurement',
@@ -162,10 +162,10 @@ final class Constructly_Foundation_Hub_Migration
             Constructly_Migration_Helpers::block('constructly/articles', [
                 'title' => 'Полезные статьи',
                 'linkLabel' => 'Все статьи →',
-                'linkUrl' => '/stati/',
+                'linkUrl' => '/baza-znaniy/',
                 'items' => [
                     [
-                        'url' => '/stati/fundament/vybor-tipa/',
+                        'url' => '/baza-znaniy/fundament/vybor-tipa/',
                         'image' => 'assets/src/images/illustrations/article-cover-1.svg',
                         'imageAlt' => '',
                         'tag' => 'Фундамент',
@@ -175,7 +175,7 @@ final class Constructly_Foundation_Hub_Migration
                         'date' => '15.04.2024',
                     ],
                     [
-                        'url' => '/stati/fundament/armirovanie/',
+                        'url' => '/baza-znaniy/fundament/armirovanie/',
                         'image' => 'assets/src/images/illustrations/article-cover-2.svg',
                         'imageAlt' => '',
                         'tag' => 'Фундамент',
@@ -185,7 +185,7 @@ final class Constructly_Foundation_Hub_Migration
                         'date' => '12.04.2024',
                     ],
                     [
-                        'url' => '/stati/styazhka/tolshchina/',
+                        'url' => '/baza-znaniy/styazhka/tolshchina/',
                         'image' => 'assets/src/images/illustrations/article-cover-3.svg',
                         'imageAlt' => '',
                         'tag' => 'Стяжка пола',
@@ -195,7 +195,7 @@ final class Constructly_Foundation_Hub_Migration
                         'date' => '10.04.2024',
                     ],
                     [
-                        'url' => '/stati/plitka/ukladka-pola/',
+                        'url' => '/baza-znaniy/plitka/ukladka-pola/',
                         'image' => 'assets/src/images/illustrations/article-cover-4.svg',
                         'imageAlt' => '',
                         'tag' => 'Плитка',

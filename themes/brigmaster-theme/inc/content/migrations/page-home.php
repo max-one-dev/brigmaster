@@ -235,12 +235,12 @@ final class Constructly_Homepage_Migration
             Constructly_Migration_Helpers::block('constructly/articles', [
                 'title' => 'Полезные статьи',
                 'linkLabel' => 'Все статьи →',
-                'linkUrl' => home_url('/stati/'),
+                'linkUrl' => home_url('/baza-znaniy/'),
                 'items' => [
                     [
                         'title' => 'Как выбрать тип фундамента для частного дома',
                         'text' => 'Разбираем основные типы фундаментов и критерии выбора под разные условия.',
-                        'url' => home_url('/stati/'),
+                        'url' => home_url('/baza-znaniy/'),
                         'image' => 'assets/src/images/illustrations/article-cover-1.svg',
                         'imageAlt' => '',
                         'tag' => 'Фундамент',
@@ -250,7 +250,7 @@ final class Constructly_Homepage_Migration
                     [
                         'title' => 'Толщина стяжки пола: какая должна быть и почему',
                         'text' => 'Рекомендации по выбору толщины для разных видов оснований.',
-                        'url' => home_url('/stati/'),
+                        'url' => home_url('/baza-znaniy/'),
                         'image' => 'assets/src/images/illustrations/article-cover-2.svg',
                         'imageAlt' => '',
                         'tag' => 'Стяжка',
@@ -260,7 +260,7 @@ final class Constructly_Homepage_Migration
                     [
                         'title' => 'Как рассчитать плитку на пол и стены без ошибок',
                         'text' => 'Пошаговая инструкция и примеры расчётов с учётом подрезки.',
-                        'url' => home_url('/stati/'),
+                        'url' => home_url('/baza-znaniy/'),
                         'image' => 'assets/src/images/illustrations/article-cover-3.svg',
                         'imageAlt' => '',
                         'tag' => 'Плитка',
@@ -270,7 +270,7 @@ final class Constructly_Homepage_Migration
                     [
                         'title' => 'С чего начать ремонт в новостройке',
                         'text' => 'План работ, этапы и полезные советы для новичков.',
-                        'url' => home_url('/stati/'),
+                        'url' => home_url('/baza-znaniy/'),
                         'image' => 'assets/src/images/illustrations/article-cover-4.svg',
                         'imageAlt' => '',
                         'tag' => 'Ремонт',

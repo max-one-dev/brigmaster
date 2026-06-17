@@ -101,4 +101,17 @@ final class Constructly_Content_Migrations
     {
         return Constructly_Privacy_Migration::build_privacy_page_content();
     }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_user_agreement_page(int $page_id): array
+    {
+        return Constructly_User_Agreement_Migration::migrate_user_agreement_page($page_id);
+    }
+
+    public static function build_user_agreement_page_content(): string
+    {
+        return Constructly_User_Agreement_Migration::build_user_agreement_page_content();
+    }
 }

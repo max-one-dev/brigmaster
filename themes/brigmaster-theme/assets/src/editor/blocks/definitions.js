@@ -19,6 +19,7 @@ export const blockAttributes = {
   text: { type: 'string' },
   sidebarTitle: { type: 'string' },
   sidebarText: { type: 'string' },
+  sidebarImage: { type: 'string' },
   anchor: { type: 'string' },
   anchorId: { type: 'string' },
   sectionId: { type: 'string' },
@@ -200,6 +201,60 @@ export const blockDefinitions = [
     name: 'constructly/content-layout',
     title: 'Constructly Content Layout',
     innerBlocks: true,
+  },
+  {
+    name: 'constructly/info-block',
+    title: 'Constructly Info Block',
+    fields: [
+      textareaField('text', 'Текст'),
+    ],
+  },
+  {
+    name: 'constructly/article-criteria',
+    title: 'Constructly Article Criteria',
+    fields: [
+      textField('columns', 'Колонки (напр. 4)'),
+      {
+        type: 'repeater',
+        name: 'items',
+        label: 'Критерии',
+        itemFields: [
+          textField('icon', 'Иконка'),
+          textField('title', 'Заголовок'),
+          textareaField('text', 'Текст'),
+        ],
+      },
+    ],
+  },
+  {
+    name: 'constructly/article-mistakes',
+    title: 'Constructly Article Mistakes',
+    fields: [
+      {
+        type: 'repeater',
+        name: 'items',
+        label: 'Ошибки',
+        itemFields: [
+          textareaField('text', 'Текст'),
+        ],
+      },
+    ],
+  },
+  {
+    name: 'constructly/foundation-cards',
+    title: 'Constructly Foundation Cards',
+    fields: [
+      {
+        type: 'repeater',
+        name: 'cards',
+        label: 'Карточки',
+        itemFields: [
+          imageField('image', 'Изображение'),
+          textField('title', 'Заголовок'),
+          textareaField('text', 'Текст'),
+        ],
+      },
+    ],
   },
   {
     name: 'constructly/foundation-hub-hero',

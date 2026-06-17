@@ -108,6 +108,26 @@ final class Constructly_Blocks
                 'title' => 'Constructly Content Layout',
                 'template' => 'content-layout',
             ],
+            'info-block' => [
+                'name' => 'constructly/info-block',
+                'title' => 'Constructly Info Block',
+                'template' => 'info-block',
+            ],
+            'article-criteria' => [
+                'name' => 'constructly/article-criteria',
+                'title' => 'Constructly Article Criteria',
+                'template' => 'article-criteria',
+            ],
+            'article-mistakes' => [
+                'name' => 'constructly/article-mistakes',
+                'title' => 'Constructly Article Mistakes',
+                'template' => 'article-mistakes',
+            ],
+            'foundation-cards' => [
+                'name' => 'constructly/foundation-cards',
+                'title' => 'Constructly Foundation Cards',
+                'template' => 'foundation-cards',
+            ],
             'foundation-hub-hero' => [
                 'name' => 'constructly/foundation-hub-hero',
                 'title' => 'Constructly Foundation Hub Hero',
@@ -219,6 +239,7 @@ final class Constructly_Blocks
             'text' => ['type' => 'string'],
             'sidebarTitle' => ['type' => 'string'],
             'sidebarText' => ['type' => 'string'],
+            'sidebarImage' => ['type' => 'string'],
             'anchor' => ['type' => 'string'],
             'anchorId' => ['type' => 'string'],
             'sectionId' => ['type' => 'string'],

@@ -20,6 +20,12 @@
 @use '../../styles/components/chip';
 @use '../../styles/abstracts/media' as media;
 
+// The reused FAQ block renders its own <section class="bm-section bm-faq-section">.
+// Inside the article prose flow that section's vertical padding is unwanted — drop it.
+.bm-prose .bm-faq-section {
+  padding-block: 0;
+}
+
 @include media.bp(lg) {
   .bm-prose .bm-faq-grid {
     grid-template-columns: minmax(0, 1fr);

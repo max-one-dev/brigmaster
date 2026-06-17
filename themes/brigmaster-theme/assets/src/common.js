@@ -11,6 +11,7 @@ import './js/components/tooltip.js';
 import './js/components/toc.js';
 import { initRankMathFaq } from './js/components/rank-math-faq.js';
 import { wrapProseTables } from './js/components/prose-tables.js';
+import './js/components/article-feedback.js';
 
 function init() {
   injectIconSprite();

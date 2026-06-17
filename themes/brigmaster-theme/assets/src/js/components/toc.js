@@ -9,9 +9,17 @@ function slugify(text) {
     .replace(/-+/g, '-');
 }
 
+// Content headings only — exclude the feedback widget's heading ("Статья была
+// полезна?"), which lives inside the prose column but is not part of the article.
+function contentHeadings(prose, selector) {
+  return Array.from(prose.querySelectorAll(selector)).filter(
+    (h) => !h.closest('.bm-article-feedback'),
+  );
+}
+
 function ensureHeadingIds(prose) {
   const used = new Set();
-  prose.querySelectorAll('h2, h3').forEach((heading) => {
+  contentHeadings(prose, 'h2, h3').forEach((heading) => {
     if (heading.id) {
       used.add(heading.id);
       return;
@@ -70,7 +78,7 @@ function buildTocList(root, prose) {
   const list = root.querySelector('.bm-toc__list');
   if (!list || list.children.length > 0) return;
 
-  prose.querySelectorAll('h2[id]').forEach((heading) => {
+  contentHeadings(prose, 'h2[id]').forEach((heading) => {
     const item = document.createElement('li');
     item.className = 'bm-toc__item';
     const link = document.createElement('a');
@@ -80,6 +88,11 @@ function buildTocList(root, prose) {
     item.appendChild(link);
     list.appendChild(item);
   });
+
+  // No content headings → no table of contents: drop the whole TOC block.
+  if (list.children.length === 0) {
+    root.remove();
+  }
 }
 
 function initTocRoot(root) {

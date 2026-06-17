@@ -89,10 +89,6 @@
     "file": "img/image/calc-icon-drywall.svg",
     "src": "images/illustrations/calc-icon-drywall.svg"
   },
-  "images/illustrations/calc-icon-foundation.svg": {
-    "file": "img/image/calc-icon-foundation.svg",
-    "src": "images/illustrations/calc-icon-foundation.svg"
-  },
   "images/illustrations/calc-icon-screed.svg": {
     "file": "img/image/calc-icon-screed.svg",
     "src": "images/illustrations/calc-icon-screed.svg"
@@ -100,6 +96,10 @@
   "images/illustrations/calc-icon-tile.svg": {
     "file": "img/image/calc-icon-tile.svg",
     "src": "images/illustrations/calc-icon-tile.svg"
+  },
+  "images/illustrations/calc_bg.jpg": {
+    "file": "img/image/calc_bg.jpg",
+    "src": "images/illustrations/calc_bg.jpg"
   },
   "images/illustrations/cta-about-light.jpg": {
     "file": "img/image/cta-about-light.jpg",

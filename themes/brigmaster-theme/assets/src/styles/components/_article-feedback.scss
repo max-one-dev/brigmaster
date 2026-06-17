@@ -65,6 +65,21 @@
   transform: rotate(180deg);
 }
 
+// Chosen vote: pressed/active look. Hover is pinned to the same brand styling so the
+// selected button doesn't pick up the secondary-button hover background.
+.bm-article-feedback__btn.is-selected,
+.bm-article-feedback__btn.is-selected:hover,
+.bm-article-feedback__btn.is-selected:focus-visible {
+  color: var(--bm-color-surface);
+  background: var(--bm-color-brand);
+  border-color: var(--bm-color-brand);
+}
+
+.bm-article-feedback__btn.is-selected .bm-icon,
+.bm-article-feedback__btn--no.is-selected .bm-icon {
+  color: var(--bm-color-surface);
+}
+
 @include media.bp(md) {
   .bm-article-feedback {
     flex-wrap: nowrap;

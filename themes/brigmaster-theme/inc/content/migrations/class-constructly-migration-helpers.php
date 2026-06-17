@@ -181,6 +181,27 @@ final class Constructly_Migration_Helpers
         return self::sideload_theme_file_as_attachment($source_path, $filename);
     }
 
+    /**
+     * Sideloads a theme image (path relative to the theme root) into the media
+     * library, reusing an existing attachment when the basename already matches.
+     * Returns the attachment ID, or 0 on failure.
+     */
+    public static function sideload_theme_image(string $relative_path): int
+    {
+        $abs = trailingslashit(get_stylesheet_directory()) . ltrim($relative_path, '/');
+        if (!is_readable($abs)) {
+            return 0;
+        }
+
+        $filename = basename($abs);
+        $existing = self::find_attachment_by_upload_basename($filename);
+        if ($existing > 0) {
+            return $existing;
+        }
+
+        return self::sideload_theme_file_as_attachment($abs, $filename);
+    }
+
     private static function find_attachment_by_upload_basename(string $filename): int
     {
         global $wpdb;
