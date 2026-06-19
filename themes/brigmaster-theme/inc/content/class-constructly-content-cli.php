@@ -14,8 +14,15 @@ final class Constructly_Content_Cli
         }
 
         WP_CLI::add_command('constructly page home migrate', [self::class, 'migrate_home_page']);
+        WP_CLI::add_command('constructly page calculators migrate', [self::class, 'migrate_calculators_index_page']);
         WP_CLI::add_command('constructly page foundation-hub migrate', [self::class, 'migrate_foundation_hub_page']);
         WP_CLI::add_command('constructly page foundation-strip migrate', [self::class, 'migrate_foundation_strip_page']);
+        WP_CLI::add_command('constructly page foundation-pile migrate', [self::class, 'migrate_foundation_pile_page']);
+        WP_CLI::add_command('constructly page foundation-slab migrate', [self::class, 'migrate_foundation_slab_page']);
+        WP_CLI::add_command('constructly page brick migrate', [self::class, 'migrate_brick_page']);
+        WP_CLI::add_command('constructly page screed migrate', [self::class, 'migrate_screed_page']);
+        WP_CLI::add_command('constructly page tile migrate', [self::class, 'migrate_tile_page']);
+        WP_CLI::add_command('constructly page drywall migrate', [self::class, 'migrate_drywall_page']);
         WP_CLI::add_command('constructly page about migrate', [self::class, 'migrate_about_page']);
         WP_CLI::add_command('constructly page contacts migrate', [self::class, 'migrate_contacts_page']);
         WP_CLI::add_command('constructly page methodology migrate', [self::class, 'migrate_methodology_page']);
@@ -118,6 +125,49 @@ final class Constructly_Content_Cli
     }
 
     /**
+     * Migrates the all-calculators index page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /kalkulyatory/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page calculators migrate
+     *     wp constructly page calculators migrate --dry-run
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_calculators_index_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['kalkulyatory', 'kalkulyatory-index', 'calculators']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_calculators_index_page_content());
+            WP_CLI::success(sprintf('Dry run completed for calculators index page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_calculators_index_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Calculators index content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
      * Migrates the foundation hub page content.
      *
      * ## OPTIONS
@@ -199,6 +249,264 @@ final class Constructly_Content_Cli
         WP_CLI::success(
             sprintf(
                 'Strip foundation content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the pile foundation calculator page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /kalkulyatory/fundament/svajnyj/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page foundation-pile migrate
+     *     wp constructly page foundation-pile migrate --dry-run
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_foundation_pile_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['kalkulyatory/fundament/svajnyj', 'kalkulyator-svajnogo-fundamenta']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_foundation_pile_page_content());
+            WP_CLI::success(sprintf('Dry run completed for pile foundation page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_foundation_pile_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Pile foundation content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the slab foundation calculator page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /kalkulyatory/fundament/plitnyj/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page foundation-slab migrate
+     *     wp constructly page foundation-slab migrate --dry-run
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_foundation_slab_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['kalkulyatory/fundament/plitnyj', 'kalkulyator-plitnogo-fundamenta']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_foundation_slab_page_content());
+            WP_CLI::success(sprintf('Dry run completed for slab foundation page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_foundation_slab_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Slab foundation content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the brick calculator page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /kalkulyatory/kirpich/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page brick migrate
+     *     wp constructly page brick migrate --dry-run
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_brick_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['kalkulyatory/kirpich', 'kalkulyator-kirpicha']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_brick_page_content());
+            WP_CLI::success(sprintf('Dry run completed for brick page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_brick_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Brick content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the screed calculator page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /kalkulyatory/styazhka/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page screed migrate
+     *     wp constructly page screed migrate --dry-run
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_screed_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['kalkulyatory/styazhka', 'kalkulyator-styazhki']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_screed_page_content());
+            WP_CLI::success(sprintf('Dry run completed for screed page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_screed_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Screed content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the tile calculator page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /kalkulyatory/plitka/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page tile migrate
+     *     wp constructly page tile migrate --dry-run
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_tile_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['kalkulyatory/plitka', 'kalkulyator-plitki']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_tile_page_content());
+            WP_CLI::success(sprintf('Dry run completed for tile page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_tile_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Tile content migrated for page ID %d using %s.',
+                $result['post_id'],
+                $result['migration']
+            )
+        );
+    }
+
+    /**
+     * Migrates the drywall calculator page content.
+     *
+     * ## OPTIONS
+     *
+     * [--page_id=<id>]
+     * : Optional page ID override. Defaults to /kalkulyatory/gipsokarton/.
+     *
+     * [--dry-run]
+     * : Print generated content without writing to the database.
+     *
+     * ## EXAMPLES
+     *
+     *     wp constructly page drywall migrate
+     *     wp constructly page drywall migrate --dry-run
+     *
+     * @param array<int, string> $args
+     * @param array<string, string|bool> $assoc_args
+     */
+    public static function migrate_drywall_page(array $args, array $assoc_args): void
+    {
+        $page_id = isset($assoc_args['page_id'])
+            ? (int) $assoc_args['page_id']
+            : self::resolve_page_id_by_path(['kalkulyatory/gipsokarton', 'kalkulyator-gipsokartona', 'kalkulyator-gkl']);
+
+        if (!empty($assoc_args['dry-run'])) {
+            WP_CLI::line(Constructly_Content_Migrations::build_drywall_page_content());
+            WP_CLI::success(sprintf('Dry run completed for drywall page ID %d.', $page_id));
+
+            return;
+        }
+
+        $result = Constructly_Content_Migrations::migrate_drywall_page($page_id);
+
+        WP_CLI::success(
+            sprintf(
+                'Drywall content migrated for page ID %d using %s.',
                 $result['post_id'],
                 $result['migration']
             )

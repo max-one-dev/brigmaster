@@ -22,9 +22,12 @@ final class Constructly_About_Migration
 
         $content = self::build_about_page_content();
 
+        // Block attribute JSON escapes < > " & to \uXXXX; wp_update_post() runs
+        // wp_unslash() which would strip those backslashes and corrupt the markup.
+        // Slash the content so the escaping survives.
         wp_update_post([
             'ID' => $page_id,
-            'post_content' => $content,
+            'post_content' => wp_slash($content),
         ]);
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);

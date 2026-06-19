@@ -174,6 +174,7 @@ function enhanceSelect(select) {
     listbox.hidden = !open;
     trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
     wrapper.classList.toggle('bm-select--open', open);
+    wrapper.closest('.brigmaster-estimator__accordion')?.classList.toggle('has-open-select', open);
     if (!open) {
       trigger.removeAttribute('aria-activedescendant');
       document.removeEventListener('pointerdown', onDocPointer, true);
@@ -339,3 +340,5 @@ document.addEventListener('wpcf7init', (event) => {
   const root = event.target instanceof Element ? event.target : document;
   initWpcf7Selects(root);
 });
+
+window.bmEnhanceEstimatorSelects = initEstimatorSelects;

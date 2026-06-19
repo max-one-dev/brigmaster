@@ -22,9 +22,12 @@ final class Constructly_Foundation_Hub_Migration
 
         $content = self::build_foundation_hub_page_content();
 
+        // Block attribute JSON escapes < > " & to \uXXXX; wp_update_post() runs
+        // wp_unslash() which would strip those backslashes and corrupt the markup.
+        // Slash the content so the escaping survives.
         wp_update_post([
             'ID' => $page_id,
-            'post_content' => $content,
+            'post_content' => wp_slash($content),
         ]);
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
@@ -117,13 +120,6 @@ final class Constructly_Foundation_Hub_Migration
                         'title' => 'Плитный фундамент',
                         'text' => 'Толщина плиты, объём бетона, арматура и материалы',
                         'href' => '/kalkulyatory/fundament/plitnyj/',
-                        'cta' => 'Рассчитать',
-                    ],
-                    [
-                        'image' => 'assets/src/images/cards/calc-cover-pier.svg',
-                        'title' => 'Буронабивные сваи',
-                        'text' => 'Расчёт количества и объёма буронабивных свай',
-                        'href' => '/kalkulyatory/fundament/buronabivnye/',
                         'cta' => 'Рассчитать',
                     ],
                 ],

@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+if ( apply_filters( 'constructly_hide_articles_block', false ) ) {
+    return;
+}
+
 $title = (string) ($attributes['title'] ?? '');
 $link_label = (string) ($attributes['linkLabel'] ?? '');
 $link_url = (string) ($attributes['linkUrl'] ?? '');

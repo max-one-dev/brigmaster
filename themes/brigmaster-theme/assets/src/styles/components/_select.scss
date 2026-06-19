@@ -89,6 +89,11 @@
   display: block;
 }
 
+.bm-select--open {
+  position: relative;
+  z-index: 50;
+}
+
 .bm-select--open .bm-select__chevron {
   transform: scaleY(-1);
 }

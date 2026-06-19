@@ -95,8 +95,15 @@ require_once __DIR__ . '/frontend/class-constructly-frontend.php';
 require_once __DIR__ . '/editor/class-constructly-blocks.php';
 require_once __DIR__ . '/content/migrations/class-constructly-migration-helpers.php';
 require_once __DIR__ . '/content/migrations/page-home.php';
+require_once __DIR__ . '/content/migrations/page-kalkulyatory.php';
 require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament.php';
 require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament-lentochnyj.php';
+require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament-svajnyj.php';
+require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament-plitnyj.php';
+require_once __DIR__ . '/content/migrations/page-kalkulyatory-kirpich.php';
+require_once __DIR__ . '/content/migrations/page-kalkulyatory-styazhka.php';
+require_once __DIR__ . '/content/migrations/page-kalkulyatory-plitka.php';
+require_once __DIR__ . '/content/migrations/page-kalkulyatory-gipsokarton.php';
 require_once __DIR__ . '/content/migrations/page-about.php';
 require_once __DIR__ . '/content/migrations/page-contacts.php';
 require_once __DIR__ . '/content/migrations/page-methodology.php';
@@ -112,3 +119,6 @@ Constructly_Frontend::init();
 Constructly_Blocks::init();
 Constructly_Content_Migrations::init();
 Constructly_Content_Cli::init();
+
+// Articles / База знаний are hidden pre-launch. Remove this line to re-enable.
+add_filter( 'constructly_hide_articles_block', '__return_true' );

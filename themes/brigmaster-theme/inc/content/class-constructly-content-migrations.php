@@ -27,6 +27,19 @@ final class Constructly_Content_Migrations
     /**
      * @return array{post_id:int, content:string, migration:string}
      */
+    public static function migrate_calculators_index_page(int $page_id): array
+    {
+        return Constructly_Calculators_Index_Migration::migrate_calculators_index_page($page_id);
+    }
+
+    public static function build_calculators_index_page_content(): string
+    {
+        return Constructly_Calculators_Index_Migration::build_calculators_index_page_content();
+    }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
     public static function migrate_foundation_hub_page(int $page_id): array
     {
         return Constructly_Foundation_Hub_Migration::migrate_foundation_hub_page($page_id);
@@ -48,6 +61,84 @@ final class Constructly_Content_Migrations
     public static function build_foundation_strip_page_content(): string
     {
         return Constructly_Foundation_Strip_Migration::build_foundation_strip_page_content();
+    }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_foundation_pile_page(int $page_id): array
+    {
+        return Constructly_Foundation_Pile_Migration::migrate_foundation_pile_page($page_id);
+    }
+
+    public static function build_foundation_pile_page_content(): string
+    {
+        return Constructly_Foundation_Pile_Migration::build_foundation_pile_page_content();
+    }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_foundation_slab_page(int $page_id): array
+    {
+        return Constructly_Foundation_Slab_Migration::migrate_foundation_slab_page($page_id);
+    }
+
+    public static function build_foundation_slab_page_content(): string
+    {
+        return Constructly_Foundation_Slab_Migration::build_foundation_slab_page_content();
+    }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_brick_page(int $page_id): array
+    {
+        return Constructly_Brick_Migration::migrate_brick_page($page_id);
+    }
+
+    public static function build_brick_page_content(): string
+    {
+        return Constructly_Brick_Migration::build_brick_page_content();
+    }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_screed_page(int $page_id): array
+    {
+        return Constructly_Screed_Migration::migrate_screed_page($page_id);
+    }
+
+    public static function build_screed_page_content(): string
+    {
+        return Constructly_Screed_Migration::build_screed_page_content();
+    }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_tile_page(int $page_id): array
+    {
+        return Constructly_Tile_Migration::migrate_tile_page($page_id);
+    }
+
+    public static function build_tile_page_content(): string
+    {
+        return Constructly_Tile_Migration::build_tile_page_content();
+    }
+
+    /**
+     * @return array{post_id:int, content:string, migration:string}
+     */
+    public static function migrate_drywall_page(int $page_id): array
+    {
+        return Constructly_Drywall_Migration::migrate_drywall_page($page_id);
+    }
+
+    public static function build_drywall_page_content(): string
+    {
+        return Constructly_Drywall_Migration::build_drywall_page_content();
     }
 
     /**

@@ -22,9 +22,12 @@ final class Constructly_Homepage_Migration
 
         $content = self::build_homepage_content();
 
+        // Block attribute JSON escapes < > " & to \uXXXX; wp_update_post() runs
+        // wp_unslash() which would strip those backslashes and corrupt the markup.
+        // Slash the content so the escaping survives.
         wp_update_post([
             'ID' => $page_id,
-            'post_content' => $content,
+            'post_content' => wp_slash($content),
         ]);
 
         update_post_meta($page_id, 'rank_math_title', 'Строительные калькуляторы онлайн Brigmaster');
