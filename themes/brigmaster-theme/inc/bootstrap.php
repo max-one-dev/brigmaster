@@ -90,6 +90,7 @@ function constructly_esc_block_image_src(string $src): string
 require_once __DIR__ . '/class-constructly-assets.php';
 require_once __DIR__ . '/class-constructly-theme-setup.php';
 require_once __DIR__ . '/template-tags.php';
+require_once __DIR__ . '/schema.php';
 require_once __DIR__ . '/bm-estimator-shortcodes.php';
 require_once __DIR__ . '/frontend/class-constructly-frontend.php';
 require_once __DIR__ . '/editor/class-constructly-blocks.php';

@@ -17,6 +17,27 @@ if ($title_id === '') {
     $title_id = 'faq-title';
 }
 $section_classes = $variant === 'calculator' ? 'bm-section bm-calculator-faq' : 'bm-section bm-faq-section';
+
+// Build FAQPage JSON-LD entities
+$faq_ld_entities = [];
+foreach ($items as $item) {
+    if (!is_array($item)) {
+        continue;
+    }
+    $q = trim((string) ($item['question'] ?? ''));
+    $a = trim((string) ($item['answer'] ?? ''));
+    if ($q === '' || $a === '') {
+        continue;
+    }
+    $faq_ld_entities[] = [
+        '@type'          => 'Question',
+        'name'           => $q,
+        'acceptedAnswer' => [
+            '@type' => 'Answer',
+            'text'  => wp_strip_all_tags($a),
+        ],
+    ];
+}
 ?>
 <section id="<?php echo esc_attr($section_id); ?>" class="<?php echo esc_attr($section_classes); ?>" aria-labelledby="<?php echo esc_attr($title_id); ?>">
     <div class="bm-container">
@@ -64,3 +85,15 @@ $section_classes = $variant === 'calculator' ? 'bm-section bm-calculator-faq' : 
         <?php endif; ?>
     </div>
 </section>
+<?php if ($faq_ld_entities !== []) : ?>
+<script type="application/ld+json">
+<?php echo wp_json_encode( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    [
+        '@context'   => 'https://schema.org',
+        '@type'      => 'FAQPage',
+        'mainEntity' => $faq_ld_entities,
+    ],
+    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+); ?>
+</script>
+<?php endif; ?>
