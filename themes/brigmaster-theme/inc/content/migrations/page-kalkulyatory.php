@@ -31,6 +31,7 @@ final class Constructly_Calculators_Index_Migration
         ]);
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
+        update_post_meta($page_id, '_wp_page_template', 'page-templates/page-hub.php');
 
         return [
             'post_id' => $page_id,
@@ -97,8 +98,7 @@ final class Constructly_Calculators_Index_Migration
                 'anchor' => 'calc-materials',
                 'titleId' => 'calc-materials-title',
                 'title' => 'Материалы и отделка',
-                'linkLabel' => 'Все калькуляторы',
-                'linkUrl' => '#calc-foundations',
+                'columns' => '4',
                 'cards' => [
                     ['icon' => 'target', 'title' => 'Кирпич', 'description' => 'Количество кирпича и раствора для кладки стен и перегородок.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['brick']],
                     ['icon' => 'calculator', 'title' => 'Стяжка пола', 'description' => 'Объём раствора и количество смеси по площади и толщине слоя.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['screed']],

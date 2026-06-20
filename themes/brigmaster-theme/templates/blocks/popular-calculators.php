@@ -34,7 +34,11 @@ if ($title_id === '') {
         </header>
 
         <?php if ($cards !== []) : ?>
-            <div class="bm-card-grid bm-card-grid--cols-5">
+            <?php
+            $columns = (int) ($attributes['columns'] ?? 5);
+            $columns_class = $columns > 0 ? ' bm-card-grid--cols-' . $columns : ' bm-card-grid--cols-5';
+            ?>
+            <div class="bm-card-grid<?php echo esc_attr($columns_class); ?>">
                 <?php foreach ($cards as $card) : ?>
                     <?php
                     if (!is_array($card)) {

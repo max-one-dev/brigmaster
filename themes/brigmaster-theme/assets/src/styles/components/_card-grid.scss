@@ -40,7 +40,7 @@
 
 @include media.bp(xl) {
   .bm-card-grid--foundation-types {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .bm-prose .bm-card-grid--foundation-types {
