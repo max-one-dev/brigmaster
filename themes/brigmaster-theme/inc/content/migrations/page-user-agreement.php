@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_User_Agreement_Migration
 {
-    private const MIGRATION_VERSION = 'user-agreement-v2';
+    private const MIGRATION_VERSION = 'user-agreement-v3';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -76,6 +76,10 @@ final class Constructly_User_Agreement_Migration
 
 <!-- wp:paragraph -->
 <p>Настоящее Пользовательское соглашение (далее — Соглашение) регулирует порядок использования сервиса строительных калькуляторов Brigmaster (далее — Сервис), размещённого в сети Интернет, а также права и обязанности пользователей Сервиса.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Правообладатель Сервиса — частное лицо — оператор сайта brigmaster.ru. Деятельность ведётся без образования юридического лица; ООО, ИНН и иные реквизиты юридического лица не указываются.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->

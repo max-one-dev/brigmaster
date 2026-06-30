@@ -72,21 +72,21 @@ final class Constructly_Calculators_Index_Migration
                 'linkUrl' => '/kalkulyatory/fundament/',
                 'cards' => [
                     [
-                        'image' => 'assets/src/images/cards/calc-cover-strip.svg',
+                        'image' => 'assets/src/images/cards/calc-cover-strip.jpg',
                         'title' => 'Ленточный фундамент',
                         'text' => 'Размеры ленты, объём бетона, арматура и опалубка',
                         'href' => '/kalkulyatory/fundament/lentochnyj/',
                         'cta' => 'Рассчитать',
                     ],
                     [
-                        'image' => 'assets/src/images/cards/calc-cover-pile.svg',
+                        'image' => 'assets/src/images/cards/calc-cover-pile.jpg',
                         'title' => 'Свайный фундамент',
                         'text' => 'Количество свай, длина, шаг и материалы ростверка',
                         'href' => '/kalkulyatory/fundament/svajnyj/',
                         'cta' => 'Рассчитать',
                     ],
                     [
-                        'image' => 'assets/src/images/cards/calc-cover-slab.svg',
+                        'image' => 'assets/src/images/cards/calc-cover-slab.jpg',
                         'title' => 'Плитный фундамент',
                         'text' => 'Толщина плиты, объём бетона, арматура и материалы',
                         'href' => '/kalkulyatory/fundament/plitnyj/',
@@ -94,16 +94,40 @@ final class Constructly_Calculators_Index_Migration
                     ],
                 ],
             ]),
-            Constructly_Migration_Helpers::block('constructly/popular-calculators', [
-                'anchor' => 'calc-materials',
+            Constructly_Migration_Helpers::block('constructly/foundation-hub-type-cards', [
+                'anchorId' => 'calc-materials',
                 'titleId' => 'calc-materials-title',
-                'title' => 'Материалы и отделка',
+                'sectionTitle' => 'Материалы и отделка',
                 'columns' => '4',
                 'cards' => [
-                    ['icon' => 'target', 'title' => 'Кирпич', 'description' => 'Количество кирпича и раствора для кладки стен и перегородок.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['brick']],
-                    ['icon' => 'calculator', 'title' => 'Стяжка пола', 'description' => 'Объём раствора и количество смеси по площади и толщине слоя.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['screed']],
-                    ['icon' => 'interface', 'title' => 'Плитка', 'description' => 'Количество плитки, клея и затирки с учётом раскладки.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['tile']],
-                    ['icon' => 'document-add', 'title' => 'Гипсокартон', 'description' => 'Листы ГКЛ, профили и крепёж для стен, перегородок и потолков.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['drywall']],
+                    [
+                        'image' => 'assets/src/images/cards/calc-cover-brick.jpg',
+                        'title' => 'Кирпич',
+                        'text' => 'Количество кирпича и раствора для кладки стен и перегородок',
+                        'href' => $links['brick'],
+                        'cta' => 'Рассчитать',
+                    ],
+                    [
+                        'image' => 'assets/src/images/cards/calc-cover-screed.jpg',
+                        'title' => 'Стяжка пола',
+                        'text' => 'Объём раствора и количество смеси по площади и толщине слоя',
+                        'href' => $links['screed'],
+                        'cta' => 'Рассчитать',
+                    ],
+                    [
+                        'image' => 'assets/src/images/cards/calc-cover-tile.jpg',
+                        'title' => 'Плитка',
+                        'text' => 'Количество плитки, клея и затирки с учётом раскладки',
+                        'href' => $links['tile'],
+                        'cta' => 'Рассчитать',
+                    ],
+                    [
+                        'image' => 'assets/src/images/cards/calc-cover-drywall.jpg',
+                        'title' => 'Гипсокартон',
+                        'text' => 'Листы ГКЛ, профили и крепёж для стен, перегородок и потолков',
+                        'href' => $links['drywall'],
+                        'cta' => 'Рассчитать',
+                    ],
                 ],
             ]),
             Constructly_Migration_Helpers::block('constructly/trust', [

@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Contacts_Migration
 {
-    private const MIGRATION_VERSION = 'contacts-v1';
+    private const MIGRATION_VERSION = 'contacts-v2';
 
     private const CONTACT_FORM_SHORTCODE = '[contact-form-7 id="3b0d792" title="Контактная форма"]';
 
@@ -64,14 +64,8 @@ final class Constructly_Contacts_Migration
                     [
                         'icon' => 'mail',
                         'title' => 'Email',
-                        'value' => 'info@brigmaster.ru',
+                        'value' => '<a href="mailto:info@brigmaster.ru">info@brigmaster.ru</a>',
                         'note' => 'Для вопросов, предложений и партнёрств.',
-                    ],
-                    [
-                        'icon' => 'share',
-                        'title' => 'Telegram',
-                        'value' => '@brigmaster_support',
-                        'note' => 'Для коротких вопросов и быстрой связи.',
                     ],
                 ],
             ]),

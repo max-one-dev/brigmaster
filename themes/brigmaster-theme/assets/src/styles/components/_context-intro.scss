@@ -1,0 +1,38 @@
+// context-intro block — toolbar style as the single base style.
+// Background stripe comes from .bm-section--bg on the <section>.
+
+// ---------------------------------------------------------------------------
+// Section padding — override .bm-section default so the band breathes
+// consistently regardless of cascade order. Mobile uses --bm-space-8 (32px),
+// desktop uses --bm-space-10 (40px), matching the --tight/default scale.
+// ---------------------------------------------------------------------------
+
+.bm-context-intro {
+  margin-top: var(--bm-space-8);
+  padding-block: var(--bm-space-8);
+
+  @media (min-width: 768px) {
+    margin-top: var(--bm-space-10);
+    padding-block: var(--bm-space-10);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Title — matches .bm-section-toolbar__title typography
+// ---------------------------------------------------------------------------
+
+.bm-context-intro__title {
+  margin: 0 0 var(--bm-space-4);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-weight: var(--bm-font-semibold);
+  line-height: 1.2;
+  color: var(--bm-color-text-strong);
+}
+
+// ---------------------------------------------------------------------------
+// Inner — full container width, no centering constraint
+// ---------------------------------------------------------------------------
+
+.bm-context-intro__inner {
+  // intentionally no max-width; spans full .bm-container width
+}

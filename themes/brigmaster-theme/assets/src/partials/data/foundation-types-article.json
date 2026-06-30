@@ -1,20 +1,20 @@
 [
   {
-    "image": "../../images/cards/calc-cover-strip.svg",
+    "image": "../../images/cards/calc-cover-strip.jpg",
     "title": "Ленточный фундамент",
     "text": "Подходит для капитальных домов на стабильных грунтах с небольшим уклоном.",
     "href": "/kalkulyatory/fundament/lentochnyj/",
     "cta": "Рассчитать"
   },
   {
-    "image": "../../images/cards/calc-cover-pile.svg",
+    "image": "../../images/cards/calc-cover-pile.jpg",
     "title": "Свайный фундамент",
     "text": "Используют на слабых и пучинистых грунтах, при высоком уровне вод.",
     "href": "/kalkulyatory/fundament/svajnyj/",
     "cta": "Рассчитать"
   },
   {
-    "image": "../../images/cards/calc-cover-slab.svg",
+    "image": "../../images/cards/calc-cover-slab.jpg",
     "title": "Плитный фундамент",
     "text": "Равномерно распределяет нагрузку — вариант для сложных грунтов.",
     "href": "/kalkulyatory/fundament/plitnyj/",

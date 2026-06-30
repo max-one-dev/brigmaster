@@ -32,7 +32,14 @@ $result_text = (string) ($attributes['resultText'] ?? '');
                         <h2 id="how-calculator-works-title" class="bm-calculator-info-card__title"><?php echo esc_html($info_title); ?></h2>
                     <?php endif; ?>
                     <?php if ($info_body !== '') : ?>
-                        <?php echo wp_kses_post($info_body); ?>
+                        <?php
+$bm_info_allowed = wp_kses_allowed_html('post');
+$bm_info_allowed['span'] = array_merge($bm_info_allowed['span'] ?? [], [
+    'data-tooltip' => true,
+    'tabindex'     => true,
+]);
+echo wp_kses($info_body, $bm_info_allowed);
+?>
                     <?php else : ?>
                         <?php /* Legacy fallback for blocks authored before the single HTML field. */ ?>
                         <?php if ($info_text !== '') : ?>

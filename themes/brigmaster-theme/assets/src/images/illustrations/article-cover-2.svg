@@ -2,7 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="article-cover-2">
   <rect width="320" height="200" fill="#f1f5f9" rx="12"/>
   <rect x="0.5" y="0.5" width="319" height="199" fill="none" stroke="#cbd5e1" stroke-dasharray="6 6" rx="11.5"/>
-  <g fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round">
+  <g fill="none" stroke="#94a3b8" stroke-width="1" stroke-linecap="round">
     <path d="M80 130 L160 70 L240 130"/>
     <path d="M100 130 L100 160 L220 160 L220 130"/>
     <path d="M140 160 L140 130 L180 130 L180 160"/>

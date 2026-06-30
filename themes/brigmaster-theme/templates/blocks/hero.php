@@ -49,7 +49,7 @@ $note = (string) ($attributes['note'] ?? '');
                                         <span class="bm-hero__feature-title"><?php echo esc_html($feature_title); ?></span>
                                     <?php endif; ?>
                                     <?php if ($feature_text !== '') : ?>
-                                        <span class="bm-hero__feature-text"><?php echo esc_html($feature_text); ?></span>
+                                        <span class="bm-hero__feature-text"><?php echo wp_kses($feature_text, ['br' => []]); ?></span>
                                     <?php endif; ?>
                                 </span>
                             </li>

@@ -40,7 +40,7 @@ if (!defined('ABSPATH')) {
 
         <div id="bm-header-panel" class="bm-header__panel">
             <?php if (has_nav_menu('primary')) : ?>
-                <nav class="bm-nav-primary" aria-label="<?php esc_attr_e('Primary', 'brigmaster-theme'); ?>" data-bm-component="nav-dropdown">
+                <nav class="bm-nav-primary" aria-label="<?php esc_attr_e('Основная навигация', 'brigmaster-theme'); ?>" data-bm-component="nav-dropdown">
                     <?php
                     wp_nav_menu(
                         [

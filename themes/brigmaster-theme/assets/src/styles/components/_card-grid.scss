@@ -73,6 +73,12 @@
   }
 }
 
+@include media.bp(xl) {
+  .bm-card-grid--foundation-types.bm-card-grid--cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 @media (width >= 1200px) {
   .bm-card-grid--cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));

@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Foundation_Hub_Migration
 {
-    private const MIGRATION_VERSION = 'foundation-hub-v1';
+    private const MIGRATION_VERSION = 'foundation-hub-v2';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -49,7 +49,7 @@ final class Constructly_Foundation_Hub_Migration
                     ['label' => 'Калькуляторы', 'url' => '/kalkulyatory/'],
                     ['label' => 'Фундамент'],
                 ],
-                'title' => 'Расчёт фундамента',
+                'title' => 'Калькулятор фундамента',
                 'lead' => 'Подберите подходящий тип фундамента, рассчитайте количество материалов и получите ориентировочные параметры для вашего проекта.',
                 'features' => [
                     ['icon' => 'calculator', 'title' => 'Точные расчёты', 'text' => 'на основе форм и формул'],
@@ -102,21 +102,21 @@ final class Constructly_Foundation_Hub_Migration
                 'linkUrl' => '/kalkulyatory/',
                 'cards' => [
                     [
-                        'image' => 'assets/src/images/cards/calc-cover-strip.svg',
+                        'image' => 'assets/src/images/cards/calc-cover-strip.jpg',
                         'title' => 'Ленточный фундамент',
                         'text' => 'Расчёт размеров ленты, объёма бетона и количества материалов',
                         'href' => '/kalkulyatory/fundament/lentochnyj/',
                         'cta' => 'Рассчитать',
                     ],
                     [
-                        'image' => 'assets/src/images/cards/calc-cover-pile.svg',
+                        'image' => 'assets/src/images/cards/calc-cover-pile.jpg',
                         'title' => 'Свайный фундамент',
                         'text' => 'Количество свай, длина, шаг и объём материалов',
                         'href' => '/kalkulyatory/fundament/svajnyj/',
                         'cta' => 'Рассчитать',
                     ],
                     [
-                        'image' => 'assets/src/images/cards/calc-cover-slab.svg',
+                        'image' => 'assets/src/images/cards/calc-cover-slab.jpg',
                         'title' => 'Плитный фундамент',
                         'text' => 'Толщина плиты, объём бетона, арматура и материалы',
                         'href' => '/kalkulyatory/fundament/plitnyj/',
@@ -130,8 +130,6 @@ final class Constructly_Foundation_Hub_Migration
                 'themeVariant' => 'bg',
                 'title' => 'Как выбрать фундамент?',
                 'subtitle' => 'Краткие рекомендации по выбору типа фундамента',
-                'linkLabel' => 'Подробнее о выборе фундамента',
-                'linkUrl' => '/baza-znaniy/fundament/',
                 'items' => [
                     [
                         'icon' => 'measurement',
@@ -152,53 +150,6 @@ final class Constructly_Foundation_Hub_Migration
                         'icon' => 'target',
                         'title' => 'Нагрузка от здания',
                         'text' => 'Чем тяжелее конструкция, тем массивнее и надёжнее должен быть фундамент.',
-                    ],
-                ],
-            ]),
-            Constructly_Migration_Helpers::block('constructly/articles', [
-                'title' => 'Полезные статьи',
-                'linkLabel' => 'Все статьи →',
-                'linkUrl' => '/baza-znaniy/',
-                'items' => [
-                    [
-                        'url' => '/baza-znaniy/fundament/vybor-tipa/',
-                        'image' => 'assets/src/images/illustrations/article-cover-1.svg',
-                        'imageAlt' => '',
-                        'tag' => 'Фундамент',
-                        'title' => 'Как выбрать тип фундамента для частного дома',
-                        'text' => 'Разбираем основные типы фундаментов и критерии выбора под разные условия.',
-                        'readTime' => '12 мин',
-                        'date' => '15.04.2024',
-                    ],
-                    [
-                        'url' => '/baza-znaniy/fundament/armirovanie/',
-                        'image' => 'assets/src/images/illustrations/article-cover-2.svg',
-                        'imageAlt' => '',
-                        'tag' => 'Фундамент',
-                        'title' => 'Армирование фундамента: полное руководство',
-                        'text' => 'Схемы армирования, выбор арматуры и правила вязки каркаса.',
-                        'readTime' => '10 мин',
-                        'date' => '12.04.2024',
-                    ],
-                    [
-                        'url' => '/baza-znaniy/styazhka/tolshchina/',
-                        'image' => 'assets/src/images/illustrations/article-cover-3.svg',
-                        'imageAlt' => '',
-                        'tag' => 'Стяжка пола',
-                        'title' => 'Толщина стяжки пола: как не ошибиться',
-                        'text' => 'От чего зависит толщина стяжки и как рассчитать оптимальный слой.',
-                        'readTime' => '8 мин',
-                        'date' => '10.04.2024',
-                    ],
-                    [
-                        'url' => '/baza-znaniy/plitka/ukladka-pola/',
-                        'image' => 'assets/src/images/illustrations/article-cover-4.svg',
-                        'imageAlt' => '',
-                        'tag' => 'Плитка',
-                        'title' => 'Укладка плитки на пол: пошаговая инструкция',
-                        'text' => 'Подготовка основания, выбор клея и технология укладки плитки.',
-                        'readTime' => '15 мин',
-                        'date' => '08.04.2024',
                     ],
                 ],
             ]),

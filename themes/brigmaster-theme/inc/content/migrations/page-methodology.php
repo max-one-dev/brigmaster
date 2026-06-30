@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Methodology_Migration
 {
-    private const MIGRATION_VERSION = 'methodology-v2';
+    private const MIGRATION_VERSION = 'methodology-v4';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -139,6 +139,18 @@ final class Constructly_Methodology_Migration
 
 <!-- wp:list -->
 <ul class="wp-block-list"><!-- wp:list-item --><li>строительные нормы и рекомендации по работам;</li><!-- /wp:list-item --><!-- wp:list-item --><li>типовые размеры материалов и практические коэффициенты расхода;</li><!-- /wp:list-item --><!-- wp:list-item --><li>технические каталоги и паспорта производителей материалов;</li><!-- /wp:list-item --><!-- wp:list-item --><li>проверочные сценарии, основанные на реальных строительных задачах.</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p><em>обновлено: 30.06.2026</em></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Нормативные обозначения, используемые в расчётах</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item --><li>СП 22.13330.2016 «Основания зданий и сооружений» — нагрузки на грунт, несущая способность оснований;</li><!-- /wp:list-item --><!-- wp:list-item --><li>СП 29.13330 «Полы» — конструкции полов, стяжки, покрытия;</li><!-- /wp:list-item --><!-- wp:list-item --><li>ГОСТ 530-2012 «Кирпич и камень керамические» — размеры, марки, требования к кладочным изделиям;</li><!-- /wp:list-item --><!-- wp:list-item --><li>ГОСТ 6787-2020 «Плитки керамические для полов» — типоразмеры и технические характеристики плитки;</li><!-- /wp:list-item --><!-- wp:list-item --><li>ГОСТ Р 6266-2022 «Листы гипсокартонные» — типы, размеры и параметры ГКЛ.</li><!-- /wp:list-item --></ul>
 <!-- /wp:list -->
 
 <!-- wp:heading {"anchor":"methodology-included"} -->

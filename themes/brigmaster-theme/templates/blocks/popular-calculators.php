@@ -50,12 +50,17 @@ if ($title_id === '') {
                     $button_label = (string) ($card['buttonLabel'] ?? '');
                     $button_url = (string) ($card['buttonUrl'] ?? '#calculators');
                     $icon = (string) ($card['icon'] ?? 'calculator');
+                    $icon_image = (string) ($card['image'] ?? '');
                     ?>
                     <article class="bm-card bm-card-calculator">
                         <div class="bm-card-calculator__icon">
-                            <svg class="bm-icon bm-icon--lg" aria-hidden="true">
-                                <use href="#bm-icon-<?php echo esc_attr($icon); ?>"></use>
-                            </svg>
+                            <?php if ($icon_image !== '') : ?>
+                                <img src="<?php echo constructly_esc_block_image_src($icon_image); ?>" alt="" width="100" height="100" loading="lazy" decoding="async">
+                            <?php else : ?>
+                                <svg class="bm-icon bm-icon--lg" aria-hidden="true">
+                                    <use href="#bm-icon-<?php echo esc_attr($icon); ?>"></use>
+                                </svg>
+                            <?php endif; ?>
                         </div>
                         <?php if ($card_title !== '') : ?>
                             <h3 class="bm-card-calculator__title"><?php echo esc_html($card_title); ?></h3>

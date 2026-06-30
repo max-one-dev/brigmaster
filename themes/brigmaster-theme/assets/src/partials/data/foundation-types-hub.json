@@ -1,20 +1,20 @@
 [
   {
-    "image": "../../images/cards/calc-cover-strip.svg",
+    "image": "../../images/cards/calc-cover-strip.jpg",
     "title": "Ленточный фундамент",
     "text": "Расчёт размеров ленты, объёма бетона и количества материалов",
     "href": "/kalkulyatory/fundament/lentochnyj/",
     "cta": "Рассчитать"
   },
   {
-    "image": "../../images/cards/calc-cover-pile.svg",
+    "image": "../../images/cards/calc-cover-pile.jpg",
     "title": "Свайный фундамент",
     "text": "Количество свай, длина, шаг и объём материалов",
     "href": "/kalkulyatory/fundament/svajnyj/",
     "cta": "Рассчитать"
   },
   {
-    "image": "../../images/cards/calc-cover-slab.svg",
+    "image": "../../images/cards/calc-cover-slab.jpg",
     "title": "Плитный фундамент",
     "text": "Толщина плиты, объём бетона, арматура и материалы",
     "href": "/kalkulyatory/fundament/plitnyj/",

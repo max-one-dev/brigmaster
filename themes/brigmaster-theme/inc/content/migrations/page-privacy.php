@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Privacy_Migration
 {
-    private const MIGRATION_VERSION = 'privacy-v4';
+    private const MIGRATION_VERSION = 'privacy-v5';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -84,6 +84,10 @@ final class Constructly_Privacy_Migration
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
+<p>Оператор сайта — частное лицо — оператор сайта brigmaster.ru. Юридическое наименование организации не указывается, так как деятельность ведётся без образования юридического лица.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
 <p>Используя сайт, вы соглашаетесь с условиями обработки данных, описанными в этом документе. Если вы не согласны с условиями, пожалуйста, не отправляйте данные через формы сайта.</p>
 <!-- /wp:paragraph -->
 
@@ -96,8 +100,12 @@ final class Constructly_Privacy_Migration
 <!-- /wp:paragraph -->
 
 <!-- wp:list -->
-<ul class="wp-block-list"><!-- wp:list-item --><li>имя и контактные данные, если вы отправляете сообщение через форму;</li><!-- /wp:list-item --><!-- wp:list-item --><li>технические данные: IP-адрес, тип браузера, устройство и действия на сайте;</li><!-- /wp:list-item --><!-- wp:list-item --><li>данные, которые вы вводите в калькуляторы для выполнения расчёта;</li><!-- /wp:list-item --><!-- wp:list-item --><li>cookies и похожие технологии, если они включены в вашем браузере.</li><!-- /wp:list-item --></ul>
+<ul class="wp-block-list"><!-- wp:list-item --><li>данные, переданные через форму обратной связи: имя, адрес электронной почты (email) и текст сообщения;</li><!-- /wp:list-item --><!-- wp:list-item --><li>технические данные: IP-адрес, тип браузера, устройство и действия на сайте;</li><!-- /wp:list-item --><!-- wp:list-item --><li>данные, которые вы вводите в калькуляторы для выполнения расчёта;</li><!-- /wp:list-item --><!-- wp:list-item --><li>cookies и похожие технологии, если они включены в вашем браузере.</li><!-- /wp:list-item --></ul>
 <!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>Данные формы (имя, email, сообщение) собираются исключительно с целью ответа на ваше обращение. Мы не передаём эти данные третьим лицам в коммерческих целях и не продаём их. По вашему запросу, направленному на контактный email, данные будут удалены.</p>
+<!-- /wp:paragraph -->
 
 <!-- wp:heading {"anchor":"privacy-use"} -->
 <h2 class="wp-block-heading" id="privacy-use">3. Как мы используем данные</h2>
@@ -171,7 +179,7 @@ final class Constructly_Privacy_Migration
 <!-- /wp:paragraph -->
 
 <!-- wp:list -->
-<ul class="wp-block-list"><!-- wp:list-item --><li>Email: info@brigmaster.ru</li><!-- /wp:list-item --><!-- wp:list-item --><li>Telegram: @brigmaster_support</li><!-- /wp:list-item --></ul>
+<ul class="wp-block-list"><!-- wp:list-item --><li>Email: <a href="mailto:info@brigmaster.ru">info@brigmaster.ru</a></li><!-- /wp:list-item --></ul>
 <!-- /wp:list -->
 HTML;
     }

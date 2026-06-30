@@ -12,6 +12,7 @@ $link_url = (string) ($attributes['linkUrl'] ?? '');
 $anchor_id = trim((string) ($attributes['anchorId'] ?? 'hub-calculators'));
 $title_id = trim((string) ($attributes['titleId'] ?? 'hub-calculators-title'));
 $cards = is_array($attributes['cards'] ?? null) ? $attributes['cards'] : [];
+$columns = (int) ($attributes['columns'] ?? 0);
 
 if ($anchor_id === '') {
     $anchor_id = 'hub-calculators';
@@ -38,7 +39,7 @@ if ($title_id === '') {
         </header>
 
         <?php if ($cards !== []) : ?>
-            <div class="bm-card-grid bm-card-grid--foundation-types">
+            <div class="<?php echo esc_attr('bm-card-grid bm-card-grid--foundation-types' . ($columns > 0 ? ' bm-card-grid--cols-' . $columns : '')); ?>">
                 <?php foreach ($cards as $card) : ?>
                     <?php
                     if (!is_array($card)) {

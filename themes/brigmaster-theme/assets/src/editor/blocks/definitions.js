@@ -52,6 +52,11 @@ export const blockAttributes = {
   noteText: { type: 'string' },
   noteLinkLabel: { type: 'string' },
   noteLinkUrl: { type: 'string' },
+  shortcodeTag: { type: 'string' },
+  shortcodeTitle: { type: 'string' },
+  resultTitle: { type: 'string' },
+  resultStatus: { type: 'string' },
+  resultText: { type: 'string' },
   features: { type: 'array', default: [] },
   breadcrumbs: { type: 'array', default: [] },
   cards: { type: 'array', default: [] },
@@ -291,6 +296,7 @@ export const blockDefinitions = [
     fields: [
       textField('anchor', 'Якорь'),
       textField('title', 'Заголовок'),
+      textField('columns', 'Колонки (напр. 4)'),
       textareaField('subtitle', 'Описание'),
       ...linkFields,
       {
@@ -338,11 +344,16 @@ export const blockDefinitions = [
     name: 'constructly/calculator-estimator',
     title: 'Constructly Calculator Estimator',
     fields: [
+      textField('shortcodeTag', 'Тег шорткода калькулятора'),
+      textField('shortcodeTitle', 'Заголовок формы'),
       textField('infoTitle', 'Заголовок'),
       textareaField('infoBody', 'Контент'),
       textField('noteText', 'Текст примечания'),
       textField('noteLinkLabel', 'Текст ссылки'),
       textField('noteLinkUrl', 'URL ссылки'),
+      textField('resultTitle', 'Заголовок результата'),
+      textField('resultStatus', 'Статус результата'),
+      textareaField('resultText', 'Текст результата'),
     ],
   },
   {

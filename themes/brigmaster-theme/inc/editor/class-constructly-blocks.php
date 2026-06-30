@@ -148,6 +148,11 @@ final class Constructly_Blocks
                 'title' => 'Constructly Calculator Estimator',
                 'template' => 'calculator-estimator',
             ],
+            'context-intro' => [
+                'name' => 'constructly/context-intro',
+                'title' => 'Constructly Context Intro',
+                'template' => 'context-intro',
+            ],
         ];
     }
 

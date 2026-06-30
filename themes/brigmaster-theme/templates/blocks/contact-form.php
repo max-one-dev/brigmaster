@@ -50,7 +50,7 @@ if ($title_id === '') {
                                 <h3 class="bm-contact-channel__title"><?php echo esc_html($channel_title); ?></h3>
                             <?php endif; ?>
                             <?php if ($value !== '') : ?>
-                                <p class="bm-contact-channel__value"><?php echo esc_html($value); ?></p>
+                                <p class="bm-contact-channel__value"><?php echo wp_kses($value, ['a' => ['href' => true, 'class' => true]]); ?></p>
                             <?php endif; ?>
                             <?php if ($note !== '') : ?>
                                 <p class="bm-contact-channel__note"><?php echo esc_html($note); ?></p>

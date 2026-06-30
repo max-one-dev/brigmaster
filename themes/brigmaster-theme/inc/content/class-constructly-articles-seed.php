@@ -349,9 +349,9 @@ final class Constructly_Articles_Seed
             $p('Для частного домостроения чаще всего используют ленточный, свайный и плитный фундамент. Кратко — особенности каждого типа.'),
             Constructly_Migration_Helpers::block('constructly/foundation-cards', [
                 'cards' => [
-                    ['image' => 'assets/src/images/cards/calc-cover-strip.svg', 'title' => 'Ленточный', 'text' => 'Лента по контуру несущих стен. Оптимален для домов из кирпича и газобетона на устойчивых грунтах.'],
-                    ['image' => 'assets/src/images/cards/calc-cover-pile.svg', 'title' => 'Свайный', 'text' => 'Передаёт нагрузку на плотные слои грунта. Подходит для слабых и пучинистых грунтов, высокого УГВ.'],
-                    ['image' => 'assets/src/images/cards/calc-cover-slab.svg', 'title' => 'Плитный', 'text' => 'Монолитная плита под всем зданием. Надёжен при неравномерной нагрузке и сложных грунтах.'],
+                    ['image' => 'assets/src/images/cards/calc-cover-strip.jpg', 'title' => 'Ленточный', 'text' => 'Лента по контуру несущих стен. Оптимален для домов из кирпича и газобетона на устойчивых грунтах.'],
+                    ['image' => 'assets/src/images/cards/calc-cover-pile.jpg', 'title' => 'Свайный', 'text' => 'Передаёт нагрузку на плотные слои грунта. Подходит для слабых и пучинистых грунтов, высокого УГВ.'],
+                    ['image' => 'assets/src/images/cards/calc-cover-slab.jpg', 'title' => 'Плитный', 'text' => 'Монолитная плита под всем зданием. Надёжен при неравномерной нагрузке и сложных грунтах.'],
                 ],
             ]),
 

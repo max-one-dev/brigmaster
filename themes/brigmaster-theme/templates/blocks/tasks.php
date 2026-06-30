@@ -31,7 +31,7 @@ if ($variant !== 'compact') {
         </header>
 
         <?php if ($items !== []) : ?>
-            <div class="bm-card-grid bm-card-grid--cols-4">
+            <div class="bm-card-grid bm-card-grid--cols-3">
                 <?php foreach ($items as $item) : ?>
                     <?php
                     if (!is_array($item)) {

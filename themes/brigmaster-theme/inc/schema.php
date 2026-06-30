@@ -31,6 +31,7 @@ function constructly_capture_hero_breadcrumbs( string $content, array $block ): 
 }
 
 add_action( 'wp_footer', 'constructly_output_breadcrumb_schema' );
+add_action( 'wp_footer', 'constructly_output_webpage_schema' );
 
 function constructly_output_breadcrumb_schema(): void {
     if ( ! is_singular() || is_front_page() ) {
@@ -106,5 +107,40 @@ function constructly_output_breadcrumb_schema(): void {
             ],
             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         )
+        . "</script>\n";
+}
+
+function constructly_output_webpage_schema(): void {
+    if ( ! is_singular() ) {
+        return;
+    }
+
+    $post = get_post();
+    if ( ! $post instanceof WP_Post ) {
+        return;
+    }
+
+    $slug = $post->post_name;
+    $allowed_slugs = [ 'o-proekte', 'kontakty' ];
+
+    if ( ! in_array( $slug, $allowed_slugs, true ) ) {
+        return;
+    }
+
+    $schema = [
+        '@context'    => 'https://schema.org',
+        '@type'       => 'WebPage',
+        'name'        => wp_strip_all_tags( get_the_title( $post ) ),
+        'url'         => esc_url( (string) get_permalink( $post ) ),
+        'description' => wp_strip_all_tags( (string) get_the_excerpt( $post ) ),
+        'inLanguage'  => 'ru-RU',
+        'isPartOf'    => [
+            '@type' => 'WebSite',
+            'url'   => home_url( '/' ),
+        ],
+    ];
+
+    echo '<script type="application/ld+json">' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES )
         . "</script>\n";
 }

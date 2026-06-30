@@ -45,21 +45,17 @@
     "file": "img/icons/chevron-down.svg",
     "src": "icons/sprite/chevron-down.svg"
   },
-  "images/cards/calc-cover-pier.svg": {
-    "file": "img/image/calc-cover-pier.svg",
-    "src": "images/cards/calc-cover-pier.svg"
+  "images/cards/calc-cover-pile.jpg": {
+    "file": "img/image/calc-cover-pile.jpg",
+    "src": "images/cards/calc-cover-pile.jpg"
   },
-  "images/cards/calc-cover-pile.svg": {
-    "file": "img/image/calc-cover-pile.svg",
-    "src": "images/cards/calc-cover-pile.svg"
+  "images/cards/calc-cover-slab.jpg": {
+    "file": "img/image/calc-cover-slab.jpg",
+    "src": "images/cards/calc-cover-slab.jpg"
   },
-  "images/cards/calc-cover-slab.svg": {
-    "file": "img/image/calc-cover-slab.svg",
-    "src": "images/cards/calc-cover-slab.svg"
-  },
-  "images/cards/calc-cover-strip.svg": {
-    "file": "img/image/calc-cover-strip.svg",
-    "src": "images/cards/calc-cover-strip.svg"
+  "images/cards/calc-cover-strip.jpg": {
+    "file": "img/image/calc-cover-strip.jpg",
+    "src": "images/cards/calc-cover-strip.jpg"
   },
   "images/illustrations/_placeholder.svg": {
     "file": "img/image/_placeholder.svg",
@@ -80,22 +76,6 @@
   "images/illustrations/article-cover-4.svg": {
     "file": "img/image/article-cover-4.svg",
     "src": "images/illustrations/article-cover-4.svg"
-  },
-  "images/illustrations/calc-icon-brick.svg": {
-    "file": "img/image/calc-icon-brick.svg",
-    "src": "images/illustrations/calc-icon-brick.svg"
-  },
-  "images/illustrations/calc-icon-drywall.svg": {
-    "file": "img/image/calc-icon-drywall.svg",
-    "src": "images/illustrations/calc-icon-drywall.svg"
-  },
-  "images/illustrations/calc-icon-screed.svg": {
-    "file": "img/image/calc-icon-screed.svg",
-    "src": "images/illustrations/calc-icon-screed.svg"
-  },
-  "images/illustrations/calc-icon-tile.svg": {
-    "file": "img/image/calc-icon-tile.svg",
-    "src": "images/illustrations/calc-icon-tile.svg"
   },
   "images/illustrations/calc_bg.jpg": {
     "file": "img/image/calc_bg.jpg",
@@ -137,21 +117,21 @@
     "file": "img/image/hero-privacy.jpg",
     "src": "images/illustrations/hero-privacy.jpg"
   },
-  "images/illustrations/task-build-house.svg": {
-    "file": "img/image/task-build-house.svg",
-    "src": "images/illustrations/task-build-house.svg"
+  "images/illustrations/task-build-house.jpg": {
+    "file": "img/image/task-build-house.jpg",
+    "src": "images/illustrations/task-build-house.jpg"
   },
-  "images/illustrations/task-landscaping.svg": {
-    "file": "img/image/task-landscaping.svg",
-    "src": "images/illustrations/task-landscaping.svg"
+  "images/illustrations/task-landscaping.jpg": {
+    "file": "img/image/task-landscaping.jpg",
+    "src": "images/illustrations/task-landscaping.jpg"
   },
-  "images/illustrations/task-renovate-apartment.svg": {
-    "file": "img/image/task-renovate-apartment.svg",
-    "src": "images/illustrations/task-renovate-apartment.svg"
+  "images/illustrations/task-renovate-apartment.jpg": {
+    "file": "img/image/task-renovate-apartment.jpg",
+    "src": "images/illustrations/task-renovate-apartment.jpg"
   },
-  "images/illustrations/task-renovate-room.svg": {
-    "file": "img/image/task-renovate-room.svg",
-    "src": "images/illustrations/task-renovate-room.svg"
+  "images/illustrations/task-renovate-room.jpg": {
+    "file": "img/image/task-renovate-room.jpg",
+    "src": "images/illustrations/task-renovate-room.jpg"
   },
   "images/logo_footer.png": {
     "file": "img/image/logo_footer.png",

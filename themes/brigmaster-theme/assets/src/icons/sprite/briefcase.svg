@@ -3,15 +3,15 @@
     d="M3 10c0-.932 0-1.398.152-1.765.203-.49.592-.88 1.082-1.083C4.602 7 5.068 7 6 7h12c.932 0 1.398 0 1.765.152.49.203.88.593 1.082 1.083.152.367.152.833.152 1.765v7c0 1.886 0 2.828-.586 3.414C19.828 21 18.886 21 17 21H7c-1.886 0-2.828 0-3.414-.586C3 19.828 3 18.886 3 17v-7Z"
     fill="none"
     stroke="currentColor"
-    stroke-width="2"
+    stroke-width="1"
     stroke-linejoin="round"
   />
   <path
     d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 10c.186 1.317.735 2.534 1.556 3.571C6.195 16.644 8.918 18 12 18s5.805-1.356 7.444-3.429c.82-1.037 1.37-2.254 1.556-3.571"
     fill="none"
     stroke="currentColor"
-    stroke-width="2"
+    stroke-width="1"
     stroke-linecap="round"
   />
-  <path d="M11.5 13h1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  <path d="M11.5 13h1" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
 </svg>
