@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_User_Agreement_Migration
 {
-    private const MIGRATION_VERSION = 'user-agreement-v3';
+    private const MIGRATION_VERSION = 'user-agreement-v4';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -79,7 +79,7 @@ final class Constructly_User_Agreement_Migration
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>Правообладатель Сервиса — частное лицо — оператор сайта brigmaster.ru. Деятельность ведётся без образования юридического лица; ООО, ИНН и иные реквизиты юридического лица не указываются.</p>
+<p>Правообладатель Сервиса — частное лицо (brigmaster.ru). Деятельность ведётся без образования юридического лица; ООО, ИНН и иные реквизиты юридического лица не публикуются. Использование Сервиса является бесплатным; никакая оплата с пользователей не взимается.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
@@ -171,7 +171,7 @@ final class Constructly_User_Agreement_Migration
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>По вопросам, связанным с использованием Сервиса Brigmaster и применением настоящего Соглашения, пользователь может связаться с командой через страницу «Контакты».</p>
+<p>По вопросам, связанным с использованием Сервиса Brigmaster и применением настоящего Соглашения, пользователь может обратиться по электронной почте: <a href="mailto:info@brigmaster.ru">info@brigmaster.ru</a>.</p>
 <!-- /wp:paragraph -->
 HTML;
     }

@@ -7,6 +7,7 @@ $anchor = trim((string) ($attributes['anchor'] ?? ''));
 $title_id = trim((string) ($attributes['titleId'] ?? 'tasks-title'));
 $variant = (string) ($attributes['variant'] ?? '');
 $items = is_array($attributes['items'] ?? null) ? $attributes['items'] : [];
+$columns = (int) ($attributes['columns'] ?? count($items));
 
 if ($title_id === '') {
     $title_id = 'tasks-title';
@@ -31,7 +32,7 @@ if ($variant !== 'compact') {
         </header>
 
         <?php if ($items !== []) : ?>
-            <div class="bm-card-grid bm-card-grid--cols-3">
+            <div class="bm-card-grid bm-card-grid--cols-<?php echo esc_attr((string) $columns); ?>">
                 <?php foreach ($items as $item) : ?>
                     <?php
                     if (!is_array($item)) {

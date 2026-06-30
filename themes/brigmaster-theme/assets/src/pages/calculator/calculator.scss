@@ -145,7 +145,7 @@
 .brigmaster-estimator__field-grid {
   display: grid;
   gap: var(--bm-space-5);
-  align-items: stretch;
+  align-items: start;
 }
 
 .brigmaster-estimator__field {
@@ -156,7 +156,8 @@
 
   > label,
   > .brigmaster-estimator__label-row {
-    flex: 1 0 auto;
+    min-height: calc(1.35 * 1em);
+    line-height: 1.35;
   }
 }
 

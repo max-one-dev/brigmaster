@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Foundation_Hub_Migration
 {
-    private const MIGRATION_VERSION = 'foundation-hub-v2';
+    private const MIGRATION_VERSION = 'foundation-hub-v3';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -43,7 +43,7 @@ final class Constructly_Foundation_Hub_Migration
     {
         $blocks = [
             Constructly_Migration_Helpers::block('constructly/foundation-hub-hero', [
-                'image' => 'assets/src/images/illustrations/hero-hub-foundation.jpg',
+                'image' => 'assets/src/images/illustrations/hero-fundament.jpg',
                 'breadcrumbs' => [
                     ['label' => 'Главная', 'url' => '/'],
                     ['label' => 'Калькуляторы', 'url' => '/kalkulyatory/'],

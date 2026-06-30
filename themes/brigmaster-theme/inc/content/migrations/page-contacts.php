@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Contacts_Migration
 {
-    private const MIGRATION_VERSION = 'contacts-v2';
+    private const MIGRATION_VERSION = 'contacts-v3';
 
     private const CONTACT_FORM_SHORTCODE = '[contact-form-7 id="3b0d792" title="Контактная форма"]';
 
@@ -65,7 +65,7 @@ final class Constructly_Contacts_Migration
                         'icon' => 'mail',
                         'title' => 'Email',
                         'value' => '<a href="mailto:info@brigmaster.ru">info@brigmaster.ru</a>',
-                        'note' => 'Для вопросов, предложений и партнёрств.',
+                        'note' => 'Для вопросов, предложений и партнёрств. Отвечаем обычно в течение 1 дня.',
                     ],
                 ],
             ]),

@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Privacy_Migration
 {
-    private const MIGRATION_VERSION = 'privacy-v5';
+    private const MIGRATION_VERSION = 'privacy-v8';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -84,7 +84,7 @@ final class Constructly_Privacy_Migration
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>Оператор сайта — частное лицо — оператор сайта brigmaster.ru. Юридическое наименование организации не указывается, так как деятельность ведётся без образования юридического лица.</p>
+<p>Оператор сайта — частное лицо. Реквизиты юридического лица не публикуются, поскольку деятельность ведётся без его образования.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
@@ -104,7 +104,7 @@ final class Constructly_Privacy_Migration
 <!-- /wp:list -->
 
 <!-- wp:paragraph -->
-<p>Данные формы (имя, email, сообщение) собираются исключительно с целью ответа на ваше обращение. Мы не передаём эти данные третьим лицам в коммерческих целях и не продаём их. По вашему запросу, направленному на контактный email, данные будут удалены.</p>
+<p>Данные формы обратной связи (имя, адрес электронной почты, текст сообщения) собираются исключительно с целью ответа на ваше обращение. Мы не передаём эти данные третьим лицам и не продаём их. Для удаления ваших данных направьте запрос на <a href="mailto:info@brigmaster.ru">info@brigmaster.ru</a> — данные будут удалены в разумный срок.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"anchor":"privacy-use"} -->
@@ -175,12 +175,8 @@ final class Constructly_Privacy_Migration
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p>Если у вас есть вопросы по данным или условиям Политики конфиденциальности, свяжитесь с нами.</p>
+<p>По вопросам обработки персональных данных, а также для запроса доступа или удаления данных свяжитесь по электронной почте: <a href="mailto:info@brigmaster.ru">info@brigmaster.ru</a>. Это единственный канал связи для обращений по данной теме.</p>
 <!-- /wp:paragraph -->
-
-<!-- wp:list -->
-<ul class="wp-block-list"><!-- wp:list-item --><li>Email: <a href="mailto:info@brigmaster.ru">info@brigmaster.ru</a></li><!-- /wp:list-item --></ul>
-<!-- /wp:list -->
 HTML;
     }
 }

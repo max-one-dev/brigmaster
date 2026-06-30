@@ -8,3 +8,85 @@
 @use '../../styles/components/link';
 @use '../../styles/components/section-toolbar';
 @use '../../styles/components/text-media';
+@use '../../styles/abstracts/media' as media;
+
+// ── Norms table ───────────────────────────────────────────────────────────────
+.bm-norms-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bm-norms-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--bm-text-sm);
+}
+
+.bm-norms-table th,
+.bm-norms-table td {
+  padding: var(--bm-space-3) var(--bm-space-4);
+  border: 1px solid var(--bm-color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.bm-norms-table th {
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+  background: var(--bm-color-surface-muted);
+  white-space: nowrap;
+}
+
+.bm-norms-table td:first-child {
+  white-space: nowrap;
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+.bm-norms-table tbody tr:nth-child(even) td {
+  background: var(--bm-color-surface-muted);
+}
+
+// ── Notice-card «Важно знать» ─────────────────────────────────────────────────
+.bm-notice-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--bm-space-4);
+  align-items: start;
+  padding: var(--bm-space-6);
+  border-left: 4px solid var(--bm-color-brand);
+  border-radius: var(--bm-radius-lg);
+  background: var(--bm-color-surface);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.06);
+}
+
+.bm-notice-card__icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--bm-radius-full, 9999px);
+  background: var(--bm-color-brand-soft);
+  color: var(--bm-color-brand);
+}
+
+.bm-notice-card__icon-svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.bm-notice-card__title {
+  margin: 0 0 var(--bm-space-2);
+  font-size: var(--bm-text-md);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+.bm-notice-card__text {
+  margin: 0;
+  font-size: var(--bm-text-base);
+  line-height: 1.55;
+  color: var(--bm-color-text);
+}

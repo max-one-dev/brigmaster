@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Calculators_Index_Migration
 {
-    private const MIGRATION_VERSION = 'calculators-index-v1';
+    private const MIGRATION_VERSION = 'calculators-index-v3';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -47,7 +47,7 @@ final class Constructly_Calculators_Index_Migration
         $blocks = [
             Constructly_Migration_Helpers::block('constructly/page-hero', [
                 'titleId' => 'calculators-hero-title',
-                'image' => 'assets/src/images/illustrations/hero-hub-foundation.jpg',
+                'image' => 'assets/src/images/illustrations/hero-hub-calculators.jpg',
                 'breadcrumbs' => [
                     ['label' => 'Главная', 'url' => '/'],
                     ['label' => 'Калькуляторы'],
@@ -181,7 +181,7 @@ final class Constructly_Calculators_Index_Migration
                 'text' => 'Начните с расчёта фундамента — это основа сметы для большинства проектов.',
                 'buttonLabel' => 'Перейти к фундаментам',
                 'buttonUrl' => '/kalkulyatory/fundament/',
-                'image' => '',
+                'image' => 'assets/src/images/illustrations/cta-about-light.jpg',
             ]),
         ];
 

@@ -25,6 +25,14 @@ function constructly_normalize_internal_url(string $url): string
         return $url;
     }
 
+    // Non-web schemes (mailto, tel, sms, callto, etc.) must be returned as-is;
+    // they have no host component, so the host-comparison logic below would
+    // silently rebuild them as scheme://site-host/path.
+    $early_scheme = strtolower((string) (wp_parse_url($url, PHP_URL_SCHEME) ?? ''));
+    if ($early_scheme !== '' && !in_array($early_scheme, ['http', 'https'], true)) {
+        return $url;
+    }
+
     $parsed_url = wp_parse_url($url);
     $home_url = wp_parse_url(home_url('/'));
 
