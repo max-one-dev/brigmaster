@@ -84,7 +84,9 @@ function restoreFromShareUrl(form) {
 
 export function initResultActions(form) {
   document.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-result-action]");
+    const _t = event.target;
+    const _el = _t && _t.nodeType === 1 ? _t : (_t && _t.parentElement) || null;
+    const button = _el ? _el.closest("[data-result-action]") : null;
     if (!button) {
       return;
     }

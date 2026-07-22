@@ -2,151 +2,161 @@ import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatter
 import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
 import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
 import { buildMixturePayload, syncPileMixtureBlocks } from "../core/mixture.js";
-import { buildPileReinforcementColumnsHtml, renderMixtureCard, renderStripReinforcementCard, syncResultGridLayout } from "../ui/result-panel.js";
+import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 
-    export function showTileResult(form, payload) {
-        const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
-        if (!resultNode) {
-            return;
-        }
-
-        const summaryCard = resultNode.querySelector('[data-result-card="tile-summary"]');
-        const layoutCard = resultNode.querySelector('[data-result-card="tile-layout"]');
-        const adhesiveCard = resultNode.querySelector('[data-result-card="tile-adhesive"]');
-        const groutCard = resultNode.querySelector('[data-result-card="tile-grout"]');
-        const costsCard = resultNode.querySelector('[data-result-card="tile-costs"]');
-        const geometry = payload?.geometry || {};
-        const tile = payload?.tile || {};
-        const layout = payload?.layout || {};
-        const cutouts = payload?.cutouts || {};
-        const openings = payload?.openings || {};
-        const adhesive = payload?.adhesive || {};
-        const grout = payload?.grout || {};
-        const costs = payload?.costs || {};
-
-        if (summaryCard) {
-            const openingsRow =
-                Number(openings.count) > 0 || Number(geometry.openingsAreaM2) > 0
-                    ? `<p><strong>Проёмы:</strong> ${formatNumber(geometry.openingsAreaM2)} м²</p>`
-                    : "";
-            const cutoutsRow =
-                Number(cutouts.count) > 0 || Number(geometry.cutoutsAreaM2) > 0
-                    ? `<p><strong>Вырезы и отверстия:</strong> ${formatNumber(geometry.cutoutsAreaM2)} м²</p>`
-                    : "";
-            const cutoutWasteRow =
-                Number(tile.countCutoutWaste) > 0
-                    ? `<p><strong>Потери на вырезы:</strong> ${formatNumber(tile.countCutoutWaste)} шт</p>`
-                    : "";
-            summaryCard.innerHTML = `
-        <h3>Плитка</h3>
-        <p><strong>Общая площадь:</strong> ${formatNumber(geometry.grossAreaM2)} м²</p>
-        ${openingsRow}
-        ${cutoutsRow}
-        <p><strong>Чистая площадь:</strong> ${formatNumber(geometry.netAreaM2)} м²</p>
-        <p><strong>Плиток без запаса:</strong> ${formatNumber(tile.countBase)} шт</p>
-        ${cutoutWasteRow}
-        <p><strong>Плиток с запасом:</strong> ${formatNumber(tile.countWithReserve)} шт</p>
-        <p><strong>К покупке:</strong> ${formatNumber(tile.countToBuy)} шт</p>
-      `;
-        }
-
-        if (layoutCard) {
-            if (layout.canRender) {
-                const warning = layout.hasNarrowCutWarning
-                    ? `<p class="brigmaster-estimator__result-note">${escapeHtml(layout.warningText || "")}</p>`
-                    : "";
-                layoutCard.innerHTML = `
-          <h3>Раскладка</h3>
-          <p><strong>Плиток по длине:</strong> ${formatNumber(layout.tilesAlongLength)}</p>
-          <p><strong>Рядов:</strong> ${formatNumber(layout.rowsCount)}</p>
-          <p><strong>Остаток по длине:</strong> ${formatNumber(layout.remainderLengthM)} м</p>
-          <p><strong>Остаток по ширине:</strong> ${formatNumber(layout.remainderWidthM)} м</p>
-          <p><strong>Крайняя подрезка по длине:</strong> ${formatNumber(layout.edgeTrimLengthMm)} мм</p>
-          <p><strong>Крайняя подрезка по ширине:</strong> ${formatNumber(layout.edgeTrimWidthMm)} мм</p>
-          ${warning}
-        `;
-            } else {
-                layoutCard.innerHTML = `
-          <h3>Раскладка</h3>
-          <p class="brigmaster-estimator__result-note">${escapeHtml(
-                    layout.note ||
-                    "Для ориентировочной раскладки нужны размеры прямоугольной зоны. В режиме по площади показываем только ориентир по материалам."
-                )}</p>
-        `;
-            }
-        }
-
-        if (adhesiveCard) {
-            if (adhesive.enabled) {
-                adhesiveCard.hidden = false;
-                const costText = hasMeaningfulNumber(adhesive.costExact)
-                    ? `<p><strong>Стоимость:</strong> ${formatNumber(adhesive.costExact)} / ${formatNumber(adhesive.costRounded)} руб</p>`
-                    : "";
-                adhesiveCard.innerHTML = `
-          <h3>Клей</h3>
-          <p><strong>Расход:</strong> ${formatNumber(adhesive.requiredKg)} кг</p>
-          <p><strong>Нужно мешков:</strong> ${formatNumber(adhesive.requiredBags)}</p>
-          <p><strong>К покупке:</strong> ${formatNumber(adhesive.bagsToBuy)} меш.</p>
-          ${costText}
-        `;
-            } else {
-                adhesiveCard.hidden = true;
-            }
-        }
-
-        if (groutCard) {
-            if (grout.enabled) {
-                groutCard.hidden = false;
-                const costText = hasMeaningfulNumber(grout.costExact)
-                    ? `<p><strong>Стоимость:</strong> ${formatNumber(grout.costExact)} / ${formatNumber(grout.costRounded)} руб</p>`
-                    : "";
-                groutCard.innerHTML = `
-          <h3>Затирка</h3>
-          <p><strong>Расход:</strong> ${formatNumber(grout.requiredKg)} кг</p>
-          <p><strong>Нужно упаковок:</strong> ${formatNumber(grout.requiredPacks)}</p>
-          <p><strong>К покупке:</strong> ${formatNumber(grout.packsToBuy)} уп.</p>
-          ${costText}
-        `;
-            } else {
-                groutCard.hidden = true;
-            }
-        }
-
-        if (costsCard) {
-            const hasCosts = [
-                costs.tileCostExact,
-                costs.adhesiveCostExact,
-                costs.groutCostExact,
-                costs.totalExact,
-            ].some((value) => hasMeaningfulNumber(value));
-            if (hasCosts) {
-                const rows = [];
-                if (hasMeaningfulNumber(costs.tileCostExact)) {
-                    rows.push(`<p><strong>Плитка:</strong> ${formatNumber(costs.tileCostExact)} руб</p>`);
-                }
-                if (hasMeaningfulNumber(costs.adhesiveCostExact)) {
-                    rows.push(`<p><strong>Клей:</strong> ${formatNumber(costs.adhesiveCostExact)} / ${formatNumber(costs.adhesiveCostRounded)} руб</p>`);
-                }
-                if (hasMeaningfulNumber(costs.groutCostExact)) {
-                    rows.push(`<p><strong>Затирка:</strong> ${formatNumber(costs.groutCostExact)} / ${formatNumber(costs.groutCostRounded)} руб</p>`);
-                }
-                if (hasMeaningfulNumber(costs.totalExact)) {
-                    rows.push(`<p><strong>Итого:</strong> ${formatNumber(costs.totalExact)} / ${formatNumber(costs.totalRounded)} руб</p>`);
-                }
-                costsCard.hidden = false;
-                costsCard.innerHTML = `<h3>Стоимость</h3>${rows.join("")}<p class="brigmaster-estimator__result-note">Если есть упаковка, сначала показывается точная оценка, затем ориентир к покупке.</p>`;
-            } else {
-                costsCard.hidden = true;
-            }
-        }
-
-        syncResultGridLayout(resultNode);
-        resultNode.hidden = false;
-        resultNode.classList.add("is-success");
-        finalizeSuccessfulResult(form);
+export function showTileResult(form, payload) {
+    const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
+    if (!resultNode) {
+        return;
     }
+
+    const geometry = payload?.geometry || {};
+    const tile    = payload?.tile    || {};
+    const layout  = payload?.layout  || {};
+    const cutouts = payload?.cutouts || {};
+    const openings = payload?.openings || {};
+    const adhesive = payload?.adhesive || {};
+    const grout    = payload?.grout   || {};
+    const costs    = payload?.costs   || {};
+
+    // Helper: one material row
+    const row = (label, value, note) => {
+        const noteHtml = note ? `<span class="bm-calculator-result__material-note">${escapeHtml(String(note))}</span>` : '';
+        return `<div class="bm-calculator-result__material"><span class="bm-calculator-result__material-head"><span>${escapeHtml(String(label))}</span><strong>${value}</strong></span>${noteHtml}</div>`;
+    };
+
+    // Helper: rebuild full card innerHTML (title + list)
+    const fillCard = (card, title, rows, extraHtml) => {
+        if (!card) { return; }
+        card.innerHTML = `<h3 class="bm-calculator-result__section-title">${escapeHtml(String(title))}</h3><div class="bm-calculator-result__list">${rows.join('')}</div>${extraHtml || ''}`;
+    };
+
+    const infoRow = (label, tooltipText, value, note) => {
+        const noteHtml = note ? `<span class="bm-calculator-result__material-note">${escapeHtml(String(note))}</span>` : '';
+        const labelHtml = `<span class="bm-result-info">${escapeHtml(String(label))}<button type="button" class="bm-result-info__trigger" aria-label="Пояснение">?</button><span class="bm-result-info__popup">${escapeHtml(String(tooltipText))}</span></span>`;
+        return `<div class="bm-calculator-result__material"><span class="bm-calculator-result__material-head">${labelHtml}<strong>${value}</strong></span>${noteHtml}</div>`;
+    };
+
+    // --- tile-summary (always visible) ---
+    const summaryCard = resultNode.querySelector('[data-result-card="tile-summary"]');
+    if (summaryCard) {
+        const rows = [
+            row('Общая площадь', `${formatNumber(geometry.grossAreaM2)} м²`),
+        ];
+        if (Number(openings.count) > 0 || Number(geometry.openingsAreaM2) > 0) {
+            rows.push(row('Проёмы', `${formatNumber(geometry.openingsAreaM2)} м²`));
+        }
+        if (Number(cutouts.count) > 0 || Number(geometry.cutoutsAreaM2) > 0) {
+            rows.push(row('Вырезы и отверстия', `${formatNumber(geometry.cutoutsAreaM2)} м²`));
+        }
+        rows.push(row('Чистая площадь', `${formatNumber(geometry.netAreaM2)} м²`));
+        rows.push(row('Плиток без запаса', `${formatNumber(tile.countBase)} шт`));
+        if (Number(tile.countCutoutWaste) > 0) {
+            rows.push(row('Потери на вырезы', `${formatNumber(tile.countCutoutWaste)} шт`));
+        }
+        rows.push(row('Плиток с запасом', `${formatNumber(tile.countWithReserve)} шт`));
+        rows.push(row('К покупке', `${formatNumber(tile.countToBuy)} шт`));
+        fillCard(summaryCard, 'Плитка', rows);
+    }
+
+    // --- tile-layout ---
+    const layoutCard = resultNode.querySelector('[data-result-card="tile-layout"]');
+    if (layoutCard) {
+        if (layout.canRender) {
+            const rows = [
+                row('Плиток по длине', formatNumber(layout.tilesAlongLength)),
+                row('Рядов', formatNumber(layout.rowsCount)),
+                infoRow('Остаток по длине', 'Дробная часть длины помещения после целых рядов плиток — столько места остаётся под крайний ряд.', `${formatNumber(layout.remainderLengthM)} м`),
+                infoRow('Остаток по ширине', 'Дробная часть ширины помещения после целых столбцов плиток — столько места остаётся под крайний столбец.', `${formatNumber(layout.remainderWidthM)} м`),
+                infoRow('Крайняя подрезка по длине', 'Фактический размер обрезанной плитки у торцевой стены (без учёта шва). Менее 50 мм — узкая подрезка, сложная в укладке; сдвиньте начало раскладки.', `${formatNumber(layout.edgeTrimLengthMm)} мм`),
+                infoRow('Крайняя подрезка по ширине', 'Фактический размер обрезанной плитки у боковой стены (без учёта шва). Менее 50 мм — узкая подрезка, сложная в укладке; сдвиньте начало раскладки.', `${formatNumber(layout.edgeTrimWidthMm)} мм`),
+            ];
+            const warningHtml = layout.hasNarrowCutWarning
+                ? `<p class="bm-calculator-result__material-note">${escapeHtml(layout.warningText || '')}</p>`
+                : '';
+            fillCard(layoutCard, 'Раскладка', rows, warningHtml);
+        } else {
+            const noteText = layout.note
+                || 'Для ориентировочной раскладки нужны размеры прямоугольной зоны. В режиме по площади показываем только ориентир по материалам.';
+            layoutCard.innerHTML = `<h3 class="bm-calculator-result__section-title">Раскладка</h3><p class="bm-calculator-result__material-note">${escapeHtml(noteText)}</p>`;
+        }
+    }
+
+    // --- tile-adhesive (conditional) ---
+    const adhesiveCard = resultNode.querySelector('[data-result-card="tile-adhesive"]');
+    if (adhesiveCard) {
+        if (adhesive.enabled) {
+            adhesiveCard.hidden = false;
+            const rows = [
+                row('Расход', `${formatNumber(adhesive.requiredKg)} кг`),
+                row('Нужно мешков', formatNumber(adhesive.requiredBags)),
+                row('К покупке', `${formatNumber(adhesive.bagsToBuy)} меш.`),
+            ];
+            if (hasMeaningfulNumber(adhesive.costExact)) {
+                rows.push(row('Стоимость', `${formatNumber(adhesive.costExact)} / ${formatNumber(adhesive.costRounded)}`));
+            }
+            fillCard(adhesiveCard, 'Клей', rows);
+        } else {
+            adhesiveCard.hidden = true;
+        }
+    }
+
+    // --- tile-grout (conditional) ---
+    const groutCard = resultNode.querySelector('[data-result-card="tile-grout"]');
+    if (groutCard) {
+        if (grout.enabled) {
+            groutCard.hidden = false;
+            const rows = [
+                row('Расход', `${formatNumber(grout.requiredKg)} кг`),
+                row('Нужно упаковок', formatNumber(grout.requiredPacks)),
+                row('К покупке', `${formatNumber(grout.packsToBuy)} уп.`),
+            ];
+            if (hasMeaningfulNumber(grout.costExact)) {
+                rows.push(row('Стоимость', `${formatNumber(grout.costExact)} / ${formatNumber(grout.costRounded)}`));
+            }
+            fillCard(groutCard, 'Затирка', rows);
+        } else {
+            groutCard.hidden = true;
+        }
+    }
+
+    // --- tile-costs (conditional) ---
+    const costsCard = resultNode.querySelector('[data-result-card="tile-costs"]');
+    if (costsCard) {
+        const hasCosts = [
+            costs.tileCostExact,
+            costs.adhesiveCostExact,
+            costs.groutCostExact,
+            costs.totalExact,
+        ].some((value) => hasMeaningfulNumber(value));
+        if (hasCosts) {
+            costsCard.hidden = false;
+            const rows = [];
+            if (hasMeaningfulNumber(costs.tileCostExact)) {
+                rows.push(row('Плитка', formatNumber(costs.tileCostExact)));
+            }
+            if (hasMeaningfulNumber(costs.adhesiveCostExact)) {
+                rows.push(row('Клей', `${formatNumber(costs.adhesiveCostExact)} / ${formatNumber(costs.adhesiveCostRounded)}`));
+            }
+            if (hasMeaningfulNumber(costs.groutCostExact)) {
+                rows.push(row('Затирка', `${formatNumber(costs.groutCostExact)} / ${formatNumber(costs.groutCostRounded)}`));
+            }
+            if (hasMeaningfulNumber(costs.totalExact)) {
+                rows.push(row('Итого', `${formatNumber(costs.totalExact)} / ${formatNumber(costs.totalRounded)}`));
+            }
+            fillCard(costsCard, 'Стоимость', rows,
+                '<p class="bm-calculator-result__material-note">Сначала показана точная оценка, затем ориентир по закупке.</p>');
+        } else {
+            costsCard.hidden = true;
+        }
+    }
+
+    resultNode.hidden = false;
+    resultNode.classList.add("is-success");
+    finalizeSuccessfulResult(form);
+}
 
 
     export function buildTileRepeatItems(form, groupName) {
@@ -238,7 +248,7 @@ import { initEstimateForms } from "../core/bootstrap.js";
             <h4 class="brigmaster-estimator__segment-title">Вырез или отверстие ${index + 1}</h4>
             <button type="button" class="brigmaster-estimator__segment-remove" data-tile-remove-item>Удалить</button>
           </div>
-          <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-grid--four">
+          <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-grid--four" data-tile-autofit>
             <div class="brigmaster-estimator__field">
               <label>Что это за элемент</label>
               <select data-tile-repeat-input="shape">
@@ -381,9 +391,13 @@ import { initEstimateForms } from "../core/bootstrap.js";
         toggleVisibility(form.querySelector('[data-field-group="tile-dimensions"]'), mode === "dimensions");
         toggleVisibility(form.querySelector('[data-field-group="tile-area"]'), mode === "area");
         toggleVisibility(form.querySelector('[data-field-group="tile-wall-height"]'), target === "wall" && mode === "dimensions");
-        toggleVisibility(form.querySelector('[data-field-group="tile-openings-toggle"]'), target === "wall");
-        toggleVisibility(form.querySelector("[data-tile-openings-root]"), target === "wall" && includeOpenings);
-        toggleVisibility(form.querySelector("[data-tile-cutouts-root]"), !!includeCutouts);
+        const openingsCheckbox = form.querySelector('[name="tileIncludeOpenings"]');
+        if (openingsCheckbox) {
+            openingsCheckbox.disabled = target !== "wall";
+            openingsCheckbox.closest("[data-toggle-field]")?.classList.toggle("is-disabled", target !== "wall");
+        }
+        toggleVisibility(form.querySelector('[data-toggle-target="tile-openings"]'), target === "wall" && includeOpenings);
+        toggleVisibility(form.querySelector('[data-toggle-target="tile-cutouts"]'), !!includeCutouts);
         toggleVisibility(form.querySelector("[data-tile-adhesive-fields]"), !!includeAdhesive);
         toggleVisibility(form.querySelector("[data-tile-grout-fields]"), !!includeGrout);
         toggleVisibility(form.querySelector('[data-field-group="tile-offset"]'), pattern === "offset");
@@ -460,6 +474,7 @@ import { initEstimateForms } from "../core/bootstrap.js";
                     "beforeend",
                     createTileRepeatMarkup(groupName, type, nextIndex)
                 );
+                window.bmEnhanceEstimatorSelects?.(listNode);
                 clearErrors(form);
                 markResultStale(form);
                 refresh();
@@ -472,6 +487,7 @@ import { initEstimateForms } from "../core/bootstrap.js";
                 const type = listNode.getAttribute("data-tile-item-type") || "opening";
                 const groupName = listNode.getAttribute("data-tile-repeat-list") || "";
                 listNode.insertAdjacentHTML("beforeend", createTileRepeatMarkup(groupName, type, 0));
+                window.bmEnhanceEstimatorSelects?.(listNode);
             }
 
             listNode.addEventListener("click", (event) => {

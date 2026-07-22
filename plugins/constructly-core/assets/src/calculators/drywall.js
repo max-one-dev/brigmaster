@@ -2,197 +2,144 @@ import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatter
 import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
 import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
 import { buildMixturePayload, syncPileMixtureBlocks } from "../core/mixture.js";
-import { buildPileReinforcementColumnsHtml, renderMixtureCard, renderStripReinforcementCard, syncResultGridLayout } from "../ui/result-panel.js";
+import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 
-    export function showDrywallResult(form, payload) {
-        const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
-        if (!resultNode) {
-            return;
+export function showDrywallResult(form, payload) {
+    const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
+    if (!resultNode) { return; }
+
+    const geometry  = payload?.geometry  || {};
+    const sheets    = payload?.sheets    || {};
+    const profiles  = payload?.profiles  || {};
+    const fasteners = payload?.fasteners || {};
+    const finishing = payload?.finishing || {};
+    const costs     = payload?.costs     || {};
+    const notes     = payload?.notes     || {};
+
+    // Helper: one material row
+    const row = (label, value, note) => {
+        const noteHtml = note ? `<span class="bm-calculator-result__material-note">${escapeHtml(String(note))}</span>` : '';
+        return `<div class="bm-calculator-result__material"><span class="bm-calculator-result__material-head"><span>${escapeHtml(String(label))}</span><strong>${value}</strong></span>${noteHtml}</div>`;
+    };
+
+    // Helper: rebuild full card innerHTML
+    const fillCard = (card, title, rows, extraHtml) => {
+        if (!card) { return; }
+        card.innerHTML = `<h3 class="bm-calculator-result__section-title">${escapeHtml(String(title))}</h3><div class="bm-calculator-result__list">${rows.join('')}</div>${extraHtml || ''}`;
+    };
+
+    // --- drywall-geometry (always visible) ---
+    const geometryCard = resultNode.querySelector('[data-result-card="drywall-geometry"]');
+    if (geometryCard) {
+        const rows = [row('Общая площадь', `${formatNumber(geometry.grossAreaM2)} м²`)];
+        if (Number(geometry.openingsAreaM2) > 0) {
+            rows.push(row('Проёмы', `${formatNumber(geometry.openingsAreaM2)} м²`));
         }
-
-        const geometryCard = resultNode.querySelector('[data-result-card="drywall-geometry"]');
-        const sheetsCard = resultNode.querySelector('[data-result-card="drywall-sheets"]');
-        const profilesCard = resultNode.querySelector('[data-result-card="drywall-profiles"]');
-        const fastenersCard = resultNode.querySelector('[data-result-card="drywall-fasteners"]');
-        const finishingCard = resultNode.querySelector('[data-result-card="drywall-finishing"]');
-        const costsCard = resultNode.querySelector('[data-result-card="drywall-costs"]');
-        const notesCard = resultNode.querySelector('[data-result-card="drywall-notes"]');
-
-        const geometry = payload?.geometry || {};
-        const sheets = payload?.sheets || {};
-        const profiles = payload?.profiles || {};
-        const fasteners = payload?.fasteners || {};
-        const finishing = payload?.finishing || {};
-        const costs = payload?.costs || {};
-        const notes = payload?.notes || {};
-
-        if (geometryCard) {
-            const openingsRow =
-                Number(geometry.openingsAreaM2) > 0
-                    ? `<p><strong>Проёмы:</strong> ${formatNumber(geometry.openingsAreaM2)} м²</p>`
-                    : "";
-            const partitionRow =
-                Number(geometry.partitionThicknessMm) > 0
-                    ? `<p><strong>Толщина перегородки:</strong> ${formatNumber(geometry.partitionThicknessMm)} мм</p>`
-                    : "";
-            const endCladdingRow =
-                Number(geometry.endCladdingAreaM2) > 0
-                    ? `<p><strong>Торцы проёмов:</strong> ${formatNumber(geometry.endCladdingAreaM2)} м²</p>`
-                    : "";
-            geometryCard.innerHTML = `
-        <h3>Геометрия</h3>
-        <p><strong>Общая площадь:</strong> ${formatNumber(geometry.grossAreaM2)} м²</p>
-        ${openingsRow}
-        <p><strong>Чистая площадь:</strong> ${formatNumber(geometry.netAreaM2)} м²</p>
-        <p><strong>Площадь обшивки без запаса:</strong> ${formatNumber(geometry.boardAreaExactM2)} м²</p>
-        <p><strong>Площадь обшивки с запасом:</strong> ${formatNumber(geometry.boardAreaWithReserveM2)} м²</p>
-        ${partitionRow}
-        ${endCladdingRow}
-      `;
+        rows.push(row('Чистая площадь', `${formatNumber(geometry.netAreaM2)} м²`));
+        rows.push(row('Площадь обшивки без запаса', `${formatNumber(geometry.boardAreaExactM2)} м²`));
+        rows.push(row('Площадь обшивки с запасом', `${formatNumber(geometry.boardAreaWithReserveM2)} м²`));
+        if (Number(geometry.partitionThicknessMm) > 0) {
+            rows.push(row('Толщина перегородки', `${formatNumber(geometry.partitionThicknessMm)} мм`));
         }
-
-        if (sheetsCard) {
-            sheetsCard.innerHTML = `
-        <h3>Листы ГКЛ</h3>
-        <p><strong>Формат листа:</strong> ${formatNumber(sheets.sheetLengthMm)}×${formatNumber(sheets.sheetWidthMm)} мм</p>
-        <p><strong>Толщина:</strong> ${formatNumber(sheets.sheetThicknessMm)} мм</p>
-        <p><strong>Слоёв обшивки:</strong> ${formatNumber(sheets.layers)}</p>
-        <p><strong>Листов без запаса:</strong> ${formatNumber(sheets.countExact)} шт</p>
-        <p><strong>Листов с запасом:</strong> ${formatNumber(sheets.countWithReserve)} шт</p>
-        <p><strong>К покупке:</strong> ${formatNumber(sheets.countToBuy)} шт</p>
-      `;
+        if (Number(geometry.endCladdingAreaM2) > 0) {
+            rows.push(row('Торцы проёмов', `${formatNumber(geometry.endCladdingAreaM2)} м²`));
         }
-
-        if (profilesCard) {
-            const rows = [];
-            if (profiles.enabled) {
-                [
-                    profiles.guide,
-                    profiles.main,
-                    profiles.cross,
-                ].forEach((item) => {
-                    if (!item || Number(item.lengthM) <= 0) {
-                        return;
-                    }
-                    rows.push(
-                        `<p><strong>${escapeHtml(item.label || "Профиль")}:</strong> ${formatNumber(
-                            item.lengthM
-                        )} м, к покупке ${formatNumber(item.lengthToBuyM)} м</p>`
-                    );
-                });
-                if (!rows.length) {
-                    rows.push('<p class="brigmaster-estimator__result-note">По заданной геометрии профиль не требуется.</p>');
-                }
-            } else {
-                rows.push(
-                    `<p class="brigmaster-estimator__result-note">${escapeHtml(
-                        notes.profilesAreaMode ||
-                        "Для профилей и крепежа нужен режим по размерам."
-                    )}</p>`
-                );
-            }
-            profilesCard.innerHTML = `<h3>Профили</h3>${rows.join("")}<p class="brigmaster-estimator__result-note">Сначала показан расчётный метраж, затем округление вверх для закупки.</p>`;
-        }
-
-        if (fastenersCard) {
-            const rows = [];
-            [
-                fasteners.boardScrews,
-                fasteners.connectorScrews,
-                fasteners.dowels,
-                fasteners.hangers,
-                fasteners.crabs,
-            ].forEach((item) => {
-                if (!item || Number(item.countBase) <= 0) {
-                    return;
-                }
-                rows.push(
-                    `<p><strong>${escapeHtml(item.label || "Позиция")}:</strong> по расчёту ${formatNumber(
-                        item.countBase
-                    )} шт, с запасом ${formatNumber(item.countWithReserve)} шт</p>`
-                );
-            });
-
-            if (!rows.length) {
-                rows.push(
-                    `<p class="brigmaster-estimator__result-note">${escapeHtml(
-                        notes.profilesAreaMode ||
-                        "Крепёж по каркасу считается только в режиме по размерам."
-                    )}</p>`
-                );
-            }
-
-            fastenersCard.innerHTML = `<h3>Метизы и крепёж</h3>${rows.join("")}<p class="brigmaster-estimator__result-note">Для всех штучных позиций показаны базовое количество и количество с запасом.</p>`;
-        }
-
-        if (finishingCard) {
-            if (finishing.enabled) {
-                finishingCard.hidden = false;
-                finishingCard.innerHTML = `
-          <h3>Отделка</h3>
-          <p><strong>Грунтовка:</strong> ${formatNumber(finishing.primerKg)} кг</p>
-          <p><strong>Шпатлёвка для швов:</strong> ${formatNumber(finishing.jointPuttyKg)} кг</p>
-          <p><strong>Финишная шпатлёвка:</strong> ${formatNumber(finishing.finishPuttyKg)} кг</p>
-          <p><strong>Армирующая лента:</strong> ${formatNumber(finishing.tapeLm)} м</p>
-        `;
-            } else {
-                finishingCard.hidden = true;
-            }
-        }
-
-        if (costsCard) {
-            const costRows = [];
-            if (hasMeaningfulNumber(costs.sheetCost)) {
-                costRows.push(`<p><strong>Листы ГКЛ:</strong> ${formatNumber(costs.sheetCost)} руб</p>`);
-            }
-            if (hasMeaningfulNumber(costs.profileCost)) {
-                costRows.push(`<p><strong>Профили:</strong> ${formatNumber(costs.profileCost)} руб</p>`);
-            }
-            if (hasMeaningfulNumber(costs.fastenersCost)) {
-                costRows.push(`<p><strong>Метизы:</strong> ${formatNumber(costs.fastenersCost)} руб</p>`);
-            }
-            if (hasMeaningfulNumber(costs.primerCost)) {
-                costRows.push(`<p><strong>Грунтовка:</strong> ${formatNumber(costs.primerCost)} руб</p>`);
-            }
-            if (hasMeaningfulNumber(costs.jointPuttyCost)) {
-                costRows.push(`<p><strong>Шпатлёвка для швов:</strong> ${formatNumber(costs.jointPuttyCost)} руб</p>`);
-            }
-            if (hasMeaningfulNumber(costs.finishPuttyCost)) {
-                costRows.push(`<p><strong>Финишная шпатлёвка:</strong> ${formatNumber(costs.finishPuttyCost)} руб</p>`);
-            }
-            if (hasMeaningfulNumber(costs.tapeCost)) {
-                costRows.push(`<p><strong>Лента:</strong> ${formatNumber(costs.tapeCost)} руб</p>`);
-            }
-            if (hasMeaningfulNumber(costs.total)) {
-                costRows.push(`<p><strong>Итого:</strong> ${formatNumber(costs.total)} руб</p>`);
-            }
-
-            if (costRows.length) {
-                costsCard.hidden = false;
-                costsCard.innerHTML = `<h3>Стоимость</h3>${costRows.join("")}`;
-            } else {
-                costsCard.hidden = true;
-            }
-        }
-
-        if (notesCard) {
-            const noteParts = [];
-            if (notes.method) {
-                noteParts.push(`<p>${escapeHtml(notes.method)}</p>`);
-            }
-            if (notes.profilesAreaMode) {
-                noteParts.push(`<p class="brigmaster-estimator__result-note">${escapeHtml(notes.profilesAreaMode)}</p>`);
-            }
-            notesCard.innerHTML = `<h3>Примечания</h3>${noteParts.join("")}`;
-        }
-
-        syncResultGridLayout(resultNode);
-        resultNode.hidden = false;
-        resultNode.classList.add("is-success");
-        finalizeSuccessfulResult(form);
+        const methodNote = notes.method
+            ? `<p class="bm-calculator-result__material-note">${escapeHtml(notes.method)}</p>`
+            : '';
+        fillCard(geometryCard, 'Геометрия', rows, methodNote);
     }
+
+    // --- drywall-sheets (always visible) ---
+    const sheetsCard = resultNode.querySelector('[data-result-card="drywall-sheets"]');
+    if (sheetsCard) {
+        fillCard(sheetsCard, 'Листы ГКЛ', [
+            row('Формат листа', `${formatNumber(sheets.sheetLengthMm)}×${formatNumber(sheets.sheetWidthMm)} мм`),
+            row('Толщина', `${formatNumber(sheets.sheetThicknessMm)} мм`),
+            row('Слоёв обшивки', formatNumber(sheets.layers)),
+            row('Листов без запаса', `${formatNumber(sheets.countExact)} шт`),
+            row('Листов с запасом', `${formatNumber(sheets.countWithReserve)} шт`),
+            row('К покупке', `${formatNumber(sheets.countToBuy)} шт`),
+        ]);
+    }
+
+    // --- drywall-profiles (always visible, content differs by mode) ---
+    const profilesCard = resultNode.querySelector('[data-result-card="drywall-profiles"]');
+    if (profilesCard) {
+        if (profiles.enabled) {
+            const rows = [];
+            [profiles.guide, profiles.main, profiles.cross].forEach((item) => {
+                if (!item || Number(item.lengthM) <= 0) { return; }
+                rows.push(row(item.label || 'Профиль', `${formatNumber(item.lengthToBuyM)} м <span class="bm-result-with-reserve">(с запасом)</span>`, `по расчёту ${formatNumber(item.lengthM)} м`));
+            });
+            fillCard(profilesCard, 'Профили', rows);
+        } else {
+            const noteText = notes.profilesAreaMode || 'Для профилей и крепежа нужен режим по размерам.';
+            fillCard(profilesCard, 'Профили', [],
+                `<p class="bm-calculator-result__material-note">${escapeHtml(noteText)}</p>`);
+        }
+    }
+
+    // --- drywall-fasteners (always visible, content differs by mode) ---
+    const fastenersCard = resultNode.querySelector('[data-result-card="drywall-fasteners"]');
+    if (fastenersCard) {
+        const rows = [];
+        [fasteners.boardScrews, fasteners.connectorScrews, fasteners.dowels, fasteners.hangers, fasteners.crabs].forEach((item) => {
+            if (!item || Number(item.countBase) <= 0) { return; }
+            rows.push(row(item.label || 'Позиция', `${formatNumber(item.countWithReserve)} шт <span class="bm-result-with-reserve">(с запасом)</span>`, `по расчёту ${formatNumber(item.countBase)} шт`));
+        });
+        if (rows.length) {
+            fillCard(fastenersCard, 'Метизы и крепёж', rows);
+        } else {
+            const noteText = notes.profilesAreaMode || 'Крепёж по каркасу считается только в режиме по размерам.';
+            fillCard(fastenersCard, 'Метизы и крепёж', [],
+                `<p class="bm-calculator-result__material-note">${escapeHtml(noteText)}</p>`);
+        }
+    }
+
+    // --- drywall-finishing (conditional) ---
+    const finishingCard = resultNode.querySelector('[data-result-card="drywall-finishing"]');
+    if (finishingCard) {
+        if (finishing.enabled) {
+            finishingCard.hidden = false;
+            fillCard(finishingCard, 'Отделка', [
+                row('Грунтовка', `${formatNumber(finishing.primerKg)} кг`),
+                row('Шпатлёвка для швов', `${formatNumber(finishing.jointPuttyKg)} кг`),
+                row('Финишная шпатлёвка', `${formatNumber(finishing.finishPuttyKg)} кг`),
+                row('Армирующая лента', `${formatNumber(finishing.tapeLm)} м`),
+            ]);
+        } else {
+            finishingCard.hidden = true;
+        }
+    }
+
+    // --- drywall-costs (conditional) ---
+    const costsCard = resultNode.querySelector('[data-result-card="drywall-costs"]');
+    if (costsCard) {
+        const costRows = [];
+        if (hasMeaningfulNumber(costs.sheetCost))      { costRows.push(row('Листы ГКЛ',              formatNumber(Math.round(costs.sheetCost)))); }
+        if (hasMeaningfulNumber(costs.profileCost))    { costRows.push(row('Профили',                formatNumber(Math.round(costs.profileCost)))); }
+        if (hasMeaningfulNumber(costs.fastenersCost))  { costRows.push(row('Метизы',                 formatNumber(Math.round(costs.fastenersCost)))); }
+        if (hasMeaningfulNumber(costs.primerCost))     { costRows.push(row('Грунтовка',              formatNumber(Math.round(costs.primerCost)))); }
+        if (hasMeaningfulNumber(costs.jointPuttyCost)) { costRows.push(row('Шпатлёвка для швов',     formatNumber(Math.round(costs.jointPuttyCost)))); }
+        if (hasMeaningfulNumber(costs.finishPuttyCost)){ costRows.push(row('Финишная шпатлёвка',     formatNumber(Math.round(costs.finishPuttyCost)))); }
+        if (hasMeaningfulNumber(costs.tapeCost))       { costRows.push(row('Армирующая лента',        formatNumber(Math.round(costs.tapeCost)))); }
+        if (hasMeaningfulNumber(costs.total))          { costRows.push(row('Итого',                  formatNumber(Math.round(costs.total)))); }
+
+        if (costRows.length) {
+            costsCard.hidden = false;
+            fillCard(costsCard, 'Стоимость', costRows);
+        } else {
+            costsCard.hidden = true;
+        }
+    }
+
+    resultNode.hidden = false;
+    resultNode.classList.add("is-success");
+    finalizeSuccessfulResult(form);
+}
 
 
     export function buildDrywallRepeatItems(form) {
@@ -445,6 +392,7 @@ import { initEstimateForms } from "../core/bootstrap.js";
                 }
                 const nextIndex = listNode.querySelectorAll("[data-drywall-repeat-item]").length;
                 listNode.insertAdjacentHTML("beforeend", createDrywallRepeatMarkup(nextIndex));
+                window.bmEnhanceEstimatorSelects?.(listNode);
                 clearErrors(form);
                 markResultStale(form);
                 refresh();
@@ -454,6 +402,7 @@ import { initEstimateForms } from "../core/bootstrap.js";
         form.querySelectorAll("[data-drywall-repeat-list]").forEach((listNode) => {
             if (!listNode.querySelector("[data-drywall-repeat-item]")) {
                 listNode.insertAdjacentHTML("beforeend", createDrywallRepeatMarkup(0));
+                window.bmEnhanceEstimatorSelects?.(listNode);
             }
 
             listNode.addEventListener("click", (event) => {

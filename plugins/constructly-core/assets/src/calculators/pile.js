@@ -1,172 +1,131 @@
+import '../core/bm-tooltip.js';
 import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatters.js";
 import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
 import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
-import { buildMixturePayload, syncPileMixtureBlocks } from "../core/mixture.js";
-import { buildPileReinforcementColumnsHtml, renderMixtureCard, renderStripReinforcementCard, syncResultGridLayout } from "../ui/result-panel.js";
+import { buildMixturePayload } from "../core/mixture.js";
+import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 
-    export function showPileFoundationResult(form, payload) {
-        const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
-        if (!resultNode) {
-            return;
-        }
+export function showPileFoundationResult(form, payload) {
+    const resultNode = getEstimatorShell(form)?.querySelector('[data-result]');
+    if (!resultNode) return;
 
-        const piles = payload?.piles || null;
-        const concrete = payload?.concrete || null;
-        const reinforcement = payload?.reinforcement || null;
-        const formwork = payload?.formwork || null;
-        const pileHeaderSection = resultNode.querySelector('[data-result-section="pile-header"]');
-        const pileConcreteCard = resultNode.querySelector('[data-result-card="pile-concrete"]');
-        const pileTypeNode = resultNode.querySelector("[data-result-pile-type]");
-        const pileCountNode = resultNode.querySelector("[data-result-pile-count]");
-        const pileConcreteVolumeNode = resultNode.querySelector("[data-result-pile-concrete-volume]");
-        const pileConcretePerPileNode = resultNode.querySelector("[data-result-pile-concrete-per-pile]");
-        const pilePerPileRow = resultNode.querySelector("[data-result-pile-per-pile-row]");
-        const pileNoteNode = resultNode.querySelector("[data-result-pile-note]");
-        const pileNoteRow = resultNode.querySelector("[data-result-pile-note-row]");
-        const pileReinforcementCard = resultNode.querySelector('[data-result-card="pile-reinforcement"]');
-        const pileFoundationMixtureCard = resultNode.querySelector('[data-result-card="pile-foundation-mixture"]');
-        const grillageHeaderSection = resultNode.querySelector('[data-result-section="grillage-header"]');
-        const concreteCard = resultNode.querySelector('[data-result-card="strip-concrete"]');
-        const concreteLengthNode = resultNode.querySelector("[data-result-strip-concrete-length]");
-        const concreteVolumeNode = resultNode.querySelector("[data-result-strip-concrete-volume]");
-        const reinforcementCard = resultNode.querySelector('[data-result-card="strip-reinforcement"]');
-        const formworkCard = resultNode.querySelector('[data-result-card="strip-formwork"]');
-        const grillageMixtureCard = resultNode.querySelector('[data-result-card="grillage-mixture"]');
-        const formworkAreaNode = resultNode.querySelector("[data-result-strip-formwork-area]");
-        const formworkLinearNode = resultNode.querySelector("[data-result-strip-formwork-linear]");
-        const requestPayload = form._lastRequestPayload || {};
-        const includePiles = requestPayload.includePiles === true;
-        const includeGrillage = requestPayload.includeGrillage === true;
+    const piles = payload?.piles || null;
+    const concrete = payload?.concrete || null;
+    const reinforcement = payload?.reinforcement || null;
+    const formwork = payload?.formwork || null;
+    const requestPayload = form._lastRequestPayload || {};
+    const includePiles = requestPayload.includePiles === true;
+    const includeGrillage = requestPayload.includeGrillage === true;
 
-        if (pileHeaderSection) {
-            if (includePiles && piles) {
-                pileHeaderSection.hidden = false;
-                const pileTypeRaw = String(piles.pileType || "").trim();
-                if (pileTypeNode) {
-                    const pileTypeMap = {
-                        bored: "Буронабивные",
-                        screw: "Винтовые",
-                        driven: "Забивные",
-                    };
-                    pileTypeNode.textContent = pileTypeMap[pileTypeRaw] || pileTypeRaw || "-";
-                }
-                if (pileCountNode) {
-                    pileCountNode.textContent = formatNumber(piles.count);
-                }
-                if (pileNoteNode) {
-                    const noteRaw = String(piles.note || "").trim();
-                    const noteRu =
-                        noteRaw === "Concrete for piles is not required for screw/driven pile types."
-                            ? "Для винтовых и забивных свай бетон не требуется."
-                            : noteRaw;
-                    pileNoteNode.textContent = noteRu || "-";
-                }
-                if (pileNoteRow) {
-                    const noteRaw = String(piles.note || "").trim();
-                    const showNote = (pileTypeRaw === "screw" || pileTypeRaw === "driven") && !!noteRaw;
-                    pileNoteRow.hidden = !showNote;
-                }
-            } else {
-                pileHeaderSection.hidden = true;
+    const row = (label, value, note) => {
+        const noteHtml = note ? `<span class="bm-calculator-result__material-note">${escapeHtml(String(note))}</span>` : '';
+        return `<div class="bm-calculator-result__material"><span class="bm-calculator-result__material-head"><span>${escapeHtml(String(label))}</span><strong>${value}</strong></span>${noteHtml}</div>`;
+    };
+    const fillCard = (card, title, rows, extraHtml) => {
+        if (!card) return;
+        card.innerHTML = `<h3 class="bm-calculator-result__section-title">${escapeHtml(String(title))}</h3><div class="bm-calculator-result__list">${rows.join('')}</div>${extraHtml || ''}`;
+    };
+    const hideCard = (card) => {
+        if (!card) return;
+        card.hidden = true;
+        card.innerHTML = '';
+    };
+
+    // --- Сваи ---
+    const pileInfoCard = resultNode.querySelector('[data-result-card="pile-info"]');
+    const pileConcreteCard = resultNode.querySelector('[data-result-card="pile-concrete"]');
+    const pileReinforcementCard = resultNode.querySelector('[data-result-card="pile-reinforcement"]');
+    const pileMixtureCard = resultNode.querySelector('[data-result-card="pile-mixture"]');
+
+    if (includePiles && piles) {
+        const pileTypeRaw = String(piles.pileType || '').trim();
+        const pileTypeMap = { bored: 'Буронабивные', screw: 'Винтовые', driven: 'Забивные' };
+        const pileTypeName = pileTypeMap[pileTypeRaw] || pileTypeRaw || '-';
+
+        if (pileInfoCard) {
+            pileInfoCard.hidden = false;
+            const infoRows = [
+                row('Тип свай', pileTypeName),
+                row('Количество', `${formatNumber(piles.count)} шт`),
+            ];
+            let pileInfoNote = '';
+            if ((pileTypeRaw === 'screw' || pileTypeRaw === 'driven') && piles.note) {
+                const noteRu = piles.note === 'Concrete for piles is not required for screw/driven pile types.'
+                    ? 'Для винтовых и забивных свай бетон не требуется.'
+                    : String(piles.note);
+                pileInfoNote = `<p class="bm-calculator-result__material-note">${escapeHtml(noteRu)}</p>`;
             }
+            fillCard(pileInfoCard, 'Сваи', infoRows, pileInfoNote);
         }
 
+        const concreteVolume = Number(piles.concreteVolumeM3);
         if (pileConcreteCard) {
-            if (includePiles && piles) {
-                const concreteVolume = Number(piles.concreteVolumeM3);
-                if (Number.isFinite(concreteVolume) && concreteVolume > 0) {
-                    pileConcreteCard.hidden = false;
-                    if (pileConcreteVolumeNode) {
-                        pileConcreteVolumeNode.textContent = formatNumber(piles.concreteVolumeM3);
-                    }
-                    const perPile = piles.concreteVolumePerPileM3;
-                    const perPileNum = Number(perPile);
-                    if (pilePerPileRow && pileConcretePerPileNode) {
-                        if (perPile != null && Number.isFinite(perPileNum)) {
-                            pilePerPileRow.hidden = false;
-                            pileConcretePerPileNode.textContent = formatNumber(perPile);
-                        } else {
-                            pilePerPileRow.hidden = true;
-                        }
-                    }
-                } else {
-                    pileConcreteCard.hidden = true;
+            if (Number.isFinite(concreteVolume) && concreteVolume > 0) {
+                pileConcreteCard.hidden = false;
+                const concreteRows = [row('Объём бетона', `${formatNumber(piles.concreteVolumeM3)} м³`)];
+                const perPile = piles.concreteVolumePerPileM3;
+                if (perPile != null && Number.isFinite(Number(perPile))) {
+                    concreteRows.push(row('На 1 сваю', `${formatNumber(perPile)} м³`));
                 }
+                fillCard(pileConcreteCard, 'Бетон свай', concreteRows);
             } else {
-                pileConcreteCard.hidden = true;
+                hideCard(pileConcreteCard);
             }
         }
 
-        if (pileReinforcementCard) {
-            const pileReinforcement = includePiles && piles?.reinforcement ? piles.reinforcement : null;
-            const columnsHtml = buildPileReinforcementColumnsHtml(pileReinforcement);
-            if (columnsHtml) {
-                pileReinforcementCard.hidden = false;
-                pileReinforcementCard.innerHTML = `<h4>Арматура свай</h4>${columnsHtml}`;
-            } else {
-                pileReinforcementCard.hidden = true;
-                pileReinforcementCard.innerHTML = "";
-            }
-        }
-
-        const hasGrillageBlock = !!(concrete || reinforcement || formwork);
-        if (grillageHeaderSection) {
-            grillageHeaderSection.hidden = !(includeGrillage && hasGrillageBlock);
-        }
-
-        if (concreteCard) {
-            if (includeGrillage && concrete) {
-                concreteCard.hidden = false;
-                if (concreteLengthNode) {
-                    concreteLengthNode.textContent = formatNumber(concrete.totalLengthM);
-                }
-                if (concreteVolumeNode) {
-                    concreteVolumeNode.textContent = formatNumber(concrete.volumeM3);
-                }
-            } else {
-                concreteCard.hidden = true;
-            }
-        }
-
-        if (includeGrillage) {
-            renderStripReinforcementCard(reinforcementCard, reinforcement, "Арматура ростверка");
-        } else if (reinforcementCard) {
-            reinforcementCard.hidden = true;
-            reinforcementCard.innerHTML = "";
-        }
-
-        if (formworkCard) {
-            if (includeGrillage && formwork) {
-                formworkCard.hidden = false;
-                if (formworkAreaNode) {
-                    formworkAreaNode.textContent = formatNumber(formwork.totalFormworkAreaWithReserveM2);
-                }
-                if (formworkLinearNode) {
-                    formworkLinearNode.textContent = formatNumber(formwork.totalFormworkLinearM);
-                }
-            } else {
-                formworkCard.hidden = true;
-            }
-        }
-
-        renderMixtureCard(
-            pileFoundationMixtureCard,
-            payload?.mixture || payload?.piles?.mixture,
-            payload?.mixture ? "Смесь и материалы" : "Смесь для свай"
-        );
-        renderMixtureCard(
-            grillageMixtureCard,
-            payload?.grillageMixture,
-            "Смесь для ростверка"
-        );
-
-        syncResultGridLayout(resultNode);
-        resultNode.hidden = false;
-        resultNode.classList.add("is-success");
-        finalizeSuccessfulResult(form);
+        renderStripReinforcementCard(pileReinforcementCard, piles.reinforcement, 'Арматура свай');
+        renderMixtureCard(pileMixtureCard, piles.mixture, 'Смесь для свай');
+    } else {
+        hideCard(pileInfoCard);
+        hideCard(pileConcreteCard);
+        hideCard(pileReinforcementCard);
+        hideCard(pileMixtureCard);
     }
+
+    // --- Ростверк ---
+    const grillageConcreteCard = resultNode.querySelector('[data-result-card="grillage-concrete"]');
+    const grillageReinforcementCard = resultNode.querySelector('[data-result-card="grillage-reinforcement"]');
+    const grillageFormworkCard = resultNode.querySelector('[data-result-card="grillage-formwork"]');
+    const grillageMixtureCard = resultNode.querySelector('[data-result-card="grillage-mixture"]');
+
+    if (includeGrillage && concrete) {
+        if (grillageConcreteCard) {
+            grillageConcreteCard.hidden = false;
+            fillCard(grillageConcreteCard, 'Бетон ростверка', [
+                row('Общая длина', `${formatNumber(concrete.totalLengthM)} м`),
+                row('Объём бетона', `${formatNumber(concrete.volumeM3)} м³`),
+            ]);
+        }
+        renderStripReinforcementCard(grillageReinforcementCard, reinforcement, 'Арматура ростверка');
+        if (grillageFormworkCard) {
+            if (formwork) {
+                grillageFormworkCard.hidden = false;
+                fillCard(grillageFormworkCard, 'Опалубка ростверка', [
+                    row('Площадь щитов', `${formatNumber(formwork.totalFormworkAreaWithReserveM2)} м²`),
+                    row('Погонные метры', `${formatNumber(formwork.totalFormworkLinearM)} м`),
+                ]);
+            } else {
+                hideCard(grillageFormworkCard);
+            }
+        }
+        renderMixtureCard(grillageMixtureCard, payload?.grillageMixture, 'Смесь для ростверка');
+    } else {
+        hideCard(grillageConcreteCard);
+        hideCard(grillageReinforcementCard);
+        hideCard(grillageFormworkCard);
+        hideCard(grillageMixtureCard);
+    }
+
+    // Единая смесь (когда useUnifiedConcreteMixtureSettings=true)
+    const unifiedMixtureCard = resultNode.querySelector('[data-result-card="unified-mixture"]');
+    renderMixtureCard(unifiedMixtureCard, payload?.mixture, 'Смесь и материалы');
+
+    resultNode.hidden = false;
+    resultNode.classList.add('is-success');
+    finalizeSuccessfulResult(form);
+}
 
 
     export function buildStripSegmentPayload(segmentNode, includeReinforcement, includeFormwork) {
@@ -241,7 +200,7 @@ import { initEstimateForms } from "../core/bootstrap.js";
         <div class="brigmaster-estimator__segment-section" data-segment-rebar-root>
           <div class="brigmaster-estimator__segment-toggles">
             <div class="brigmaster-estimator__field brigmaster-estimator__toggle">
-              <input id="segment-${index}-include-rebar" type="checkbox" checked data-segment-include-reinforcement data-checkbox-key="segment-include-rebar">
+              <input id="segment-${index}-include-rebar" type="checkbox" data-segment-include-reinforcement data-checkbox-key="segment-include-rebar">
               <label for="segment-${index}-include-rebar" class="brigmaster-estimator__label-row" data-label-for-checkbox="segment-include-rebar"><span>Учитывать арматуру для этого участка</span></label>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentIncludeReinforcement" data-field-error="segments.${index}.segmentIncludeReinforcement" aria-live="polite"></div>
             </div>
@@ -321,7 +280,7 @@ import { initEstimateForms } from "../core/bootstrap.js";
         <div class="brigmaster-estimator__segment-section" data-segment-formwork-root>
           <div class="brigmaster-estimator__segment-toggles">
             <div class="brigmaster-estimator__field brigmaster-estimator__toggle">
-              <input id="segment-${index}-include-formwork" type="checkbox" checked data-segment-include-formwork data-checkbox-key="segment-include-formwork">
+              <input id="segment-${index}-include-formwork" type="checkbox" data-segment-include-formwork data-checkbox-key="segment-include-formwork">
               <label for="segment-${index}-include-formwork" class="brigmaster-estimator__label-row" data-label-for-checkbox="segment-include-formwork"><span>Учитывать опалубку для этого участка</span></label>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentIncludeFormwork" data-field-error="segments.${index}.segmentIncludeFormwork" aria-live="polite"></div>
             </div>
@@ -527,6 +486,8 @@ import { initEstimateForms } from "../core/bootstrap.js";
         const pileReinforcementFieldsGroup = form.querySelector('[data-field-group="pile-reinforcement-fields"]');
         const reinforcementToggleRow = form.querySelector('[data-toggle-field="strip-reinforcement"]');
         const formworkToggleRow = form.querySelector('[data-toggle-field="strip-formwork"]');
+        const reinforcementAccordion = form.querySelector('[data-toggle-target="strip-reinforcement"]');
+        const formworkAccordion = form.querySelector('[data-toggle-target="strip-formwork"]');
         const modeField = form.querySelector('[data-field-group="estimator-mode"]');
 
         if (calculator === "pile_foundation") {
@@ -553,6 +514,12 @@ import { initEstimateForms } from "../core/bootstrap.js";
             );
             toggleVisibility(reinforcementToggleRow, includeGrillage);
             toggleVisibility(formworkToggleRow, includeGrillage);
+            if (reinforcementAccordion instanceof HTMLDetailsElement) {
+                reinforcementAccordion.hidden = !includeReinforcement;
+            }
+            if (formworkAccordion instanceof HTMLDetailsElement) {
+                formworkAccordion.hidden = !includeFormwork;
+            }
 
             const pilesPanel = form.querySelector('[data-pile-panel="piles"]');
             const grillagePanels = form.querySelectorAll('[data-pile-panel="grillage"]');

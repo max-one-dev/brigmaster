@@ -30,13 +30,15 @@ import { validatePositiveField, validatePositiveValue, validateSelectedValue } f
                 formData,
                 nameOf("readyConcretePricePerM3")
             );
-            isValid =
-                validatePositiveValue(
-                    form,
-                    `${errorPrefix}.readyConcretePricePerM3`,
-                    mixture.readyConcretePricePerM3,
-                    "Цена раствора за м³ должна быть больше 0."
-                ) && isValid;
+            if (mixture.readyConcretePricePerM3 !== "") {
+                isValid =
+                    validatePositiveValue(
+                        form,
+                        `${errorPrefix}.readyConcretePricePerM3`,
+                        mixture.readyConcretePricePerM3,
+                        "Цена раствора за м³ должна быть больше 0."
+                    ) && isValid;
+            }
             return { mixture, isValid };
         }
 
@@ -50,13 +52,15 @@ import { validatePositiveField, validatePositiveValue, validateSelectedValue } f
                     mixture.dryMixBagWeightKg,
                     "Вес мешка должен быть больше 0."
                 ) && isValid;
-            isValid =
-                validatePositiveValue(
-                    form,
-                    `${errorPrefix}.dryMixBagPrice`,
-                    mixture.dryMixBagPrice,
-                    "Цена мешка должна быть больше 0."
-                ) && isValid;
+            if (mixture.dryMixBagPrice !== "") {
+                isValid =
+                    validatePositiveValue(
+                        form,
+                        `${errorPrefix}.dryMixBagPrice`,
+                        mixture.dryMixBagPrice,
+                        "Цена мешка должна быть больше 0."
+                    ) && isValid;
+            }
             return { mixture, isValid };
         }
 
@@ -97,13 +101,15 @@ import { validatePositiveField, validatePositiveValue, validateSelectedValue } f
                 mixture.cementUnitWeightKg,
                 "Вес единицы цемента должен быть больше 0."
             ) && isValid;
-        isValid =
-            validatePositiveValue(
-                form,
-                `${errorPrefix}.cementUnitPrice`,
-                mixture.cementUnitPrice,
-                "Цена цемента должна быть больше 0."
-            ) && isValid;
+        if (mixture.cementUnitPrice !== "") {
+            isValid =
+                validatePositiveValue(
+                    form,
+                    `${errorPrefix}.cementUnitPrice`,
+                    mixture.cementUnitPrice,
+                    "Цена цемента должна быть больше 0."
+                ) && isValid;
+        }
         isValid =
             validatePositiveValue(
                 form,
@@ -126,13 +132,15 @@ import { validatePositiveField, validatePositiveValue, validateSelectedValue } f
                 mixture.sandUnitWeightKg,
                 "Вес единицы песка должен быть больше 0."
             ) && isValid;
-        isValid =
-            validatePositiveValue(
-                form,
-                `${errorPrefix}.sandUnitPrice`,
-                mixture.sandUnitPrice,
-                "Цена песка должна быть больше 0."
-            ) && isValid;
+        if (mixture.sandUnitPrice !== "") {
+            isValid =
+                validatePositiveValue(
+                    form,
+                    `${errorPrefix}.sandUnitPrice`,
+                    mixture.sandUnitPrice,
+                    "Цена песка должна быть больше 0."
+                ) && isValid;
+        }
 
         if (includeGravel) {
             mixture.gravelShare = readTrimmed(formData, nameOf("gravelShare"));
@@ -168,13 +176,15 @@ import { validatePositiveField, validatePositiveValue, validateSelectedValue } f
                     mixture.gravelUnitWeightKg,
                     "Вес единицы щебня должен быть больше 0."
                 ) && isValid;
-            isValid =
-                validatePositiveValue(
-                    form,
-                    `${errorPrefix}.gravelUnitPrice`,
-                    mixture.gravelUnitPrice,
-                    "Цена щебня должна быть больше 0."
-                ) && isValid;
+            if (mixture.gravelUnitPrice !== "") {
+                isValid =
+                    validatePositiveValue(
+                        form,
+                        `${errorPrefix}.gravelUnitPrice`,
+                        mixture.gravelUnitPrice,
+                        "Цена щебня должна быть больше 0."
+                    ) && isValid;
+            }
         }
 
         return { mixture, isValid };
@@ -267,9 +277,23 @@ import { validatePositiveField, validatePositiveValue, validateSelectedValue } f
             return;
         }
 
-        const useUnified =
-            form.querySelector('[name="useUnifiedConcreteMixtureSettings"]')?.checked !==
-            false;
+        const unifiedToggle = form.querySelector('[name="useUnifiedConcreteMixtureSettings"]');
+        const includePiles = !!form.querySelector('[name="includePiles"]')?.checked;
+        const includeGrillage = !!form.querySelector('[name="includeGrillage"]')?.checked;
+        const bothSelected = includePiles && includeGrillage;
+
+        if (unifiedToggle) {
+            unifiedToggle.disabled = !bothSelected;
+            if (!bothSelected) {
+                unifiedToggle.checked = true;
+            }
+            const toggleRow = unifiedToggle.closest(".brigmaster-estimator__toggle");
+            if (toggleRow) {
+                toggleRow.classList.toggle("is-disabled", !bothSelected);
+            }
+        }
+
+        const useUnified = unifiedToggle ? unifiedToggle.checked : true;
         const sharedBlock = form.querySelector('[data-pile-mixture-block="shared"]');
         const pileBlock = form.querySelector('[data-pile-mixture-block="pile"]');
         const grillageBlock = form.querySelector(
@@ -318,6 +342,14 @@ import { validatePositiveField, validatePositiveValue, validateSelectedValue } f
                 clearErrors(form);
                 markResultStale(form);
                 syncPileMixtureBlocks(form);
+            });
+            ["includePiles", "includeGrillage"].forEach((name) => {
+                const calcToggle = form.querySelector(`[name="${name}"]`);
+                if (calcToggle) {
+                    calcToggle.addEventListener("change", () => {
+                        syncPileMixtureBlocks(form);
+                    });
+                }
             });
         }
     }

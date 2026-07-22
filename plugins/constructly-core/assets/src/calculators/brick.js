@@ -2,7 +2,7 @@ import { escapeHtml, formatNumber, hasMeaningfulNumber, normalizePurchaseWeight 
 import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
 import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
 import { buildMixturePayload, syncMixtureUnitFields, syncPileMixtureBlocks } from "../core/mixture.js";
-import { buildPileReinforcementColumnsHtml, renderMixtureCard, renderStripReinforcementCard, syncResultGridLayout } from "../ui/result-panel.js";
+import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 
@@ -12,13 +12,6 @@ import { initEstimateForms } from "../core/bootstrap.js";
             return;
         }
 
-        const summaryCard = resultNode.querySelector('[data-result-card="brick-summary"]');
-        const geometryCard = resultNode.querySelector('[data-result-card="brick-geometry"]');
-        const mortarCard = resultNode.querySelector('[data-result-card="brick-mortar"]');
-        const meshCard = resultNode.querySelector('[data-result-card="brick-mesh"]');
-        const lintelsCard = resultNode.querySelector('[data-result-card="brick-lintels"]');
-        const costsCard = resultNode.querySelector('[data-result-card="brick-costs"]');
-
         const summary = payload?.summary || {};
         const brick = payload?.brick || {};
         const mortar = payload?.mortar || {};
@@ -26,116 +19,139 @@ import { initEstimateForms } from "../core/bootstrap.js";
         const lintels = payload?.lintels || {};
         const costs = payload?.costs || {};
 
+        // Helper: build one material row HTML
+        const row = (label, value, note) => {
+            const noteHtml = note ? `<span class="bm-calculator-result__material-note">${escapeHtml(String(note))}</span>` : '';
+            return `<div class="bm-calculator-result__material"><span class="bm-calculator-result__material-head"><span>${escapeHtml(String(label))}</span><strong>${value}</strong></span>${noteHtml}</div>`;
+        };
+
+        // Helper: row with info tooltip icon next to label
+        const infoRow = (label, tooltipText, value, note) => {
+            const noteHtml = note ? `<span class="bm-calculator-result__material-note">${escapeHtml(String(note))}</span>` : '';
+            const labelHtml = `<span class="bm-result-info">${escapeHtml(String(label))}<button type="button" class="bm-result-info__trigger" aria-label="Пояснение">?</button><span class="bm-result-info__popup">${escapeHtml(String(tooltipText))}</span></span>`;
+            return `<div class="bm-calculator-result__material"><span class="bm-calculator-result__material-head">${labelHtml}<strong>${value}</strong></span>${noteHtml}</div>`;
+        };
+
+        // Helper: regenerate full card structure (h3 + list) — robust against clearResult wiping innerHTML
+        const fillCard = (card, title, rows, extraHtml) => {
+            if (!card) { return; }
+            card.innerHTML = `<h3 class="bm-calculator-result__section-title">${escapeHtml(String(title))}</h3><div class="bm-calculator-result__list">${rows.join('')}</div>${extraHtml || ''}`;
+        };
+
+        // Build purchase note for mortar components
+        const buildPurchaseNote = (component) => {
+            const unit = String(component?.purchaseUnit || '');
+            const weight = formatNumber(component?.displayUnitWeight);
+            if (unit === 'bag') {
+                return `${formatNumber(component?.requiredUnits)} меш., к покупке ${formatNumber(component?.roundedUnits)} меш. по ${weight} кг`;
+            }
+            return `${formatNumber(component?.requiredUnits)} т, к покупке ${formatNumber(component?.roundedUnits)} т`;
+        };
+
+        // --- brick-summary (always visible) ---
+        const summaryCard = resultNode.querySelector('[data-result-card="brick-summary"]');
         if (summaryCard) {
-            const weightLine = Number.isFinite(Number(brick.weightPerUnitKg))
-                ? `<p><strong>Масса 1 кирпича:</strong> ${formatNumber(brick.weightPerUnitKg)} кг</p>`
-                : "";
-            summaryCard.innerHTML = `
-        <h3>Кирпич</h3>
-        <p><strong>Количество без запаса:</strong> ${formatNumber(brick.countExact)} шт</p>
-        <p><strong>Количество с запасом:</strong> ${formatNumber(brick.countWithReserve)} шт</p>
-        <p><strong>К покупке рекомендовано:</strong> ${formatNumber(brick.countToBuy)} шт</p>
-        ${weightLine}
-        <p><strong>Общий вес:</strong> ${formatNumber(brick.massWithReserveKg)} кг</p>
-      `;
+            const rows = [
+                row('Количество без запаса', `${formatNumber(brick.countExact)} шт`),
+                row('Количество с запасом', `${formatNumber(brick.countWithReserve)} шт`),
+                row('К покупке рекомендовано', `${formatNumber(brick.countToBuy)} шт`),
+            ];
+            if (Number.isFinite(Number(brick.weightPerUnitKg))) {
+                rows.push(row('Масса 1 кирпича', `${formatNumber(brick.weightPerUnitKg)} кг`));
+            }
+            rows.push(row('Общий вес', `${formatNumber(brick.massWithReserveKg)} кг`));
+            fillCard(summaryCard, 'Кирпич', rows);
         }
 
+        // --- brick-geometry (always visible) ---
+        const geometryCard = resultNode.querySelector('[data-result-card="brick-geometry"]');
         if (geometryCard) {
-            geometryCard.innerHTML = `
-        <h3>Геометрия кладки</h3>
-        <p><strong>Чистая площадь:</strong> ${formatNumber(summary.netAreaM2)} м²</p>
-        <p><strong>Объём стены:</strong> ${formatNumber(summary.wallVolumeM3)} м³</p>
-        <p><strong>Толщина:</strong> ${escapeHtml(summary.wallThicknessLabel || "-")} (${formatNumber(summary.wallThicknessMm)} мм)</p>
-        <p><strong>Рядов кладки:</strong> ${formatNumber(summary.rowsCount)}</p>
-        <p><strong>Ориентировочная нагрузка:</strong> ${formatNumber(summary.estimatedFoundationLoadTonnes)} т</p>
-      `;
+            fillCard(geometryCard, 'Геометрия кладки', [
+                row('Чистая площадь', `${formatNumber(summary.netAreaM2)} м²`),
+                row('Объём стены', `${formatNumber(summary.wallVolumeM3)} м³`),
+                row('Толщина', `${escapeHtml(summary.wallThicknessLabel || '-')} (${formatNumber(summary.wallThicknessMm)} мм)`),
+                row('Рядов кладки', formatNumber(summary.rowsCount)),
+                infoRow('Ориентировочная нагрузка', 'Суммарный вес: кирпич с запасом + раствор', `${formatNumber(summary.estimatedFoundationLoadTonnes)} т`),
+            ]);
         }
 
+        // --- brick-mortar (always visible) ---
+        const mortarCard = resultNode.querySelector('[data-result-card="brick-mortar"]');
         if (mortarCard) {
-            const buildPurchaseText = (component) => {
-                const unit = String(component?.purchaseUnit || "");
-                const displayUnitWeight = formatNumber(component?.displayUnitWeight);
-                if (unit === "bag") {
-                    return `${formatNumber(component?.requiredUnits)} меш., к покупке ${formatNumber(component?.roundedUnits)} меш. по ${displayUnitWeight} кг`;
-                }
-
-                return `${formatNumber(component?.requiredUnits)} т, к покупке ${formatNumber(component?.roundedUnits)} т`;
-            };
-
-            mortarCard.innerHTML = `
-        <h3>Раствор</h3>
-        <p><strong>Объём раствора:</strong> ${formatNumber(mortar.volumeM3)} м³</p>
-        <p><strong>Пропорция:</strong> ${escapeHtml(mortar?.ratio?.display || "-")}</p>
-        <p><strong>Цемент:</strong> ${formatNumber(mortar?.cement?.weightKg)} кг, ${buildPurchaseText(mortar?.cement)}</p>
-        <p><strong>Песок:</strong> ${formatNumber(mortar?.sand?.weightKg)} кг, ${buildPurchaseText(mortar?.sand)}</p>
-        <p><strong>Вода:</strong> ${formatNumber(mortar.waterLiters)} л</p>
-      `;
+            fillCard(mortarCard, 'Раствор', [
+                row('Объём раствора', `${formatNumber(mortar.volumeM3)} м³`),
+                row('Пропорция', escapeHtml(mortar?.ratio?.display || '-')),
+                row('Цемент', `${formatNumber(mortar?.cement?.weightKg)} кг`, buildPurchaseNote(mortar?.cement)),
+                row('Песок', `${formatNumber(mortar?.sand?.weightKg)} кг`, buildPurchaseNote(mortar?.sand)),
+                row('Вода', `${formatNumber(mortar.waterLiters)} л`),
+            ]);
         }
 
+        // --- brick-mesh (conditional) ---
+        const meshCard = resultNode.querySelector('[data-result-card="brick-mesh"]');
         if (meshCard) {
             const hasMesh = mesh && Number.isFinite(Number(mesh.meshLengthM)) && Number(mesh.meshLengthM) > 0;
             if (hasMesh) {
                 meshCard.hidden = false;
-                meshCard.innerHTML = `
-          <h3>Кладочная сетка</h3>
-          <p><strong>Частота:</strong> каждый ${formatNumber(mesh.frequencyRows)} ряд</p>
-          <p><strong>Армированных рядов:</strong> ${formatNumber(mesh.reinforcedRows)}</p>
-          <p><strong>Ориентир по длине:</strong> ${formatNumber(mesh.meshLengthM)} м</p>
-          <p><strong>Площадь сетки:</strong> ${formatNumber(mesh.meshAreaM2)} м²</p>
-        `;
+                fillCard(meshCard, 'Кладочная сетка', [
+                    row('Частота', `каждый ${formatNumber(mesh.frequencyRows)} ряд`),
+                    row('Армированных рядов', formatNumber(mesh.reinforcedRows)),
+                    row('Ориентир по длине', `${formatNumber(mesh.meshLengthM)} м`),
+                    row('Площадь сетки', `${formatNumber(mesh.meshAreaM2)} м²`),
+                ]);
             } else {
                 meshCard.hidden = true;
             }
         }
 
+        // --- brick-lintels (conditional) ---
+        const lintelsCard = resultNode.querySelector('[data-result-card="brick-lintels"]');
         if (lintelsCard) {
             const lintelItems = Array.isArray(lintels?.items) ? lintels.items : [];
             if (lintelItems.length > 0) {
                 lintelsCard.hidden = false;
-                const list = lintelItems
-                    .map(
-                        (item) =>
-                            `<li>${escapeHtml(item.label || "Проём")}: ${formatNumber(item.count)} шт по мин. длине ${formatNumber(item.recommendedLengthM)} м</li>`
-                    )
-                    .join("");
-                lintelsCard.innerHTML = `
-          <h3>Перемычки</h3>
-          <p><strong>Всего проёмов:</strong> ${formatNumber(lintels.totalCount)} шт</p>
-          <ul class="brigmaster-estimator__result-list">${list}</ul>
-          <p class="brigmaster-estimator__result-note">${escapeHtml(lintels.note || "")}</p>
-        `;
+                const supportM = lintels.recommendedSupportLengthM ?? 0.25;
+                const rows = lintelItems.map((item) => {
+                    const widthNote = Number.isFinite(Number(item.widthM))
+                        ? `Проём ${formatNumber(item.widthM)} м + ${formatNumber(supportM * 2)} м опирание`
+                        : `Мин. длина: ${formatNumber(item.recommendedLengthM)} м`;
+                    return row(
+                        `${escapeHtml(item.label || 'Проём')} × ${formatNumber(item.count)} шт`,
+                        `≥ ${formatNumber(item.recommendedLengthM)} м`,
+                        widthNote
+                    );
+                });
+                const noteText = 'Купить по 1 перемычке на каждый проём. Длина = ширина проёма + 0.25 м опирание с каждой стороны. Тип и схему армирования — по проекту.';
+                fillCard(lintelsCard, `Перемычки (${formatNumber(lintels.totalCount)} шт)`, rows, `<p class="bm-calculator-result__material-note">${escapeHtml(noteText)}</p>`);
             } else {
                 lintelsCard.hidden = true;
             }
         }
 
+        // --- brick-costs (conditional) ---
+        const costsCard = resultNode.querySelector('[data-result-card="brick-costs"]');
         if (costsCard) {
-            const hasCosts = [
-                costs?.brickExact,
-                costs?.cementExact,
-                costs?.sandExact,
-                costs?.totalExact,
-            ].some((value) => Number.isFinite(Number(value)));
+            const hasCosts = [costs?.brickExact, costs?.cementExact, costs?.sandExact, costs?.totalExact]
+                .some((v) => hasMeaningfulNumber(v));
             if (hasCosts) {
                 costsCard.hidden = false;
                 const rows = [];
-                if (Number.isFinite(Number(costs.brickExact))) {
-                    rows.push(`<p><strong>Кирпич:</strong> ${formatNumber(costs.brickExact)} / ${formatNumber(costs.brickRounded)}</p>`);
+                if (hasMeaningfulNumber(costs.brickExact)) {
+                    rows.push(row('Кирпич', `${formatNumber(costs.brickExact)} / ${formatNumber(costs.brickRounded)}`));
                 }
-                if (Number.isFinite(Number(costs.cementExact))) {
-                    rows.push(`<p><strong>Цемент:</strong> ${formatNumber(costs.cementExact)} / ${formatNumber(costs.cementRounded)}</p>`);
+                if (hasMeaningfulNumber(costs.cementExact)) {
+                    rows.push(row('Цемент', `${formatNumber(costs.cementExact)} / ${formatNumber(costs.cementRounded)}`));
                 }
-                if (Number.isFinite(Number(costs.sandExact))) {
-                    rows.push(`<p><strong>Песок:</strong> ${formatNumber(costs.sandExact)} / ${formatNumber(costs.sandRounded)}</p>`);
+                if (hasMeaningfulNumber(costs.sandExact)) {
+                    rows.push(row('Песок', `${formatNumber(costs.sandExact)} / ${formatNumber(costs.sandRounded)}`));
                 }
-                rows.push(`<p><strong>Итого:</strong> ${formatNumber(costs.totalExact)} / ${formatNumber(costs.totalRounded)}</p>`);
-                costsCard.innerHTML = `<h3>Стоимость</h3>${rows.join("")}<p class="brigmaster-estimator__result-note">Сначала показана точная оценка, затем ориентир по закупке.</p>`;
+                rows.push(row('Итого', `${formatNumber(costs.totalExact)} / ${formatNumber(costs.totalRounded)}`));
+                fillCard(costsCard, 'Стоимость', rows, '<p class="bm-calculator-result__material-note">Сначала показана точная оценка, затем ориентир по закупке.</p>');
             } else {
                 costsCard.hidden = true;
             }
         }
 
-        syncResultGridLayout(resultNode);
         resultNode.hidden = false;
         resultNode.classList.add("is-success");
         finalizeSuccessfulResult(form);
@@ -277,9 +293,9 @@ import { initEstimateForms } from "../core/bootstrap.js";
         const includeMesh = form.querySelector('[name="includeMasonryMesh"]')?.checked === true;
         const dimensionsGroup = form.querySelector('[data-field-group="brick-geometry-dimensions"]');
         const areaGroup = form.querySelector('[data-field-group="brick-geometry-area"]');
-        const openingsRoot = form.querySelector("[data-brick-openings-root]");
-        const gablesRoot = form.querySelector("[data-brick-gables-root]");
-        const meshFrequencyField = form.querySelector('[name="masonryMeshFrequencyRows"]')?.closest(".brigmaster-estimator__field");
+        const openingsRoot = form.querySelector('[data-toggle-target="brick-openings"]');
+        const gablesRoot = form.querySelector('[data-toggle-target="brick-gables"]');
+        const meshFrequencyField = form.querySelector('[data-field-group="brick-mesh"]');
 
         toggleVisibility(dimensionsGroup, mode === "dimensions");
         toggleVisibility(areaGroup, mode === "area");

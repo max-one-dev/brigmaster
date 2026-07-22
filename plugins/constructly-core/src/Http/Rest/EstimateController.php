@@ -1824,11 +1824,10 @@ final class EstimateController
         }
 
         if ($type === 'ready') {
-            $this->validatePositiveNumericField(
+            $this->validateOptionalPositiveNumericField(
                 $errors,
                 $fieldPrefix . '.readyConcretePricePerM3',
-                $mixture['readyConcretePricePerM3'] ?? null,
-                sprintf('The %s.readyConcretePricePerM3 field is required and must be numeric.', $fieldPrefix)
+                $mixture['readyConcretePricePerM3'] ?? null
             );
             return;
         }
@@ -1840,11 +1839,10 @@ final class EstimateController
                 $mixture['dryMixBagWeightKg'] ?? null,
                 sprintf('The %s.dryMixBagWeightKg field is required and must be numeric.', $fieldPrefix)
             );
-            $this->validatePositiveNumericField(
+            $this->validateOptionalPositiveNumericField(
                 $errors,
                 $fieldPrefix . '.dryMixBagPrice',
-                $mixture['dryMixBagPrice'] ?? null,
-                sprintf('The %s.dryMixBagPrice field is required and must be numeric.', $fieldPrefix)
+                $mixture['dryMixBagPrice'] ?? null
             );
             return;
         }
@@ -1869,11 +1867,10 @@ final class EstimateController
             $mixture['cementUnitWeightKg'] ?? null,
             sprintf('The %s.cementUnitWeightKg field is required and must be numeric.', $fieldPrefix)
         );
-        $this->validatePositiveNumericField(
+        $this->validateOptionalPositiveNumericField(
             $errors,
             $fieldPrefix . '.cementUnitPrice',
-            $mixture['cementUnitPrice'] ?? null,
-            sprintf('The %s.cementUnitPrice field is required and must be numeric.', $fieldPrefix)
+            $mixture['cementUnitPrice'] ?? null
         );
         $this->validatePositiveNumericField(
             $errors,
@@ -1881,11 +1878,10 @@ final class EstimateController
             $mixture['sandUnitWeightKg'] ?? null,
             sprintf('The %s.sandUnitWeightKg field is required and must be numeric.', $fieldPrefix)
         );
-        $this->validatePositiveNumericField(
+        $this->validateOptionalPositiveNumericField(
             $errors,
             $fieldPrefix . '.sandUnitPrice',
-            $mixture['sandUnitPrice'] ?? null,
-            sprintf('The %s.sandUnitPrice field is required and must be numeric.', $fieldPrefix)
+            $mixture['sandUnitPrice'] ?? null
         );
 
         if ($requiresGravel) {
@@ -1902,11 +1898,10 @@ final class EstimateController
                 $mixture['gravelUnitWeightKg'] ?? null,
                 sprintf('The %s.gravelUnitWeightKg field is required and must be numeric.', $fieldPrefix)
             );
-            $this->validatePositiveNumericField(
+            $this->validateOptionalPositiveNumericField(
                 $errors,
                 $fieldPrefix . '.gravelUnitPrice',
-                $mixture['gravelUnitPrice'] ?? null,
-                sprintf('The %s.gravelUnitPrice field is required and must be numeric.', $fieldPrefix)
+                $mixture['gravelUnitPrice'] ?? null
             );
         }
     }

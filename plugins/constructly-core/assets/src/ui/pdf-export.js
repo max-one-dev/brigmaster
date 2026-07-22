@@ -64,18 +64,31 @@ export async function exportEstimateToPdf(form, button) {
     return;
   }
 
-  // Open the viewer tab synchronously inside the click gesture so the popup blocker lets
-  // it through; we point it at the generated PDF once it's ready.
+  // Open the viewer tab synchronously inside the click gesture so the popup blocker
+  // lets it through; we point it at the generated PDF once it's ready.
   const viewer = window.open("", "_blank");
 
   isBusy = true;
   setButtonBusy(button, true);
+
+  // Apply the PDF layout class to the LIVE document before calling html2canvas.
+  // This avoids an html2canvas timing bug where measuring the cloned element after
+  // onclone may still return pre-CSS-change dimensions (form still visible = 1855px
+  // instead of the collapsed 687px). The class on the live body is automatically
+  // copied into the html2canvas clone, so no onclone callback is needed.
+  document.body.classList.add(EXPORT_CLASS);
 
   try {
     // Make sure web fonts (Inter / Cyrillic) are ready before rasterizing.
     if (document.fonts?.ready) {
       await document.fonts.ready;
     }
+
+    // Wait two animation frames so the browser fully reflows the layout after
+    // the class change before html2canvas measures element bounds.
+    await new Promise((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve)),
+    );
 
     const { default: html2pdf } = await import("html2pdf.js");
 
@@ -87,12 +100,10 @@ export async function exportEstimateToPdf(form, button) {
           scale: 2,
           useCORS: true,
           backgroundColor: "#ffffff",
-          // Force a desktop width so the two-column print layout renders instead of the
-          // ≤767px mobile drawer view.
-          windowWidth: 1280,
-          // Apply the print layout to the CLONED document only, so the live page never
-          // flashes the full-screen estimate while the snapshot is being taken.
-          onclone: (clonedDoc) => clonedDoc.body.classList.add(EXPORT_CLASS),
+          // Render at desktop width so the mobile CSS breakpoint (≤900px) never
+          // fires during capture — it would add overflow:auto and padding-top:40px
+          // to the aside, inflating the captured height.
+          windowWidth: 1440,
         },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         pagebreak: { mode: ["avoid-all"] },
@@ -117,6 +128,8 @@ export async function exportEstimateToPdf(form, button) {
     }
     flashButton(button, "Не удалось открыть");
   } finally {
+    // Always restore the live document regardless of success or error.
+    document.body.classList.remove(EXPORT_CLASS);
     setButtonBusy(button, false);
     isBusy = false;
   }

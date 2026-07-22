@@ -1,8 +1,8 @@
 import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatters.js";
 import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
 import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
-import { buildMixturePayload, syncPileMixtureBlocks } from "../core/mixture.js";
-import { buildPileReinforcementColumnsHtml, renderMixtureCard, renderStripReinforcementCard, syncResultGridLayout } from "../ui/result-panel.js";
+import { buildMixturePayload } from "../core/mixture.js";
+import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 
@@ -46,13 +46,11 @@ import { initEstimateForms } from "../core/bootstrap.js";
         }
 
         renderMixtureCard(
-            resultNode.querySelector('[data-result-card="mixture"]'),
+            resultNode.querySelector('[data-result-card="strip-mixture"]'),
             payload?.mixture,
-            "",
+            "Смесь и материалы",
             { omitVolume: true }
         );
-
-        syncResultGridLayout(resultNode);
         resultNode.hidden = false;
         resultNode.classList.add("is-success");
         finalizeSuccessfulResult(form);
@@ -461,6 +459,11 @@ import { initEstimateForms } from "../core/bootstrap.js";
         toggleVisibility(segmentsGroup, includeGrillage && mode === "segments");
         toggleVisibility(globalRebarGroup, includeReinforcement);
         toggleVisibility(globalFormworkGroup, includeFormwork);
+
+        const reinforcementAccordion = form.querySelector('[data-toggle-target="strip-reinforcement"]');
+        const formworkAccordion = form.querySelector('[data-toggle-target="strip-formwork"]');
+        toggleVisibility(reinforcementAccordion, includeReinforcement);
+        toggleVisibility(formworkAccordion, includeFormwork);
 
         const segmentNodes = form.querySelectorAll("[data-strip-segment-item]");
         segmentNodes.forEach((segmentNode) => {

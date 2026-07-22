@@ -66,14 +66,14 @@ final class ConcreteMixtureCalculator
      */
     private function calculateReadyMix(float $volumeM3, array $mixture): array
     {
-        $pricePerM3 = $this->requirePositiveFloat($mixture, 'readyConcretePricePerM3');
+        $pricePerM3 = $this->optionalPositiveFloat($mixture, 'readyConcretePricePerM3');
 
         return [
             'type' => self::TYPE_READY,
             'displayType' => 'Готовая',
             'volumeM3' => $volumeM3,
             'pricePerM3' => $pricePerM3,
-            'totalCost' => $volumeM3 * $pricePerM3,
+            'totalCost' => $pricePerM3 !== null ? $volumeM3 * $pricePerM3 : null,
             'note' => 'Готовая смесь считается как итоговый объём товарного бетона, поставляемого на объект в готовом виде.',
         ];
     }
@@ -85,7 +85,7 @@ final class ConcreteMixtureCalculator
     private function calculateDryScreedMix(float $volumeM3, array $mixture): array
     {
         $bagWeightKg = $this->requirePositiveFloat($mixture, 'dryMixBagWeightKg');
-        $bagPrice = $this->requirePositiveFloat($mixture, 'dryMixBagPrice');
+        $bagPrice = $this->optionalPositiveFloat($mixture, 'dryMixBagPrice');
         $totalWeightKg = $volumeM3 * self::DRY_SCREED_CONSUMPTION_KG_PER_M3;
         $requiredBags = $totalWeightKg / $bagWeightKg;
         $roundedBags = (float) ceil($requiredBags);
@@ -101,8 +101,8 @@ final class ConcreteMixtureCalculator
             'bagPrice' => $bagPrice,
             'requiredBags' => $requiredBags,
             'roundedBags' => $roundedBags,
-            'totalCostExact' => $requiredBags * $bagPrice,
-            'totalCostRounded' => $roundedBags * $bagPrice,
+            'totalCostExact' => $bagPrice !== null ? $requiredBags * $bagPrice : null,
+            'totalCostRounded' => $bagPrice !== null ? $roundedBags * $bagPrice : null,
             'note' => 'Расход принят по среднему ориентиру: 19 кг сухой смеси на 1 м² при толщине 10 мм (диапазон 18–20 кг). Точный расход уточняйте по паспорту смеси.',
         ];
     }
@@ -137,7 +137,7 @@ final class ConcreteMixtureCalculator
                 sharesSum: $sharesSum,
                 purchaseUnit: $this->requirePurchaseUnit($mixture, 'cementPurchaseUnit'),
                 unitWeightKg: $this->requirePositiveFloat($mixture, 'cementUnitWeightKg'),
-                unitPrice: $this->requirePositiveFloat($mixture, 'cementUnitPrice')
+                unitPrice: $this->optionalPositiveFloat($mixture, 'cementUnitPrice')
             ),
             'sand' => $this->buildComponent(
                 label: 'Песок',
@@ -147,7 +147,7 @@ final class ConcreteMixtureCalculator
                 sharesSum: $sharesSum,
                 purchaseUnit: $this->requirePurchaseUnit($mixture, 'sandPurchaseUnit'),
                 unitWeightKg: $this->requirePositiveFloat($mixture, 'sandUnitWeightKg'),
-                unitPrice: $this->requirePositiveFloat($mixture, 'sandUnitPrice')
+                unitPrice: $this->optionalPositiveFloat($mixture, 'sandUnitPrice')
             ),
         ];
 
@@ -160,16 +160,20 @@ final class ConcreteMixtureCalculator
                 sharesSum: $sharesSum,
                 purchaseUnit: $this->requirePurchaseUnit($mixture, 'gravelPurchaseUnit'),
                 unitWeightKg: $this->requirePositiveFloat($mixture, 'gravelUnitWeightKg'),
-                unitPrice: $this->requirePositiveFloat($mixture, 'gravelUnitPrice')
+                unitPrice: $this->optionalPositiveFloat($mixture, 'gravelUnitPrice')
             );
         }
 
         $waterLiters = $components['cement']['weightKg'] * self::WATER_CEMENT_RATIO;
+        $hasCosts = false;
         $totalCostExact = 0.0;
         $totalCostRounded = 0.0;
         foreach ($components as $component) {
-            $totalCostExact += $component['totalCostExact'];
-            $totalCostRounded += $component['totalCostRounded'];
+            if ($component['totalCostExact'] !== null) {
+                $hasCosts = true;
+                $totalCostExact += $component['totalCostExact'];
+                $totalCostRounded += $component['totalCostRounded'];
+            }
         }
 
         return [
@@ -180,8 +184,8 @@ final class ConcreteMixtureCalculator
             'waterCementRatio' => self::WATER_CEMENT_RATIO,
             'waterLiters' => $waterLiters,
             'components' => $components,
-            'totalCostExact' => $totalCostExact,
-            'totalCostRounded' => $totalCostRounded,
+            'totalCostExact' => $hasCosts ? $totalCostExact : null,
+            'totalCostRounded' => $hasCosts ? $totalCostRounded : null,
             'note' => 'Для самомесной смеси доли принимаются по объёму. Для пересчёта в массу использованы справочные насыпные плотности, количество воды рассчитано по В/Ц = 0.5.',
         ];
     }
@@ -197,7 +201,7 @@ final class ConcreteMixtureCalculator
         float $sharesSum,
         string $purchaseUnit,
         float $unitWeightKg,
-        float $unitPrice
+        ?float $unitPrice
     ): array {
         $volumeM3 = $dryVolumeM3 * ($share / $sharesSum);
         $weightKg = $volumeM3 * $densityKgPerM3;
@@ -220,8 +224,8 @@ final class ConcreteMixtureCalculator
             'unitPrice' => $unitPrice,
             'requiredUnits' => $requiredUnits,
             'roundedUnits' => $roundedUnits,
-            'totalCostExact' => $requiredUnits * $unitPrice,
-            'totalCostRounded' => $roundedUnits * $unitPrice,
+            'totalCostExact' => $unitPrice !== null ? $requiredUnits * $unitPrice : null,
+            'totalCostRounded' => $unitPrice !== null ? $roundedUnits * $unitPrice : null,
         ];
     }
 
@@ -244,6 +248,30 @@ final class ConcreteMixtureCalculator
     private function requirePositiveFloat(array $mixture, string $field): float
     {
         $value = $mixture[$field] ?? null;
+        if ((!is_string($value) && !is_int($value) && !is_float($value)) || !is_numeric((string) $value)) {
+            throw new InvalidArgumentException(sprintf('The %s field must be numeric.', $field));
+        }
+
+        $normalized = (float) $value;
+        if ($normalized <= 0) {
+            throw new InvalidArgumentException(sprintf('The %s field must be greater than 0.', $field));
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * Returns null when the field is absent or empty string; throws when present but not a positive number.
+     *
+     * @param array<string, mixed> $mixture
+     */
+    private function optionalPositiveFloat(array $mixture, string $field): ?float
+    {
+        $value = $mixture[$field] ?? null;
+        if ($value === null || (is_string($value) && trim($value) === '')) {
+            return null;
+        }
+
         if ((!is_string($value) && !is_int($value) && !is_float($value)) || !is_numeric((string) $value)) {
             throw new InvalidArgumentException(sprintf('The %s field must be numeric.', $field));
         }

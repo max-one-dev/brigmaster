@@ -115,11 +115,6 @@ const MODE_HINTS_DRYWALL = {
         if (notice) {
             notice.hidden = false;
         }
-        Array.from(resultNode.children).forEach((child) => {
-            if (child !== notice) {
-                child.hidden = true;
-            }
-        });
     }
 
 
@@ -526,8 +521,6 @@ const MODE_HINTS_DRYWALL = {
                 return;
             }
             const row = checkbox.closest("[data-toggle-field]");
-            const lockTrigger = row?.querySelector("[data-mode-lock-trigger]");
-            const lockAnchor = lockTrigger?.closest(".brigmaster-estimator__tooltip-anchor");
             if (shouldLock) {
                 if (!Object.prototype.hasOwnProperty.call(checkbox.dataset, "previousChecked")) {
                     checkbox.dataset.previousChecked = checkbox.checked ? "1" : "0";
@@ -536,7 +529,6 @@ const MODE_HINTS_DRYWALL = {
                 checkbox.disabled = true;
                 checkbox.setAttribute("aria-disabled", "true");
                 row?.classList.add("is-disabled");
-                lockAnchor?.classList.remove("brigmaster-estimator__tooltip-anchor--hidden");
                 return;
             }
 
@@ -547,7 +539,6 @@ const MODE_HINTS_DRYWALL = {
                 delete checkbox.dataset.previousChecked;
             }
             row?.classList.remove("is-disabled");
-            lockAnchor?.classList.add("brigmaster-estimator__tooltip-anchor--hidden");
         });
     }
 

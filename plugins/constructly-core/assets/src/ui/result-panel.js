@@ -1,28 +1,5 @@
-import { escapeHtml, formatNumber } from "../core/formatters.js";
+import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatters.js";
 import { getEstimatorShell } from "../core/form-state.js";
-
-
-    export function syncResultGridLayout(resultNode) {
-        if (!(resultNode instanceof Element)) {
-            return;
-        }
-
-        const grids = resultNode.querySelectorAll(".brigmaster-estimator__result-grid");
-        grids.forEach((grid) => {
-            if (!(grid instanceof HTMLElement)) {
-                return;
-            }
-
-            const visibleCards = Array.from(
-                grid.querySelectorAll(
-                    '.brigmaster-estimator__result-card:not([hidden]):not(.brigmaster-estimator__result-card--mixture)'
-                )
-            );
-
-            const columns = Math.max(1, visibleCards.length);
-            grid.style.setProperty("--brigmaster-result-columns", String(columns));
-        });
-    }
 
 
     export function buildMixtureResultHtml(mixture, title, options = {}) {
@@ -59,6 +36,7 @@ import { getEstimatorShell } from "../core/form-state.js";
                 : "bm-calculator-result__material";
             return `<div class="${className}"><span class="bm-calculator-result__material-head"><span>${labelHtml}</span><strong>${value}</strong></span></div>`;
         };
+        const hasPositiveCost = (v) => hasMeaningfulNumber(v) && Number(v) > 0;
         const COST_HINT = "Слева — точный расчёт, справа — с округлением до целых единиц закупки.";
         // Renders an "exact / rounded" cost pair. The exact part is wrapped so it can be
         // hidden in print, where only the practical "to purchase" (rounded) figure matters.
@@ -70,18 +48,22 @@ import { getEstimatorShell } from "../core/form-state.js";
             if (!omitVolume) {
                 summaryItems.push(item("Объём", `${formatNumber(mixture.volumeM3)} м³`));
             }
-            summaryItems.push(
-                item("Цена за м³", formatNumber(mixture.pricePerM3)),
-                item("Итоговая стоимость", formatNumber(mixture.totalCost))
-            );
+            if (hasPositiveCost(mixture.pricePerM3)) {
+                summaryItems.push(item("Цена за м³", formatNumber(mixture.pricePerM3)));
+            }
+            if (hasPositiveCost(mixture.totalCost)) {
+                summaryItems.push(item("Итоговая стоимость", formatNumber(mixture.totalCost)));
+            }
         } else if (type === "dry_ready") {
             summaryItems.push(
                 item("Тип", escapeHtml(mixture.displayType || "Готовая, сухая"), null, "bm-calculator-result__material--mixture-type"),
                 item("Ориентир расхода", `${formatNumber(mixture.consumptionKgPerM2Per10mm)} кг/м² при 10 мм`),
                 item("Общий вес смеси", `${formatNumber(mixture.totalWeightKg)} кг`),
-                item("Мешки", `${formatNumber(mixture.requiredBags)} шт, к покупке ${formatNumber(mixture.roundedBags)} шт по ${formatNumber(mixture.bagWeightKg)} кг`),
-                item("Стоимость", costPair(mixture.totalCostExact, mixture.totalCostRounded), COST_HINT)
+                item("Мешки", `${formatNumber(mixture.requiredBags)} шт, к покупке ${formatNumber(mixture.roundedBags)} шт по ${formatNumber(mixture.bagWeightKg)} кг`)
             );
+            if (hasPositiveCost(mixture.totalCostRounded)) {
+                summaryItems.push(item("Стоимость", costPair(mixture.totalCostExact, mixture.totalCostRounded), COST_HINT));
+            }
         } else if (type === "self_mix") {
             summaryItems.push(item("Тип", escapeHtml(mixture.displayType || "Самомесная"), null, "bm-calculator-result__material--mixture-type"));
 
@@ -90,11 +72,14 @@ import { getEstimatorShell } from "../core/form-state.js";
                 if (!component || typeof component !== "object") {
                     return;
                 }
+                const costSpan = hasPositiveCost(component.totalCostRounded)
+                    ? `<span class="bm-calculator-result__material-cost"><span>Стоимость</span><span>${costPair(component.totalCostExact, component.totalCostRounded)}</span></span>`
+                    : "";
                 summaryItems.push(
                     `<div class="bm-calculator-result__material bm-calculator-result__material--component">
             <span class="bm-calculator-result__material-head"><span>${escapeHtml(component.label || "Материал")}</span><strong>${formatNumber(component.weightKg)} кг</strong></span>
             <span class="bm-calculator-result__material-note">${buildPurchaseText(component)}</span>
-            <span class="bm-calculator-result__material-cost"><span>Стоимость</span><span>${costPair(component.totalCostExact, component.totalCostRounded)}</span></span>
+            ${costSpan}
           </div>`
                 );
             });
@@ -102,10 +87,10 @@ import { getEstimatorShell } from "../core/form-state.js";
             if (!omitVolume) {
                 summaryItems.push(item("Объём готовой смеси", `${formatNumber(mixture.volumeM3)} м³`));
             }
-            summaryItems.push(
-                item("Вода", `${formatNumber(mixture.waterLiters)} л`),
-                item("Итоговая стоимость", costPair(mixture.totalCostExact, mixture.totalCostRounded), COST_HINT)
-            );
+            summaryItems.push(item("Вода", `${formatNumber(mixture.waterLiters)} л`));
+            if (hasPositiveCost(mixture.totalCostRounded)) {
+                summaryItems.push(item("Итоговая стоимость", costPair(mixture.totalCostExact, mixture.totalCostRounded), COST_HINT));
+            }
         }
 
         if (mixture.note) {
@@ -133,12 +118,10 @@ import { getEstimatorShell } from "../core/form-state.js";
         if (!html) {
             cardNode.hidden = true;
             cardNode.innerHTML = "";
-            cardNode.classList.remove("brigmaster-estimator__result-card--mixture");
             return;
         }
 
         cardNode.hidden = false;
-        cardNode.classList.add("brigmaster-estimator__result-card--mixture");
         cardNode.innerHTML = html;
     }
 
@@ -222,74 +205,4 @@ import { getEstimatorShell } from "../core/form-state.js";
         }
         reinforcementCard.hidden = false;
         reinforcementCard.innerHTML = html;
-    }
-
-    /**
-     * Pile reinforcement block (same column layout as grillage strip reinforcement).
-     * @param {object} pileReinforcement - API piles.reinforcement
-     */
-
-    export function buildPileReinforcementColumnsHtml(pileReinforcement) {
-        if (!pileReinforcement) {
-            return "";
-        }
-        const byDiameter = Array.isArray(pileReinforcement?.byDiameter)
-            ? pileReinforcement.byDiameter
-            : [];
-        const buildDiameterLabel = (diameter) =>
-            Number.isFinite(Number(diameter)) ? `Ø${formatNumber(diameter)} мм` : "Ø-";
-        const lengthLines = byDiameter.map((item) => {
-            const d = item?.diameterMm;
-            const lenWithReserve = item?.totalLengthWithReserveM;
-            return `<li>${buildDiameterLabel(d)} - ${formatNumber(lenWithReserve)} м</li>`;
-        });
-        const massLines = byDiameter.map((item) => {
-            const d = item?.diameterMm;
-            const mass = item?.massKg;
-            return `<li>${buildDiameterLabel(d)} - ${formatNumber(mass)} кг</li>`;
-        });
-        const fallbackDiameter = Number(pileReinforcement?.diameterMm);
-        if (lengthLines.length === 0 && Number.isFinite(fallbackDiameter)) {
-            lengthLines.push(
-                `<li>${buildDiameterLabel(fallbackDiameter)} - ${formatNumber(pileReinforcement?.totalLengthWithReserveM)} м</li>`
-            );
-            massLines.push(
-                `<li>${buildDiameterLabel(fallbackDiameter)} - ${formatNumber(pileReinforcement?.massKg)} кг</li>`
-            );
-        }
-        const totalLengthWithReserveM = byDiameter.length > 0
-            ? byDiameter.reduce(
-                (sum, item) => sum + (Number.isFinite(Number(item?.totalLengthWithReserveM)) ? Number(item.totalLengthWithReserveM) : 0),
-                0
-            )
-            : Number(pileReinforcement?.totalLengthWithReserveM) || 0;
-        const totalMassKg = byDiameter.length > 0
-            ? byDiameter.reduce(
-                (sum, item) => sum + (Number.isFinite(Number(item?.massKg)) ? Number(item.massKg) : 0),
-                0
-            )
-            : Number(pileReinforcement?.massKg) || 0;
-
-        if (lengthLines.length === 0 && massLines.length === 0) {
-            return "";
-        }
-
-        return `
-      <div class="brigmaster-estimator__rebar-columns">
-        <div class="brigmaster-estimator__rebar-column">
-          <p class="brigmaster-estimator__rebar-column-title"><strong>Длина (с запасом):</strong></p>
-          <ul class="brigmaster-estimator__result-list">
-            ${lengthLines.join("")}
-            <li><strong>Всего:</strong> ${formatNumber(totalLengthWithReserveM)} м</li>
-          </ul>
-        </div>
-        <div class="brigmaster-estimator__rebar-column">
-          <p class="brigmaster-estimator__rebar-column-title"><strong>Масса:</strong></p>
-          <ul class="brigmaster-estimator__result-list">
-            ${massLines.join("")}
-            <li><strong>Всего:</strong> ${formatNumber(totalMassKg)} кг</li>
-          </ul>
-        </div>
-      </div>
-    `;
     }

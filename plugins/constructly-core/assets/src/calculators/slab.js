@@ -1,8 +1,8 @@
 ﻿import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatters.js";
 import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
 import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
-import { buildMixturePayload, syncPileMixtureBlocks } from "../core/mixture.js";
-import { buildPileReinforcementColumnsHtml, renderMixtureCard, renderStripReinforcementCard, syncResultGridLayout } from "../ui/result-panel.js";
+import { buildMixturePayload } from "../core/mixture.js";
+import { renderMixtureCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 
@@ -182,75 +182,68 @@ import { initEstimateForms } from "../core/bootstrap.js";
 
 
     export function showSlabResult(form, payload, requestPayload) {
-        const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
-        if (!resultNode) {
-            return;
-        }
+        const resultNode = getEstimatorShell(form)?.querySelector('[data-result]');
+        if (!resultNode) return;
 
-        const concreteVolumeNode = resultNode.querySelector("[data-result-concrete-volume]");
-        const concreteAreaNode = resultNode.querySelector("[data-result-concrete-area]");
-        const concreteHeightNode = resultNode.querySelector("[data-result-concrete-height]");
-        const reinforcementCard = resultNode.querySelector('[data-result-card="reinforcement"]');
-        const formworkCard = resultNode.querySelector('[data-result-card="formwork"]');
         const concrete = payload?.concrete || {};
         const reinforcement = payload?.reinforcement || null;
         const formwork = payload?.formwork || null;
+        const mixture = payload?.mixture || null;
 
-        if (concreteVolumeNode) {
-            concreteVolumeNode.textContent = formatNumber(concrete.volumeM3);
-        }
-        if (concreteAreaNode) {
-            concreteAreaNode.textContent = formatNumber(concrete.areaM2);
-        }
-        if (concreteHeightNode) {
-            concreteHeightNode.textContent = formatNumber(concrete.heightM);
-        }
+        const row = (label, value, note) => {
+            const noteHtml = note ? `<span class="bm-calculator-result__material-note">${escapeHtml(String(note))}</span>` : '';
+            return `<div class="bm-calculator-result__material"><span class="bm-calculator-result__material-head"><span>${escapeHtml(String(label))}</span><strong>${value}</strong></span>${noteHtml}</div>`;
+        };
+        const fillCard = (card, title, rows, extraHtml) => {
+            if (!card) return;
+            card.innerHTML = `<h3 class="bm-calculator-result__section-title">${escapeHtml(String(title))}</h3><div class="bm-calculator-result__list">${rows.join('')}</div>${extraHtml || ''}`;
+        };
 
+        // Concrete
+        const concreteCard = resultNode.querySelector('[data-result-card="slab-concrete"]');
+        fillCard(concreteCard, 'Бетон', [
+            row('Объём', `${formatNumber(concrete.volumeM3)} м³`),
+            row('Площадь', `${formatNumber(concrete.areaM2)} м²`),
+            row('Высота', `${formatNumber(concrete.heightM)} м`),
+        ]);
+
+        // Mixture (separate section)
+        const mixtureCard = resultNode.querySelector('[data-result-card="slab-mixture"]');
+        renderMixtureCard(mixtureCard, mixture, 'Смесь и материалы');
+
+        // Reinforcement
+        const reinforcementCard = resultNode.querySelector('[data-result-card="slab-reinforcement"]');
         if (reinforcementCard) {
             if (reinforcement) {
                 reinforcementCard.hidden = false;
-                reinforcementCard.innerHTML = `
-          <h3>Арматура</h3>
-          <p><strong>Масса:</strong> ${formatNumber(reinforcement.massKg)} кг</p>
-          <p><strong>Общая длина (с запасом):</strong> ${formatNumber(
-                    reinforcement.totalLengthWithReserveM
-                )} м</p>
-          <p><strong>Сетка:</strong> Ø${formatNumber(
-                    reinforcement.diameterMm
-                )}, шаг ${formatNumber(reinforcement.stepMm)} мм, ${formatNumber(
-                    reinforcement.layers
-                )} слоя</p>
-        `;
+                fillCard(reinforcementCard, 'Арматура', [
+                    row('Масса', `${formatNumber(reinforcement.massKg)} кг`),
+                    row('Длина с запасом', `${formatNumber(reinforcement.totalLengthWithReserveM)} м`),
+                    row('Сетка', `Ø${formatNumber(reinforcement.diameterMm)}, шаг ${formatNumber(reinforcement.stepMm)} мм, ${formatNumber(reinforcement.layers)} сл.`),
+                ]);
             } else {
                 reinforcementCard.hidden = true;
-                reinforcementCard.innerHTML = "";
             }
         }
 
+        // Formwork
+        const formworkCard = resultNode.querySelector('[data-result-card="slab-formwork"]');
         if (formworkCard) {
             if (formwork) {
                 formworkCard.hidden = false;
-                formworkCard.innerHTML = `
-          <h3>Опалубка</h3>
-          <p><strong>Площадь щитов:</strong> ${formatNumber(formwork.areaM2)} м2</p>
-          <p><strong>Погонные метры:</strong> ${formatNumber(formwork.linearMeters)} м</p>
-          <p><strong>Высота:</strong> ${formatNumber(formwork.heightM)} м</p>
-        `;
+                fillCard(formworkCard, 'Опалубка', [
+                    row('Площадь щитов', `${formatNumber(formwork.areaM2)} м²`),
+                    row('Погонные метры', `${formatNumber(formwork.linearMeters)} м`),
+                    row('Высота опалубки', `${formatNumber(formwork.heightM)} м`),
+                ]);
             } else {
                 formworkCard.hidden = true;
-                formworkCard.innerHTML = "";
             }
         }
 
         renderSlabScheme(form, payload, requestPayload);
-        renderMixtureCard(
-            resultNode.querySelector('[data-result-card="mixture"]'),
-            payload?.mixture,
-            "Смесь и материалы"
-        );
-        syncResultGridLayout(resultNode);
         resultNode.hidden = false;
-        resultNode.classList.add("is-success");
+        resultNode.classList.add('is-success');
         finalizeSuccessfulResult(form);
     }
 
@@ -270,21 +263,17 @@ import { initEstimateForms } from "../core/bootstrap.js";
 
         const includeReinforcement = !!includeReinforcementToggle?.checked;
         const includeFormwork = !!includeFormworkToggle?.checked;
-        const dimensionsGroup = form.querySelector('[data-field-group="slab-dimensions"]');
+        const dimensionsGroups = form.querySelectorAll('[data-field-group="slab-dimensions"]');
         const areaGroup = form.querySelector('[data-field-group="slab-area"]');
         const heightGroup = form.querySelector('[data-field-group="slab-height"]');
-        const noticeNode = form.querySelector("[data-area-mode-notice]");
-        const reinforcementGroup = form.querySelector(
-            '[data-field-group="slab-reinforcement"]'
-        );
-        const formworkGroup = form.querySelector('[data-field-group="slab-formwork"]');
+        const reinforcementAccordion = form.querySelector('[data-toggle-target="reinforcement"]');
+        const formworkAccordion = form.querySelector('[data-toggle-target="formwork"]');
 
-        toggleVisibility(dimensionsGroup, mode === "dimensions");
+        dimensionsGroups.forEach((el) => toggleVisibility(el, mode === "dimensions"));
         toggleVisibility(areaGroup, mode === "area");
         toggleVisibility(heightGroup, true);
-        toggleVisibility(noticeNode, false);
-        toggleVisibility(reinforcementGroup, mode === "dimensions" && includeReinforcement);
-        toggleVisibility(formworkGroup, mode === "dimensions" && includeFormwork);
+        toggleVisibility(reinforcementAccordion, mode === "dimensions" && includeReinforcement);
+        toggleVisibility(formworkAccordion, mode === "dimensions" && includeFormwork);
     }
 
 

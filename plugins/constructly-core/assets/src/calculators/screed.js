@@ -2,7 +2,7 @@ import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatter
 import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
 import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
 import { buildMixturePayload, syncPileMixtureBlocks } from "../core/mixture.js";
-import { buildPileReinforcementColumnsHtml, renderMixtureCard, renderStripReinforcementCard, syncResultGridLayout } from "../ui/result-panel.js";
+import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 
@@ -51,7 +51,6 @@ import { initEstimateForms } from "../core/bootstrap.js";
             "Смесь и материалы"
         );
 
-        syncResultGridLayout(resultNode);
         resultNode.hidden = false;
         resultNode.classList.add("is-success");
         finalizeSuccessfulResult(form);
@@ -69,15 +68,15 @@ import { initEstimateForms } from "../core/bootstrap.js";
         setModeLockState(form, isAreaMode);
 
         const includeRebar = form.querySelector('[name="includeReinforcement"]')?.checked === true;
-        const dimensionsGroup = form.querySelector('[data-field-group="screed-dimensions"]');
+        const dimensionsGroups = form.querySelectorAll('[data-field-group="screed-dimensions"]');
         const areaGroup = form.querySelector('[data-field-group="screed-area"]');
         const heightGroup = form.querySelector('[data-field-group="screed-height"]');
-        const rebarGroup = form.querySelector('[data-field-group="screed-reinforcement"]');
+        const rebarAccordion = form.querySelector('[data-toggle-target="screed-reinforcement"]');
 
-        toggleVisibility(dimensionsGroup, mode === "dimensions");
+        dimensionsGroups.forEach((el) => toggleVisibility(el, mode === "dimensions"));
         toggleVisibility(areaGroup, mode === "area");
         toggleVisibility(heightGroup, true);
-        toggleVisibility(rebarGroup, mode === "dimensions" && includeRebar);
+        toggleVisibility(rebarAccordion, mode === "dimensions" && includeRebar);
     }
 
 
