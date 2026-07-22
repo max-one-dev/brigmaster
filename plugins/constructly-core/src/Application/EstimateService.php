@@ -18,7 +18,8 @@ final class EstimateService
     public const CALCULATOR_STRIP_FOUNDATION = 'strip_foundation';
     public const CALCULATOR_PILE_FOUNDATION = 'pile_foundation';
 
-    private const ALLOWED_CALCULATORS = [
+    /** @var array<int, string> Canonical list of supported calculator slugs (single source of truth). */
+    public const ALLOWED_CALCULATORS = [
         self::CALCULATOR_BRICK,
         self::CALCULATOR_SCREED,
         self::CALCULATOR_DRYWALL,

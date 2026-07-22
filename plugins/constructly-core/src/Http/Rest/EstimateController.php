@@ -12,15 +12,8 @@ use WP_REST_Response;
 
 final class EstimateController
 {
-    private const ALLOWED_CALCULATORS = [
-        EstimateService::CALCULATOR_BRICK,
-        EstimateService::CALCULATOR_SCREED,
-        EstimateService::CALCULATOR_DRYWALL,
-        EstimateService::CALCULATOR_TILE,
-        EstimateService::CALCULATOR_SLAB_FOUNDATION,
-        EstimateService::CALCULATOR_STRIP_FOUNDATION,
-        EstimateService::CALCULATOR_PILE_FOUNDATION,
-    ];
+    /** Single source of truth lives in EstimateService; aliased here so existing self:: usages keep working. */
+    private const ALLOWED_CALCULATORS = EstimateService::ALLOWED_CALCULATORS;
 
     private const ALLOWED_TILE_MODES = [
         'dimensions',
