@@ -1,0 +1,142 @@
+// _bm-tooltip-panel.scss
+// Переиспользуемый тултип-оверлей / bottom-sheet (mobile).
+// Класс .bm-tooltip здесь — корневой контейнер оверлея (не триггер из _tooltip.scss).
+
+// Скрыт по умолчанию через HTML-атрибут hidden
+// stylelint-disable-next-line selector-no-qualifying-type
+div.bm-tooltip[hidden] {
+  display: none;
+}
+
+// Корневой контейнер (фиксированный, вне потока)
+div.bm-tooltip {
+  position: fixed;
+  z-index: 2147483000;
+  inset: auto; // переопределяется .is-sheet
+}
+
+// ─── Десктоп (не bottom-sheet) ──────────────────────────────────────────────
+.bm-tooltip__backdrop {
+  display: none; // только на мобилке
+}
+
+.bm-tooltip__panel {
+  position: fixed; // top/left/width ставит JS
+  max-width: 320px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(2 8 23 / 18%);
+  padding: 14px;
+}
+
+// Замечание 3: на десктопе крестик не нужен.
+.bm-tooltip:not(.is-sheet) .bm-tooltip__close {
+  display: none;
+}
+
+// ─── Мобилка: bottom-sheet ──────────────────────────────────────────────────
+div.bm-tooltip.is-sheet {
+  inset: 0;
+}
+
+.is-sheet .bm-tooltip__backdrop {
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: rgba(2 8 23 / 50%);
+}
+
+.is-sheet .bm-tooltip__panel {
+  position: fixed;
+  // Замечание 1: на всю ширину экрана.
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  max-width: none;
+  // Замечание 2: высота по контенту, внутренний скролл при переполнении.
+  height: auto;
+  max-height: 85vh;
+  overflow: auto;
+  border-radius: 16px 16px 0 0;
+  animation: bm-tooltip-up 0.2s ease;
+}
+
+@keyframes bm-tooltip-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+// ─── Внутренние элементы ────────────────────────────────────────────────────
+.bm-tooltip__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  // Визуальные стили наследуем от темы; только позиционирование здесь
+  background: transparent;
+  border: 0;
+  padding: 4px;
+  cursor: pointer;
+  line-height: 1;
+  font-size: 18px;
+  color: inherit;
+}
+
+.bm-tooltip__media svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bm-tooltip__title {
+  margin: 0 0 8px; // Замечание 6: нет отступа сверху.
+  font-size: 15px;
+}
+
+// Замечание 3: на мобилке заголовок/шапка не должны наезжать на крестик.
+.is-sheet .bm-tooltip__title {
+  padding-right: 32px;
+}
+
+// Замечание 6: когда заголовка нет — не должно быть пустоты сверху.
+.bm-tooltip__body > :first-child {
+  margin-top: 0;
+}
+
+.bm-tooltip__text {
+  margin: 8px 0 0;
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+// ─── Кнопка-триггер ─────────────────────────────────────────────────────────
+// Переиспользует визуал .brigmaster-estimator__tooltip-trigger
+.bm-tooltip-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--bm-color-text-muted, #94a3b8);
+  cursor: pointer;
+  flex: 0 0 auto;
+  vertical-align: middle;
+
+  svg,
+  .bm-icon {
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentcolor;
+    outline-offset: 2px;
+  }
+}
