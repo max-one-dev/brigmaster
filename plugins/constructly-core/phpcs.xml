@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<ruleset name="Brigmaster Core">
+    <description>Pragmatic ruleset for constructly-core: WP correctness + security only, no style war with the PSR-4 codebase.</description>
+
+    <!-- What to scan -->
+    <file>src</file>
+    <arg name="extensions" value="php"/>
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <!-- Environment -->
+    <config name="minimum_supported_wp_version" value="6.0"/>
+    <config name="testVersion" value="8.2-"/>
+
+    <!--
+      The codebase is PSR-4 (spaces, short arrays, camelCase methods, PSR brace style).
+      Basing on WordPress-Extra would emit ~13k pure formatting/naming violations and
+      zero real signal. So we deliberately include ONLY the high-value sub-rulesets:
+      security, WP-specific correctness, and static analysis. Formatting/naming/array-style
+      is out of scope for this refactor (owner: pragmatic subset, non-blocking on legacy).
+    -->
+    <rule ref="WordPress.Security"/>
+    <rule ref="WordPress.DB"/>
+    <rule ref="WordPress.WP">
+        <exclude name="WordPress.WP.I18n"/>
+    </rule>
+    <rule ref="WordPress.PHP">
+        <exclude name="WordPress.PHP.YodaConditions"/>
+        <!-- Deprecated in WPCS 3.3; PHP cross-version checks belong to PHPCompatibility -->
+        <exclude name="WordPress.PHP.POSIXFunctions"/>
+    </rule>
+    <rule ref="WordPress.CodeAnalysis"/>
+    <rule ref="Generic.PHP.Syntax"/>
+</ruleset>
