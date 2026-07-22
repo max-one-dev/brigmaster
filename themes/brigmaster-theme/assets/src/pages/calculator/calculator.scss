@@ -80,6 +80,7 @@
 
 .bm-calculator-layout__main {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--bm-space-8);
 }
 
@@ -148,6 +149,13 @@
   align-items: start;
 }
 
+[data-pile-primary-grid] > .brigmaster-estimator__field:not(.brigmaster-estimator__field-group--hidden) {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  gap: var(--bm-space-2);
+}
+
 .brigmaster-estimator__field {
   display: flex;
   flex-direction: column;
@@ -156,7 +164,6 @@
 
   > label,
   > .brigmaster-estimator__label-row {
-    min-height: calc(1.35 * 1em);
     line-height: 1.35;
   }
 }
@@ -229,13 +236,14 @@
 .brigmaster-estimator__toggle {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: var(--bm-space-3);
   align-items: center;
-  min-height: 2.75rem;
-  padding: var(--bm-space-3) var(--bm-space-4);
-  border: 1px solid var(--bm-color-border);
-  border-radius: var(--bm-radius-md);
-  background: var(--bm-color-surface);
+}
+
+.brigmaster-estimator__toggle > .brigmaster-estimator__hint {
+  flex-basis: 100%;
+  margin: 0;
 }
 
 .brigmaster-estimator__toggle input[type='checkbox'] {
@@ -248,6 +256,12 @@
 .brigmaster-estimator__toggle label {
   font-size: var(--bm-text-base);
   cursor: pointer;
+}
+
+.brigmaster-estimator__toggle.is-disabled > input[type="checkbox"],
+.brigmaster-estimator__toggle.is-disabled .brigmaster-estimator__label-row > span:first-child {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .brigmaster-estimator__actions {
@@ -323,6 +337,13 @@
 .brigmaster-estimator__field-group {
   min-width: 0;
 }
+
+.brigmaster-estimator__field-group:not(.brigmaster-estimator__field-grid):not(.brigmaster-estimator__field):not(.brigmaster-estimator__field-group--hidden) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bm-space-5);
+}
+
 
 .brigmaster-estimator__field-group--hidden,
 .brigmaster-estimator__tooltip-anchor--hidden {
@@ -778,6 +799,9 @@
 
 .bm-calculator-result__material-head > span:first-child {
   max-width: 250px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bm-space-1);
 }
 
 .bm-calculator-result__material-head strong {
@@ -1041,6 +1065,7 @@
 
 .bm-calculator-info-card {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--bm-space-4);
   margin-top: 0;
   padding: var(--bm-space-6);
@@ -1084,6 +1109,7 @@
 
 .bm-calculator-info-card table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
 }
 
@@ -1093,6 +1119,8 @@
   border: 1px solid var(--bm-color-border);
   text-align: left;
   vertical-align: top;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .bm-calculator-info-card th {
@@ -1302,7 +1330,14 @@
   .brigmaster-estimator__field-grid--four {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+
+  .brigmaster-estimator__field-grid[data-tile-autofit],
+  .brigmaster-estimator__field-grid[data-autofit-row] {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
 }
+
 /* stylelint-enable selector-class-pattern */
 
 @include media.bp(lg) {
@@ -1515,6 +1550,29 @@ body.bm-pdf-export {
 
   .bm-calculator-result__note {
     gap: 0 !important;
+  }
+}
+
+@media (width < 768px) {
+  .brigmaster-estimator {
+    padding: var(--bm-space-4);
+  }
+
+  .brigmaster-estimator__accordion-body {
+    padding: var(--bm-space-4);
+  }
+
+  .bm-calculator-info-card {
+    padding: var(--bm-space-4);
+  }
+
+  .bm-calculator-info-card table {
+    font-size: var(--bm-text-base);
+  }
+
+  .bm-calculator-info-card th,
+  .bm-calculator-info-card td {
+    padding: var(--bm-space-2) var(--bm-space-3);
   }
 }
 /* stylelint-enable selector-class-pattern */

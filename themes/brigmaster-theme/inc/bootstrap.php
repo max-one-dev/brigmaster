@@ -95,6 +95,7 @@ function constructly_esc_block_image_src(string $src): string
     return esc_url(get_theme_file_uri($src));
 }
 
+require_once __DIR__ . '/favicon.php';
 require_once __DIR__ . '/class-constructly-assets.php';
 require_once __DIR__ . '/class-constructly-theme-setup.php';
 require_once __DIR__ . '/template-tags.php';

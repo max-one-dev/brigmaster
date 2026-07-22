@@ -137,19 +137,18 @@ final class Constructly_Foundation_Pile_Migration
                     ['question' => 'Нужна ли регистрация для использования?', 'answer' => 'Нет, расчёт можно выполнить без регистрации.'],
                 ],
             ]),
-            Constructly_Migration_Helpers::block('constructly/popular-calculators', [
-                'anchor' => 'related-calculators',
+            Constructly_Migration_Helpers::block('constructly/foundation-hub-type-cards', [
+                'anchorId' => 'related-calculators',
                 'titleId' => 'related-calculators-title',
-                'themeVariant' => 'muted',
                 'columns' => '4',
-                'title' => 'Быстрый доступ к калькуляторам',
+                'sectionTitle' => 'Быстрый доступ к калькуляторам',
                 'linkLabel' => 'Все калькуляторы',
                 'linkUrl' => '/kalkulyatory/',
                 'cards' => [
-                    ['icon' => 'measurement', 'title' => 'Ленточный фундамент', 'description' => 'Объём бетона, арматура и опалубка ленты для устойчивых грунтов.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => '/kalkulyatory/fundament/lentochnyj/'],
-                    ['icon' => 'calculator', 'title' => 'Плитный фундамент', 'description' => 'Монолитная плита: бетон, двойная арматурная сетка и опалубка по периметру.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => '/kalkulyatory/fundament/plitnyj/'],
-                    ['icon' => 'target', 'title' => 'Кирпич', 'description' => 'Штучный расход кирпича и объём кладочного раствора по площади и типу кладки.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['brick']],
-                    ['icon' => 'interface', 'title' => 'Стяжка пола', 'description' => 'Раствор или сухая смесь для стяжки по площади помещения и толщине слоя.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['screed']],
+                    ['image' => 'assets/src/images/cards/calc-cover-strip.jpg', 'title' => 'Ленточный фундамент', 'text' => 'Объём бетона, арматура и опалубка ленты для устойчивых грунтов.', 'href' => '/kalkulyatory/fundament/lentochnyj/', 'cta' => 'Рассчитать'],
+                    ['image' => 'assets/src/images/cards/calc-cover-slab.jpg', 'title' => 'Плитный фундамент', 'text' => 'Монолитная плита: бетон, двойная арматурная сетка и опалубка по периметру.', 'href' => '/kalkulyatory/fundament/plitnyj/', 'cta' => 'Рассчитать'],
+                    ['image' => 'assets/src/images/cards/calc-cover-brick.jpg', 'title' => 'Кирпич', 'text' => 'Штучный расход кирпича и объём кладочного раствора по площади и типу кладки.', 'href' => $links['brick'], 'cta' => 'Рассчитать'],
+                    ['image' => 'assets/src/images/cards/calc-cover-screed.jpg', 'title' => 'Стяжка пола', 'text' => 'Раствор или сухая смесь для стяжки по площади помещения и толщине слоя.', 'href' => $links['screed'], 'cta' => 'Рассчитать'],
                 ],
             ]),
         ];

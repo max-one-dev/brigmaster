@@ -130,19 +130,18 @@ final class Constructly_Tile_Migration
                     ['question' => 'Нужна ли регистрация для использования?', 'answer' => 'Нет, расчёт можно выполнить без регистрации.'],
                 ],
             ]),
-            Constructly_Migration_Helpers::block('constructly/popular-calculators', [
-                'anchor' => 'related-calculators',
+            Constructly_Migration_Helpers::block('constructly/foundation-hub-type-cards', [
+                'anchorId' => 'related-calculators',
                 'titleId' => 'related-calculators-title',
-                'themeVariant' => 'muted',
                 'columns' => '4',
-                'title' => 'Быстрый доступ к калькуляторам',
+                'sectionTitle' => 'Быстрый доступ к калькуляторам',
                 'linkLabel' => 'Все калькуляторы',
                 'linkUrl' => '/kalkulyatory/',
                 'cards' => [
-                    ['icon' => 'measurement', 'title' => 'Фундамент', 'description' => 'Расчёт объёма бетона, опалубки, арматуры и материалов.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => '/kalkulyatory/fundament/'],
-                    ['icon' => 'calculator', 'title' => 'Стяжка пола', 'description' => 'Цементно-песчаная стяжка, наливные полы и другие типы.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['screed']],
-                    ['icon' => 'target', 'title' => 'Кирпич', 'description' => 'Количество кирпича и раствора для кладки стен и перегородок.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['brick']],
-                    ['icon' => 'document-add', 'title' => 'Гипсокартон', 'description' => 'Расчёт листов, профилей, крепежа и материалов для монтажа.', 'buttonLabel' => 'Рассчитать', 'buttonUrl' => $links['drywall']],
+                    ['image' => 'assets/src/images/cards/calc-cover-foundation.jpg', 'title' => 'Фундамент', 'text' => 'Расчёт объёма бетона, опалубки, арматуры и материалов.', 'href' => '/kalkulyatory/fundament/', 'cta' => 'Рассчитать'],
+                    ['image' => 'assets/src/images/cards/calc-cover-screed.jpg', 'title' => 'Стяжка пола', 'text' => 'Цементно-песчаная стяжка, наливные полы и другие типы.', 'href' => $links['screed'], 'cta' => 'Рассчитать'],
+                    ['image' => 'assets/src/images/cards/calc-cover-brick.jpg', 'title' => 'Кирпич', 'text' => 'Количество кирпича и раствора для кладки стен и перегородок.', 'href' => $links['brick'], 'cta' => 'Рассчитать'],
+                    ['image' => 'assets/src/images/cards/calc-cover-drywall.jpg', 'title' => 'Гипсокартон', 'text' => 'Расчёт листов, профилей, крепежа и материалов для монтажа.', 'href' => $links['drywall'], 'cta' => 'Рассчитать'],
                 ],
             ]),
         ];
