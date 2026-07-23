@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Brigmaster\Http\Shortcode;
 
+use Brigmaster\Presentation\Html\MarkupHelpers;
+
 final class EstimateShortcode
 {
     public function __construct(
@@ -337,7 +339,7 @@ final class EstimateShortcode
                     </div>
 
                     <details class="brigmaster-estimator__accordion" open data-toggle-target="reinforcement">
-                        <summary class="brigmaster-estimator__accordion-summary">Армирование<?php echo $this->accordionChevronMarkup(); ?></summary>
+                        <summary class="brigmaster-estimator__accordion-summary">Армирование<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                         <div class="brigmaster-estimator__accordion-body">
                             <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--four">
                                 <div class="brigmaster-estimator__field">
@@ -405,7 +407,7 @@ final class EstimateShortcode
                     </div>
 
                     <details class="brigmaster-estimator__accordion" open data-toggle-target="formwork">
-                        <summary class="brigmaster-estimator__accordion-summary">Опалубка<?php echo $this->accordionChevronMarkup(); ?></summary>
+                        <summary class="brigmaster-estimator__accordion-summary">Опалубка<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                         <div class="brigmaster-estimator__accordion-body">
                             <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--two">
                                 <div class="brigmaster-estimator__field">
@@ -644,7 +646,7 @@ final class EstimateShortcode
                     <?php if ($calculator === 'pile_foundation') : ?>
                     <?php $stripLabel = $calculator === 'pile_foundation' ? 'ростверка' : 'ленты'; ?>
                         <details class="brigmaster-estimator__accordion" open<?php echo $calculator === 'pile_foundation' ? ' data-pile-panel="grillage"' : ''; ?>>
-                            <summary class="brigmaster-estimator__accordion-summary"><?php echo $calculator === 'pile_foundation' ? 'Геометрия ростверка' : 'Геометрия ленты'; ?><?php echo $this->accordionChevronMarkup(); ?></summary>
+                            <summary class="brigmaster-estimator__accordion-summary"><?php echo $calculator === 'pile_foundation' ? 'Геометрия ростверка' : 'Геометрия ленты'; ?><?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                             <div class="brigmaster-estimator__accordion-body">
                     <?php if ($calculator === 'pile_foundation') : ?>
                         <div class="brigmaster-estimator__field" data-field-group="estimator-mode">
@@ -851,7 +853,7 @@ final class EstimateShortcode
                         </div>
                         <?php if ($calculator !== 'pile_foundation') : ?>
                         <details class="brigmaster-estimator__accordion" open data-toggle-target="strip-reinforcement">
-                            <summary class="brigmaster-estimator__accordion-summary">Арматура<?php echo $this->accordionChevronMarkup(); ?></summary>
+                            <summary class="brigmaster-estimator__accordion-summary">Арматура<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                             <div class="brigmaster-estimator__accordion-body">
                         <?php endif; ?>
 
@@ -953,7 +955,7 @@ final class EstimateShortcode
                         </div>
                         <?php if ($calculator !== 'pile_foundation') : ?>
                         <details class="brigmaster-estimator__accordion" open data-toggle-target="strip-formwork">
-                            <summary class="brigmaster-estimator__accordion-summary">Опалубка<?php echo $this->accordionChevronMarkup(); ?></summary>
+                            <summary class="brigmaster-estimator__accordion-summary">Опалубка<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                             <div class="brigmaster-estimator__accordion-body">
                         <?php endif; ?>
 
@@ -1057,7 +1059,7 @@ $bmPileDiagramSvg = <<<'SVG'
 SVG;
 ?>
                         <details class="brigmaster-estimator__accordion" open data-pile-panel="piles">
-                            <summary class="brigmaster-estimator__accordion-summary">Сваи<?php echo $this->accordionChevronMarkup(); ?></summary>
+                            <summary class="brigmaster-estimator__accordion-summary">Сваи<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                             <div class="brigmaster-estimator__accordion-body">
 
                         <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--pile-primary" data-field-group="pile-primary-row" data-pile-primary-grid data-autofit-row>
@@ -1219,7 +1221,7 @@ SVG;
                     <?php endif; ?>
                 <?php if ($calculator === 'pile_foundation') : ?>
                         <details class="brigmaster-estimator__accordion" open>
-                            <summary class="brigmaster-estimator__accordion-summary">Тип смеси<?php echo $this->accordionChevronMarkup(); ?></summary>
+                            <summary class="brigmaster-estimator__accordion-summary">Тип смеси<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                             <div class="brigmaster-estimator__accordion-body">
                                 <div class="brigmaster-estimator__field-group brigmaster-estimator__field brigmaster-estimator__toggle" data-unified-mixture-toggle>
                                     <input id="<?php echo esc_attr($instanceId . 'use-unified-concrete-mixture'); ?>" type="checkbox" name="useUnifiedConcreteMixtureSettings" value="1" checked>
@@ -1332,7 +1334,7 @@ SVG;
                     </div>
 
                     <details class="brigmaster-estimator__accordion" open data-toggle-target="screed-reinforcement">
-                        <summary class="brigmaster-estimator__accordion-summary">Армирование<?php echo $this->accordionChevronMarkup(); ?></summary>
+                        <summary class="brigmaster-estimator__accordion-summary">Армирование<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                         <div class="brigmaster-estimator__accordion-body">
                             <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--four">
                                 <div class="brigmaster-estimator__field">
@@ -2063,7 +2065,7 @@ SVG;
         </div>
 
         <details class="brigmaster-estimator__accordion" open data-toggle-target="brick-openings">
-            <summary class="brigmaster-estimator__accordion-summary">Окна и двери<?php echo $this->accordionChevronMarkup(); ?></summary>
+            <summary class="brigmaster-estimator__accordion-summary">Окна и двери<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
             <div class="brigmaster-estimator__accordion-body">
                 <?php echo $this->renderBrickRepeatableGroup($instanceId, 'windows', 'Окна', 'window', false); ?>
                 <?php echo $this->renderBrickRepeatableGroup($instanceId, 'doors', 'Двери', 'door', false); ?>
@@ -2079,7 +2081,7 @@ SVG;
         </div>
 
         <details class="brigmaster-estimator__accordion" open data-toggle-target="brick-gables">
-            <summary class="brigmaster-estimator__accordion-summary">Фронтоны<?php echo $this->accordionChevronMarkup(); ?></summary>
+            <summary class="brigmaster-estimator__accordion-summary">Фронтоны<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
             <div class="brigmaster-estimator__accordion-body">
                 <p class="brigmaster-estimator__hint brigmaster-estimator__hint--accordion">
                     Фронтон считается как треугольник по формуле `0.5 x ширина x высота`. Угол отдельно не задаётся: он автоматически определяется этими двумя размерами.
@@ -2247,7 +2249,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($targetFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Тип конструкции</span>
-                    <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-target-tooltip', 'Стена — облицовка по одной плоскости. Потолок — подвесной каркас. Перегородка — двусторонняя конструкция из профиля и листов.'); ?>
+                    <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-target-tooltip', 'Стена — облицовка по одной плоскости. Потолок — подвесной каркас. Перегородка — двусторонняя конструкция из профиля и листов.'); ?>
                 </label>
                 <select id="<?php echo esc_attr($targetFieldId); ?>" name="drywallTarget" data-drywall-target-select>
                     <option value="wall">Стена</option>
@@ -2259,7 +2261,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($sheetFormatFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Формат листа</span>
-                    <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-sheet-format-tooltip', 'Можно выбрать стандартный размер листа или задать свой. Это влияет на количество листов и количество поперечных перемычек.'); ?>
+                    <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-sheet-format-tooltip', 'Можно выбрать стандартный размер листа или задать свой. Это влияет на количество листов и количество поперечных перемычек.'); ?>
                 </label>
                 <select id="<?php echo esc_attr($sheetFormatFieldId); ?>" data-drywall-sheet-format-select>
                     <option value="2500x1200" data-sheet-length="2500" data-sheet-width="1200">2500×1200 мм</option>
@@ -2274,7 +2276,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'drywall-length'); ?>" class="brigmaster-estimator__label-row">
                     <span data-drywall-length-label>Длина стены (м)</span>
-                    <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-length-tooltip', 'Если нужно посчитать комнату целиком, сложите длины всех стен и введите общую сумму.'); ?>
+                    <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-length-tooltip', 'Если нужно посчитать комнату целиком, сложите длины всех стен и введите общую сумму.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'drywall-length'); ?>" type="number" name="drywallLength" min="0.01" step="0.01" value="6">
                 <p class="brigmaster-estimator__hint" data-drywall-length-hint>Для комнаты можно указать суммарную длину всех стен.</p>
@@ -2304,7 +2306,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'drywall-area'); ?>" class="brigmaster-estimator__label-row">
                     <span>Площадь конструкции (м²)</span>
-                    <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-area-tooltip', 'В режиме по площади калькулятор точно считает листы и отделку, но не считает профили и крепёж по каркасу.'); ?>
+                    <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-area-tooltip', 'В режиме по площади калькулятор точно считает листы и отделку, но не считает профили и крепёж по каркасу.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'drywall-area'); ?>" type="number" name="drywallArea" min="0.01" step="0.01" value="20">
                 <div class="brigmaster-estimator__error" data-field-error="area" aria-live="polite"></div>
@@ -2313,7 +2315,7 @@ SVG;
 
         <div class="brigmaster-estimator__accordions" data-estimator-accordions>
             <details class="brigmaster-estimator__accordion" open>
-                <summary class="brigmaster-estimator__accordion-summary">Листы и каркас<?php echo $this->accordionChevronMarkup(); ?></summary>
+                <summary class="brigmaster-estimator__accordion-summary">Листы и каркас<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                 <div class="brigmaster-estimator__accordion-body">
                     <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--three">
                         <div class="brigmaster-estimator__field">
@@ -2337,7 +2339,7 @@ SVG;
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($layersFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Слоёв обшивки</span>
-                                <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-layers-tooltip', 'Для перегородки значение применяется к каждой стороне. Один слой подходит для простых задач, два — когда нужна более жёсткая конструкция.'); ?>
+                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-layers-tooltip', 'Для перегородки значение применяется к каждой стороне. Один слой подходит для простых задач, два — когда нужна более жёсткая конструкция.'); ?>
                             </label>
                             <select id="<?php echo esc_attr($layersFieldId); ?>" name="drywallLayers">
                                 <option value="1">1 слой</option>
@@ -2348,7 +2350,7 @@ SVG;
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($stepFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Шаг профиля (мм)</span>
-                                <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-step-tooltip', 'Чем меньше шаг, тем жёстче каркас и выше расход профиля. Для большинства бытовых конструкций берут 400 или 600 мм.'); ?>
+                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-step-tooltip', 'Чем меньше шаг, тем жёстче каркас и выше расход профиля. Для большинства бытовых конструкций берут 400 или 600 мм.'); ?>
                             </label>
                             <select id="<?php echo esc_attr($stepFieldId); ?>" name="drywallFrameStepMm">
                                 <option value="600">600</option>
@@ -2359,7 +2361,7 @@ SVG;
                         <div class="brigmaster-estimator__field brigmaster-estimator__field-group--hidden" data-field-group="drywall-profile-width">
                             <label for="<?php echo esc_attr($profileWidthFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Ширина профиля перегородки (мм)</span>
-                                <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-profile-width-tooltip', 'Профиль определяет базовую толщину каркаса. В результате калькулятор также покажет ориентировочную итоговую толщину перегородки с учётом слоёв ГКЛ.'); ?>
+                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-profile-width-tooltip', 'Профиль определяет базовую толщину каркаса. В результате калькулятор также покажет ориентировочную итоговую толщину перегородки с учётом слоёв ГКЛ.'); ?>
                             </label>
                             <select id="<?php echo esc_attr($profileWidthFieldId); ?>" name="drywallProfileWidthMm">
                                 <option value="50">50</option>
@@ -2371,7 +2373,7 @@ SVG;
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($reserveFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Запас на листы и профиль (%)</span>
-                                <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-reserve-tooltip', 'Запас компенсирует подрезку, подгонку листов и добор профиля на сложных участках.'); ?>
+                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-reserve-tooltip', 'Запас компенсирует подрезку, подгонку листов и добор профиля на сложных участках.'); ?>
                             </label>
                             <input id="<?php echo esc_attr($reserveFieldId); ?>" type="number" name="reservePercent" min="1" step="1" value="10">
                             <div class="brigmaster-estimator__error" data-field-error="reservePercent" aria-live="polite"></div>
@@ -2379,7 +2381,7 @@ SVG;
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($fastenerReserveFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Запас на метизы (%)</span>
-                                <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-fastener-reserve-tooltip', 'Запас применяется ко всем штучным позициям: саморезам, дюбелям, подвесам и соединителям.'); ?>
+                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-fastener-reserve-tooltip', 'Запас применяется ко всем штучным позициям: саморезам, дюбелям, подвесам и соединителям.'); ?>
                             </label>
                             <input id="<?php echo esc_attr($fastenerReserveFieldId); ?>" type="number" name="drywallFastenerReservePercent" min="1" step="1" value="10">
                             <div class="brigmaster-estimator__error" data-field-error="drywallFastenerReservePercent" aria-live="polite"></div>
@@ -2393,7 +2395,7 @@ SVG;
             <input id="<?php echo esc_attr($includeFinishingFieldId); ?>" type="checkbox" name="drywallIncludeFinishing" value="1">
             <label for="<?php echo esc_attr($includeFinishingFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть отделку</span>
-                <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-finishing-tooltip', 'Добавляет ориентир по грунтовке, шпатлёвке для швов, финишной шпатлёвке и армирующей ленте. Эти материалы появляются отдельными строками в результате расчёта.'); ?>
+                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-finishing-tooltip', 'Добавляет ориентир по грунтовке, шпатлёвке для швов, финишной шпатлёвке и армирующей ленте. Эти материалы появляются отдельными строками в результате расчёта.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="drywallIncludeFinishing" aria-live="polite"></div>
         </div>
@@ -2402,7 +2404,7 @@ SVG;
             <input id="<?php echo esc_attr($includeOpeningsFieldId); ?>" type="checkbox" name="includeOpenings" value="1">
             <label for="<?php echo esc_attr($includeOpeningsFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть проёмы</span>
-                <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-openings-tooltip', 'Проёмы уменьшают чистую площадь обшивки. Для потолка блок скрывается, потому что геометрия там другая.'); ?>
+                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-openings-tooltip', 'Проёмы уменьшают чистую площадь обшивки. Для потолка блок скрывается, потому что геометрия там другая.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="includeOpenings" aria-live="polite"></div>
         </div>
@@ -2411,7 +2413,7 @@ SVG;
             <input id="<?php echo esc_attr($includeEndCladdingFieldId); ?>" type="checkbox" name="drywallIncludeEndCladding" value="1">
             <label for="<?php echo esc_attr($includeEndCladdingFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть облицовку торцов проёмов</span>
-                <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-end-cladding-tooltip', 'Актуально для перегородок. В расчёт добавляются полосы ГКЛ по толщине перегородки на боковые и верхние откосы.'); ?>
+                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-end-cladding-tooltip', 'Актуально для перегородок. В расчёт добавляются полосы ГКЛ по толщине перегородки на боковые и верхние откосы.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="drywallIncludeEndCladding" aria-live="polite"></div>
         </div>
@@ -2424,7 +2426,7 @@ SVG;
             <input id="<?php echo esc_attr($includeCostsFieldId); ?>" type="checkbox" name="drywallIncludeCosts" value="1">
             <label for="<?php echo esc_attr($includeCostsFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Посчитать стоимость</span>
-                <?php echo $this->renderEstimatorTooltip($instanceId . 'drywall-costs-tooltip', 'Все ценовые поля необязательны. Если заполнить только часть из них, в результате появятся только эти строки.'); ?>
+                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-costs-tooltip', 'Все ценовые поля необязательны. Если заполнить только часть из них, в результате появятся только эти строки.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="drywallIncludeCosts" aria-live="polite"></div>
         </div>
@@ -2590,7 +2592,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tileTargetFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Что облицовываем</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-target-tooltip', 'Подбирает набор полей под пол или стены. В версии v1 ориентировочная раскладка рассчитана для прямоугольной зоны.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-target-tooltip', 'Подбирает набор полей под пол или стены. В версии v1 ориентировочная раскладка рассчитана для прямоугольной зоны.'); ?>
                 </label>
                 <select id="<?php echo esc_attr($tileTargetFieldId); ?>" name="tileTarget" data-tile-target-select>
                     <option value="floor">Пол</option>
@@ -2601,7 +2603,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tilePatternFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Способ укладки</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-pattern-tooltip', 'Прямая укладка обычно требует меньшего запаса. Смещение и диагональ повышают количество подрезки, поэтому калькулятор предлагает больший запас по умолчанию.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-pattern-tooltip', 'Прямая укладка обычно требует меньшего запаса. Смещение и диагональ повышают количество подрезки, поэтому калькулятор предлагает больший запас по умолчанию.'); ?>
                 </label>
                 <select id="<?php echo esc_attr($tilePatternFieldId); ?>" name="tileLayingPattern" data-tile-pattern-select>
                     <option value="direct">Прямая</option>
@@ -2616,7 +2618,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'tile-room-length'); ?>" class="brigmaster-estimator__label-row">
                     <span data-tile-length-label>Длина помещения (м)</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-length-tooltip', 'Для пола это длина пола, для стен это длина комнаты. При расчёте стен по размерам калькулятор строит прямоугольную развёртку по периметру.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-length-tooltip', 'Для пола это длина пола, для стен это длина комнаты. При расчёте стен по размерам калькулятор строит прямоугольную развёртку по периметру.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'tile-room-length'); ?>" type="number" name="length" min="0.01" step="0.01" value="6">
                 <div class="brigmaster-estimator__error" data-field-error="length" aria-live="polite"></div>
@@ -2624,7 +2626,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'tile-room-width'); ?>" class="brigmaster-estimator__label-row">
                     <span data-tile-width-label>Ширина помещения (м)</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-width-tooltip', 'Для стен нужна ширина комнаты, чтобы получить прямоугольный периметр. Для сложной формы помещения используйте результат как ориентир по материалам.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-width-tooltip', 'Для стен нужна ширина комнаты, чтобы получить прямоугольный периметр. Для сложной формы помещения используйте результат как ориентир по материалам.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'tile-room-width'); ?>" type="number" name="width" min="0.01" step="0.01" value="4">
                 <div class="brigmaster-estimator__error" data-field-error="width" aria-live="polite"></div>
@@ -2632,7 +2634,7 @@ SVG;
             <div class="brigmaster-estimator__field brigmaster-estimator__field-group--hidden" data-field-group="tile-wall-height">
                 <label for="<?php echo esc_attr($instanceId . 'tile-wall-height'); ?>" class="brigmaster-estimator__label-row">
                     <span>Высота стен (м)</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-height-tooltip', 'Используется только для стен. Для простой модели v1 все стены считаются как прямоугольная полоса по периметру.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-height-tooltip', 'Используется только для стен. Для простой модели v1 все стены считаются как прямоугольная полоса по периметру.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'tile-wall-height'); ?>" type="number" name="height" min="0.01" step="0.01" value="2.7">
                 <div class="brigmaster-estimator__error" data-field-error="height" aria-live="polite"></div>
@@ -2643,7 +2645,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'tile-area'); ?>" class="brigmaster-estimator__label-row">
                     <span>Площадь облицовки (м²)</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-area-tooltip', 'Если точные размеры неизвестны, можно считать по площади. В этом режиме калькулятор точно считает ориентир по материалам, а ориентировочная раскладка отключается.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-area-tooltip', 'Если точные размеры неизвестны, можно считать по площади. В этом режиме калькулятор точно считает ориентир по материалам, а ориентировочная раскладка отключается.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'tile-area'); ?>" type="number" name="area" min="0.01" step="0.01" value="24">
                 <div class="brigmaster-estimator__error" data-field-error="area" aria-live="polite"></div>
@@ -2654,7 +2656,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tileLengthFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Длина плитки (мм)</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-size-length-tooltip', 'Размер одной плитки без шва. В расчёте количества и раскладки шов учитывается отдельно.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-size-length-tooltip', 'Размер одной плитки без шва. В расчёте количества и раскладки шов учитывается отдельно.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tileLengthFieldId); ?>" type="number" name="tileLengthMm" min="1" step="1" value="600">
                 <div class="brigmaster-estimator__error" data-field-error="tileLengthMm" aria-live="polite"></div>
@@ -2667,7 +2669,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tileThicknessFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Толщина плитки (мм)</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-thickness-tooltip', 'Нужна в первую очередь для расчёта затирки. Для стен по умолчанию подставляется 8 мм, для пола 9 мм.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-thickness-tooltip', 'Нужна в первую очередь для расчёта затирки. Для стен по умолчанию подставляется 8 мм, для пола 9 мм.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tileThicknessFieldId); ?>" type="number" name="tileThicknessMm" min="1" step="1" value="9" data-tile-thickness-input>
                 <div class="brigmaster-estimator__error" data-field-error="tileThicknessMm" aria-live="polite"></div>
@@ -2675,7 +2677,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tileJointFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Ширина шва (мм)</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-joint-tooltip', 'Шов влияет и на ориентировочную раскладку, и на расход затирки. В расчёте количества плиток шов участвует как часть модуля раскладки.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-joint-tooltip', 'Шов влияет и на ориентировочную раскладку, и на расход затирки. В расчёте количества плиток шов участвует как часть модуля раскладки.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tileJointFieldId); ?>" type="number" name="tileJointMm" min="1" step="0.1" value="2">
                 <div class="brigmaster-estimator__error" data-field-error="tileJointMm" aria-live="polite"></div>
@@ -2686,7 +2688,7 @@ SVG;
             <div class="brigmaster-estimator__field brigmaster-estimator__field-group--hidden" data-field-group="tile-offset">
                 <label for="<?php echo esc_attr($tileOffsetFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Смещение (% длины плитки)</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-offset-tooltip', 'Нужно только для укладки со смещением. Значение 50% соответствует классическому сдвигу на половину плитки.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-offset-tooltip', 'Нужно только для укладки со смещением. Значение 50% соответствует классическому сдвигу на половину плитки.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tileOffsetFieldId); ?>" type="number" name="tileOffsetPercent" min="1" step="1" value="50">
                 <div class="brigmaster-estimator__error" data-field-error="tileOffsetPercent" aria-live="polite"></div>
@@ -2694,7 +2696,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($reserveFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Запас (%)</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-reserve-tooltip', 'Рекомендуемый запас зависит от способа укладки: прямая обычно 5%, смещение 7%, диагональ 10% и выше. Значение можно изменить под свою задачу.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-reserve-tooltip', 'Рекомендуемый запас зависит от способа укладки: прямая обычно 5%, смещение 7%, диагональ 10% и выше. Значение можно изменить под свою задачу.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($reserveFieldId); ?>" type="number" name="reservePercent" min="1" step="1" value="5" data-tile-reserve-input>
                 <div class="brigmaster-estimator__error" data-field-error="reservePercent" aria-live="polite"></div>
@@ -2702,7 +2704,7 @@ SVG;
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tilePriceFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Цена плитки за м²</span>
-                    <?php echo $this->renderTileTooltip($instanceId . 'tile-price-tooltip', 'Поле необязательно. Если цена не указана, карточка стоимости по плитке не выводится.'); ?>
+                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-price-tooltip', 'Поле необязательно. Если цена не указана, карточка стоимости по плитке не выводится.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tilePriceFieldId); ?>" type="number" name="tilePricePerM2" min="0.01" step="0.01" placeholder="Укажите цену">
                 <div class="brigmaster-estimator__error" data-field-error="tilePricePerM2" aria-live="polite"></div>
@@ -2713,14 +2715,14 @@ SVG;
             <input id="<?php echo esc_attr($tileIncludeOpeningsFieldId); ?>" type="checkbox" name="tileIncludeOpenings" value="1">
             <label for="<?php echo esc_attr($tileIncludeOpeningsFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть окна и двери</span>
-                <?php echo $this->renderTileTooltip($instanceId . 'tile-openings-toggle-tooltip', 'Проёмы уменьшают чистую площадь облицовки. Подрезка вокруг проёмов отдельно не моделируется по координатам, поэтому запас всё равно нужен.'); ?>
+                <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-openings-toggle-tooltip', 'Проёмы уменьшают чистую площадь облицовки. Подрезка вокруг проёмов отдельно не моделируется по координатам, поэтому запас всё равно нужен.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="tileIncludeOpenings" aria-live="polite"></div>
             <p class="brigmaster-estimator__hint">Доступно, когда выбрана облицовка стен.</p>
         </div>
 
         <details class="brigmaster-estimator__accordion" open data-toggle-target="tile-openings">
-            <summary class="brigmaster-estimator__accordion-summary">Окна и двери<?php echo $this->accordionChevronMarkup(); ?></summary>
+            <summary class="brigmaster-estimator__accordion-summary">Окна и двери<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
             <div class="brigmaster-estimator__accordion-body">
                 <?php echo $this->renderTileRepeatableGroup($instanceId, 'tileOpenings', 'Окна и двери', 'opening', false); ?>
             </div>
@@ -2730,13 +2732,13 @@ SVG;
             <input id="<?php echo esc_attr($tileIncludeCutoutsFieldId); ?>" type="checkbox" name="tileIncludeCutouts" value="1">
             <label for="<?php echo esc_attr($tileIncludeCutoutsFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть отверстия</span>
-                <?php echo $this->renderTileTooltip($instanceId . 'tile-cutouts-toggle-tooltip', 'Вырез уменьшает площадь, но часто съедает целую плитку. Поэтому калькулятор дополнительно прибавляет ориентир по потерям на каждый вырез.'); ?>
+                <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-cutouts-toggle-tooltip', 'Вырез уменьшает площадь, но часто съедает целую плитку. Поэтому калькулятор дополнительно прибавляет ориентир по потерям на каждый вырез.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="tileIncludeCutouts" aria-live="polite"></div>
         </div>
 
         <details class="brigmaster-estimator__accordion" open data-toggle-target="tile-cutouts">
-            <summary class="brigmaster-estimator__accordion-summary">Вырезы и отверстия<?php echo $this->accordionChevronMarkup(); ?></summary>
+            <summary class="brigmaster-estimator__accordion-summary">Вырезы и отверстия<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
             <div class="brigmaster-estimator__accordion-body">
                 <?php echo $this->renderTileRepeatableGroup($instanceId, 'tileCutouts', 'Вырезы и отверстия', 'cutout', true); ?>
             </div>
@@ -2746,7 +2748,7 @@ SVG;
             <input id="<?php echo esc_attr($tileIncludeAdhesiveFieldId); ?>" type="checkbox" name="tileIncludeAdhesive" value="1">
             <label for="<?php echo esc_attr($tileIncludeAdhesiveFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Рассчитать клей</span>
-                <?php echo $this->renderTileTooltip($instanceId . 'tile-adhesive-tooltip', 'Расход клея справочный. Он зависит от размера плитки, основания, размера зуба шпателя и толщины слоя.'); ?>
+                <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-adhesive-tooltip', 'Расход клея справочный. Он зависит от размера плитки, основания, размера зуба шпателя и толщины слоя.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="tileIncludeAdhesive" aria-live="polite"></div>
         </div>
@@ -2778,7 +2780,7 @@ SVG;
             <input id="<?php echo esc_attr($tileIncludeGroutFieldId); ?>" type="checkbox" name="tileIncludeGrout" value="1">
             <label for="<?php echo esc_attr($tileIncludeGroutFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Рассчитать затирку</span>
-                <?php echo $this->renderTileTooltip($instanceId . 'tile-grout-tooltip', 'Затирка считается ориентировочно по размерам плитки, толщине плитки, ширине шва и плотности смеси.'); ?>
+                <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-grout-tooltip', 'Затирка считается ориентировочно по размерам плитки, толщине плитки, ширине шва и плотности смеси.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="tileIncludeGrout" aria-live="polite"></div>
         </div>
@@ -2902,18 +2904,6 @@ SVG;
         return (string) ob_get_clean();
     }
 
-    private function renderEstimatorTooltip(string $tooltipId, string $content): string
-    {
-        return '<span class="brigmaster-estimator__tooltip-anchor">'
-            . '<button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка" aria-expanded="false" aria-controls="' . esc_attr($tooltipId) . '">i</button>'
-            . '<div id="' . esc_attr($tooltipId) . '" class="brigmaster-estimator__tooltip" role="tooltip" hidden>' . esc_html($content) . '</div>'
-            . '</span>';
-    }
-
-    private function renderTileTooltip(string $tooltipId, string $content): string
-    {
-        return $this->renderEstimatorTooltip($tooltipId, $content);
-    }
 
     private function renderTileResultTemplate(): string
     {
@@ -2974,16 +2964,6 @@ SVG;
         return (string) ob_get_clean();
     }
 
-    /**
-     * Accordion summary chevron (SVG in markup; child theme animates via scaleY).
-     */
-    private function accordionChevronMarkup(): string
-    {
-        return '<span class="brigmaster-estimator__accordion-chevron" aria-hidden="true">'
-            . '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" focusable="false">'
-            . '<path d="M2.25 4.25L6 7.75L9.75 4.25" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>'
-            . '</svg></span>';
-    }
 
     private function enqueueAssets(string $calculator): void
     {
