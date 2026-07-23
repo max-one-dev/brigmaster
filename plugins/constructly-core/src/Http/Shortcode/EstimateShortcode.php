@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Brigmaster\Http\Shortcode;
 
+use Brigmaster\Presentation\Estimator\ResultTemplate\BrickResultTemplate;
+use Brigmaster\Presentation\Estimator\ResultTemplate\DrywallResultTemplate;
+use Brigmaster\Presentation\Estimator\ResultTemplate\TileResultTemplate;
 use Brigmaster\Presentation\Html\MarkupHelpers;
 
 final class EstimateShortcode
@@ -1627,11 +1630,11 @@ SVG;
                     </div>
                     <p class="bm-calculator-result__save">Сохранение результата в проект появится позже.</p>
                 <?php elseif ($calculator === 'brick') : ?>
-                    <?php echo $this->renderBrickResultTemplate(); ?>
+                    <?php echo BrickResultTemplate::render(); ?>
                 <?php elseif ($calculator === 'tile') : ?>
-                    <?php echo $this->renderTileResultTemplate(); ?>
+                    <?php echo TileResultTemplate::render(); ?>
                 <?php elseif ($calculator === 'drywall') : ?>
-                    <?php echo $this->renderDrywallResultTemplate(); ?>
+                    <?php echo DrywallResultTemplate::render(); ?>
                 <?php endif; ?>
             </div>
             <div class="brigmaster-estimator__tooltip-backdrop" data-tooltip-backdrop hidden></div>
@@ -2157,68 +2160,6 @@ SVG;
         return (string) ob_get_clean();
     }
 
-    private function renderBrickResultTemplate(): string
-    {
-        ob_start();
-        ?>
-                    <div class="bm-calculator-result__head">
-                        <h2 class="bm-calculator-result__title">Результаты расчёта</h2>
-                        <span class="bm-calculator-result__status">Готово</span>
-                    </div>
-                    <div class="bm-calculator-result__sections">
-                        <section class="bm-calculator-result__breakdown" data-result-card="brick-summary">
-                            <h3 class="bm-calculator-result__section-title">Кирпич</h3>
-                            <div class="bm-calculator-result__list" data-result-list="brick-summary"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="brick-geometry">
-                            <h3 class="bm-calculator-result__section-title">Геометрия кладки</h3>
-                            <div class="bm-calculator-result__list" data-result-list="brick-geometry"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="brick-mortar">
-                            <h3 class="bm-calculator-result__section-title">Раствор</h3>
-                            <div class="bm-calculator-result__list" data-result-list="brick-mortar"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="brick-mesh" hidden>
-                            <h3 class="bm-calculator-result__section-title">Кладочная сетка</h3>
-                            <div class="bm-calculator-result__list" data-result-list="brick-mesh"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="brick-lintels" hidden>
-                            <h3 class="bm-calculator-result__section-title">Перемычки</h3>
-                            <div class="bm-calculator-result__list" data-result-list="brick-lintels"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="brick-costs" hidden>
-                            <h3 class="bm-calculator-result__section-title">Стоимость</h3>
-                            <div class="bm-calculator-result__list" data-result-list="brick-costs"></div>
-                        </section>
-                    </div>
-                    <div class="bm-calculator-result__note">
-                        <span class="bm-calculator-result__note-icon" aria-hidden="true">
-                            <svg class="bm-icon"><use href="#bm-icon-info-circle"></use></svg>
-                        </span>
-                        <span class="bm-calculator-result__note-content">
-                            <strong>Расчёт ориентировочный</strong>
-                            <span>Фактический расход зависит от качества материалов и условий кладки.</span>
-                        </span>
-                    </div>
-                    <div class="bm-calculator-result__actions">
-                        <button type="button" class="bm-button bm-button--primary" data-result-action="download">
-                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-download"></use></svg>
-                            <span>Открыть PDF</span>
-                        </button>
-                        <button type="button" class="bm-button bm-button--secondary" data-result-action="copy-link">
-                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-link"></use></svg>
-                            <span>Скопировать ссылку</span>
-                        </button>
-                        <button type="button" class="bm-button bm-button--secondary" data-result-action="print">
-                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-print"></use></svg>
-                            <span>Распечатать</span>
-                        </button>
-                    </div>
-                    <p class="bm-calculator-result__save">Сохранение результата в проект появится позже.</p>
-        <?php
-        return (string) ob_get_clean();
-    }
-
     private function renderDrywallEstimatorFields(string $instanceId): string
     {
         $targetFieldId = $instanceId . 'drywall-target';
@@ -2495,69 +2436,6 @@ SVG;
             <div class="brigmaster-estimator__error" data-field-error="windows" aria-live="polite"></div>
             <div class="brigmaster-estimator__error" data-field-error="doors" aria-live="polite"></div>
         </div>
-        <?php
-
-        return (string) ob_get_clean();
-    }
-
-    private function renderDrywallResultTemplate(): string
-    {
-        ob_start();
-        ?>
-                    <div class="bm-calculator-result__head">
-                        <h2 class="bm-calculator-result__title">Результаты расчёта</h2>
-                        <span class="bm-calculator-result__status">Готово</span>
-                    </div>
-                    <div class="bm-calculator-result__sections">
-                        <section class="bm-calculator-result__breakdown" data-result-card="drywall-geometry">
-                            <h3 class="bm-calculator-result__section-title">Геометрия</h3>
-                            <div class="bm-calculator-result__list" data-result-list="drywall-geometry"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="drywall-sheets">
-                            <h3 class="bm-calculator-result__section-title">Листы ГКЛ</h3>
-                            <div class="bm-calculator-result__list" data-result-list="drywall-sheets"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="drywall-profiles">
-                            <h3 class="bm-calculator-result__section-title">Профили</h3>
-                            <div class="bm-calculator-result__list" data-result-list="drywall-profiles"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="drywall-fasteners">
-                            <h3 class="bm-calculator-result__section-title">Метизы и крепёж</h3>
-                            <div class="bm-calculator-result__list" data-result-list="drywall-fasteners"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="drywall-finishing" hidden>
-                            <h3 class="bm-calculator-result__section-title">Отделка</h3>
-                            <div class="bm-calculator-result__list" data-result-list="drywall-finishing"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="drywall-costs" hidden>
-                            <h3 class="bm-calculator-result__section-title">Стоимость</h3>
-                            <div class="bm-calculator-result__list" data-result-list="drywall-costs"></div>
-                        </section>
-                    </div>
-                    <div class="bm-calculator-result__note">
-                        <span class="bm-calculator-result__note-icon" aria-hidden="true">
-                            <svg class="bm-icon"><use href="#bm-icon-info-circle"></use></svg>
-                        </span>
-                        <span class="bm-calculator-result__note-content">
-                            <strong>Расчёт ориентировочный</strong>
-                            <span>Уточняйте у поставщика актуальные форматы листов и длины профилей.</span>
-                        </span>
-                    </div>
-                    <div class="bm-calculator-result__actions">
-                        <button type="button" class="bm-button bm-button--primary" data-result-action="download">
-                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-download"></use></svg>
-                            <span>Открыть PDF</span>
-                        </button>
-                        <button type="button" class="bm-button bm-button--secondary" data-result-action="copy-link">
-                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-link"></use></svg>
-                            <span>Скопировать ссылку</span>
-                        </button>
-                        <button type="button" class="bm-button bm-button--secondary" data-result-action="print">
-                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-print"></use></svg>
-                            <span>Распечатать</span>
-                        </button>
-                    </div>
-                    <p class="bm-calculator-result__save">Сохранение результата в проект появится позже.</p>
         <?php
 
         return (string) ob_get_clean();
@@ -2899,66 +2777,6 @@ SVG;
             </div>
             <div class="brigmaster-estimator__error" data-field-error="<?php echo esc_attr($group); ?>" aria-live="polite"></div>
         </div>
-        <?php
-
-        return (string) ob_get_clean();
-    }
-
-
-    private function renderTileResultTemplate(): string
-    {
-        ob_start();
-        ?>
-                    <div class="bm-calculator-result__head">
-                        <h2 class="bm-calculator-result__title">Результаты расчёта</h2>
-                        <span class="bm-calculator-result__status">Готово</span>
-                    </div>
-                    <div class="bm-calculator-result__sections">
-                        <section class="bm-calculator-result__breakdown" data-result-card="tile-summary">
-                            <h3 class="bm-calculator-result__section-title">Плитка</h3>
-                            <div class="bm-calculator-result__list" data-result-list="tile-summary"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="tile-layout">
-                            <h3 class="bm-calculator-result__section-title">Раскладка</h3>
-                            <div class="bm-calculator-result__list" data-result-list="tile-layout"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="tile-adhesive" hidden>
-                            <h3 class="bm-calculator-result__section-title">Клей</h3>
-                            <div class="bm-calculator-result__list" data-result-list="tile-adhesive"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="tile-grout" hidden>
-                            <h3 class="bm-calculator-result__section-title">Затирка</h3>
-                            <div class="bm-calculator-result__list" data-result-list="tile-grout"></div>
-                        </section>
-                        <section class="bm-calculator-result__breakdown" data-result-card="tile-costs" hidden>
-                            <h3 class="bm-calculator-result__section-title">Стоимость</h3>
-                            <div class="bm-calculator-result__list" data-result-list="tile-costs"></div>
-                        </section>
-                    </div>
-                    <div class="bm-calculator-result__note">
-                        <span class="bm-calculator-result__note-icon" aria-hidden="true">
-                            <svg class="bm-icon"><use href="#bm-icon-info-circle"></use></svg>
-                        </span>
-                        <span class="bm-calculator-result__note-content">
-                            <strong>Расчёт ориентировочный</strong>
-                            <span>Фактический расход зависит от формата плитки, способа укладки и условий работ.</span>
-                        </span>
-                    </div>
-                    <div class="bm-calculator-result__actions">
-                        <button type="button" class="bm-button bm-button--primary" data-result-action="download">
-                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-download"></use></svg>
-                            <span>Открыть PDF</span>
-                        </button>
-                        <button type="button" class="bm-button bm-button--secondary" data-result-action="copy-link">
-                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-link"></use></svg>
-                            <span>Скопировать ссылку</span>
-                        </button>
-                        <button type="button" class="bm-button bm-button--secondary" data-result-action="print">
-                            <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-print"></use></svg>
-                            <span>Распечатать</span>
-                        </button>
-                    </div>
-                    <p class="bm-calculator-result__save">Сохранение результата в проект появится позже.</p>
         <?php
 
         return (string) ob_get_clean();
