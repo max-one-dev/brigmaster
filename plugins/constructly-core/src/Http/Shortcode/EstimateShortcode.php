@@ -21,14 +21,17 @@ use Brigmaster\Presentation\Html\MarkupHelpers;
 
 final class EstimateShortcode
 {
+    private readonly EstimatorAssetEnqueuer $assetEnqueuer;
+
     public function __construct(
         private readonly string $pluginFilePath
     ) {
+        $this->assetEnqueuer = new EstimatorAssetEnqueuer($pluginFilePath);
     }
 
     public function registerShortcodes(): void
     {
-        add_filter('rank_math/json_ld', [$this, 'addFoundationHubFaqSchema'], 20, 2);
+        add_filter('rank_math/json_ld', [new FoundationHubFaqSchema(), 'addFoundationHubFaqSchema'], 20, 2);
 
         add_shortcode('brigmaster_concrete_estimator', [$this, 'renderConcreteShortcode']);
         add_shortcode('brigmaster_strip_foundation_estimator', [$this, 'renderStripFoundationShortcode']);
@@ -94,90 +97,13 @@ final class EstimateShortcode
         return (string) apply_filters('constructly_render_foundation_hub', '');
     }
 
-    /**
-     * Injects FAQPage for pages that only render [brigmaster_foundation_hub] (Rank Math merges into WebPage).
-     *
-     * @param array<string, mixed> $data
-     * @param mixed                $jsonLd Unused; signature matches rank_math/json_ld.
-     * @return array<string, mixed>
-     */
-    public function addFoundationHubFaqSchema(array $data, mixed $jsonLd): array
-    {
-        if (!is_singular()) {
-            return $data;
-        }
-
-        global $post;
-        if (!$post instanceof \WP_Post) {
-            return $data;
-        }
-
-        $postContent = (string) $post->post_content;
-
-        if (has_block('rank-math/faq-block', $postContent)) {
-            return $data;
-        }
-
-        if (
-            !has_block('constructly/foundation-hub', $postContent)
-            && !has_shortcode($postContent, 'brigmaster_foundation_hub')
-        ) {
-            return $data;
-        }
-
-        $pairs = [
-            [
-                'id' => 'foundation-hub-faq-1',
-                'name' => 'Что делает этот раздел, а что не делает?',
-                'text' => 'Хаб помогает перейти к нужному фундаментному калькулятору, но не выбирает тип основания автоматически и не заменяет решение проектировщика.',
-            ],
-            [
-                'id' => 'foundation-hub-faq-2',
-                'name' => 'Можно ли ориентироваться только на онлайн-калькулятор?',
-                'text' => 'Нет. Каждый фундаментный калькулятор дает предварительную оценку материалов, но не заменяет проект, геологию и проверку несущей способности.',
-            ],
-            [
-                'id' => 'foundation-hub-faq-3',
-                'name' => 'Как выбрать между плитой, лентой и сваями?',
-                'text' => 'Сначала определите конструктивную схему по грунту, нагрузкам и условиям участка. После этого используйте соответствующий калькулятор, чтобы оценить материалы внутри выбранного варианта.',
-            ],
-            [
-                'id' => 'foundation-hub-faq-4',
-                'name' => 'Почему результаты на разных страницах отличаются?',
-                'text' => 'Плитный, ленточный и свайный фундамент рассчитываются по разным моделям и с разным набором полей, поэтому итоговые показатели не совпадают между собой.',
-            ],
-        ];
-
-        if (!isset($data['faqs'])) {
-            $data['faqs'] = [
-                '@type' => 'FAQPage',
-                'mainEntity' => [],
-            ];
-        }
-
-        $permalinkBase = get_permalink($post) . '#';
-        foreach ($pairs as $row) {
-            $data['faqs']['mainEntity'][] = [
-                '@type' => 'Question',
-                'url' => esc_url($permalinkBase . $row['id']),
-                'name' => $row['name'],
-                'acceptedAnswer' => [
-                    '@type' => 'Answer',
-                    'text' => $row['text'],
-                ],
-            ];
-        }
-
-        return $data;
-    }
-
     private function renderEstimator(string $calculator, string $title): string
     {
         if (!in_array($calculator, ['slab_foundation', 'strip_foundation', 'pile_foundation', 'brick', 'screed', 'drywall', 'tile'], true)) {
             return '';
         }
 
-        $this->enqueueAssets($calculator);
+        $this->assetEnqueuer->enqueue($calculator);
 
         $heading = trim($title);
 
@@ -1138,94 +1064,5 @@ SVG;
         <?php
 
         return (string) ob_get_clean();
-    }
-
-    private function enqueueAssets(string $calculator): void
-    {
-        $baseUrl = plugin_dir_url($this->pluginFilePath);
-        $basePath = plugin_dir_path($this->pluginFilePath);
-        $calculatorEntryMap = [
-            'slab_foundation' => 'slab',
-            'strip_foundation' => 'strip',
-            'pile_foundation' => 'pile',
-            'brick' => 'brick',
-            'screed' => 'screed',
-            'drywall' => 'drywall',
-            'tile' => 'tile',
-        ];
-        $entryName = $calculatorEntryMap[$calculator] ?? null;
-        if (!is_string($entryName) || $entryName === '') {
-            return;
-        }
-
-        $scriptRelativePath = 'assets/dist/calculators/' . $entryName . '.js';
-        $scriptAbsolutePath = $basePath . $scriptRelativePath;
-        if (!file_exists($scriptAbsolutePath)) {
-            return;
-        }
-        $scriptHandle = 'brigmaster-estimate-form-' . $entryName;
-        $assetVersion = (string) filemtime($scriptAbsolutePath);
-
-        wp_register_script(
-            $scriptHandle,
-            $baseUrl . $scriptRelativePath,
-            [],
-            $assetVersion,
-            true
-        );
-        wp_script_add_data($scriptHandle, 'type', 'module');
-        add_filter('script_loader_tag', [$this, 'renderEstimateModuleScriptTag'], 10, 3);
-
-        $metrika = $this->getYandexMetrikaFrontendConfig();
-
-        wp_localize_script(
-            $scriptHandle,
-            'brigmasterEstimateFormData',
-            [
-                'endpoint' => esc_url_raw(rest_url('brigmaster/v1/estimate')),
-                'networkErrorMessage' => 'Не удалось выполнить запрос. Проверьте подключение и попробуйте снова.',
-                'metrikaCounterId' => $metrika['counterId'],
-                'metrikaEnabled' => $metrika['enabled'],
-            ]
-        );
-
-        wp_enqueue_script($scriptHandle);
-    }
-
-    public function renderEstimateModuleScriptTag(string $tag, string $handle, string $src): string
-    {
-        if (!str_starts_with($handle, 'brigmaster-estimate-form-')) {
-            return $tag;
-        }
-
-        return '<script type="module" src="' . esc_url($src) . '" id="' . esc_attr($handle) . '-js"></script>' . "\n";
-    }
-
-    /**
-     * Yandex Metrika reachGoal when production (child theme {@see constructly_is_production_site()} if present)
-     * and {@see BRIGMASTER_YANDEX_METRIKA_COUNTER_ID} is set. Counter ID: wp-config constant + filter.
-     *
-     * @return array{counterId: int, enabled: bool}
-     */
-    private function getYandexMetrikaFrontendConfig(): array
-    {
-        $isProduction = function_exists('constructly_is_production_site')
-            ? constructly_is_production_site()
-            : wp_get_environment_type() === 'production';
-        $isProduction = (bool) apply_filters('brigmaster_is_production_for_yandex_goals', $isProduction);
-
-        $counterId = 0;
-        if (defined('BRIGMASTER_YANDEX_METRIKA_COUNTER_ID')) {
-            $counterId = (int) BRIGMASTER_YANDEX_METRIKA_COUNTER_ID;
-        }
-
-        $counterId = (int) apply_filters('brigmaster_yandex_metrika_counter_id', $counterId);
-
-        $enabled = $isProduction && $counterId > 0;
-
-        return [
-            'counterId' => $enabled ? $counterId : 0,
-            'enabled' => $enabled,
-        ];
     }
 }
