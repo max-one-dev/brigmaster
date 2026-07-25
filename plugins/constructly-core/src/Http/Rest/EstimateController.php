@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Brigmaster\Http\Rest;
 
 use Brigmaster\Application\EstimateService;
-use Brigmaster\Domain\DTO\EstimateInput;
+use Brigmaster\Http\Rest\Validation\EstimateRequestMapper;
 use Brigmaster\Http\Rest\Validation\EstimateRequestValidator;
-use Brigmaster\Http\Rest\Validation\RequestValueHelpers;
 use InvalidArgumentException;
 use WP_REST_Request;
 use WP_REST_Response;
 
 final class EstimateController
 {
-    use RequestValueHelpers;
-
     private readonly EstimateRequestValidator $requestValidator;
+
+    private readonly EstimateRequestMapper $requestMapper;
 
     public function __construct(
         private readonly EstimateService $estimateService
     ) {
         $this->requestValidator = new EstimateRequestValidator();
+        $this->requestMapper = new EstimateRequestMapper();
     }
 
     public function registerRoutes(): void
@@ -287,241 +287,9 @@ final class EstimateController
         }
 
         try {
-            $calculator = (string) $calculatorRaw;
-            $mode = (string) $modeRaw;
-            $area = $this->isNumericValue($areaRaw) ? (float) $areaRaw : null;
-            $thickness = $this->isNumericValue($thicknessRaw) ? (float) $thicknessRaw : null;
-            $subType = $this->isNonEmptyString($subTypeRaw) ? (string) $subTypeRaw : null;
-            $tileLengthCm = $this->isNumericValue($tileLengthCmRaw) ? (float) $tileLengthCmRaw : null;
-            $tileWidthCm = $this->isNumericValue($tileWidthCmRaw) ? (float) $tileWidthCmRaw : null;
-            $length = $this->isNumericValue($lengthRaw) ? (float) $lengthRaw : null;
-            $width = $this->isNumericValue($widthRaw) ? (float) $widthRaw : null;
-            $height = $this->isNumericValue($heightRaw) ? (float) $heightRaw : null;
-            $includeReinforcement = is_bool($includeReinforcementRaw) ? $includeReinforcementRaw : null;
-            $includeFormwork = is_bool($includeFormworkRaw) ? $includeFormworkRaw : null;
-            $rebarDiameterMm = $this->isNumericValue($rebarDiameterMmRaw) ? (float) $rebarDiameterMmRaw : null;
-            $rebarStepMm = $this->isNumericValue($rebarStepMmRaw) ? (float) $rebarStepMmRaw : null;
-            $rebarLayers = $this->isNumericValue($rebarLayersRaw) ? (int) $rebarLayersRaw : null;
-            $rebarReservePercent = $this->isNumericValue($rebarReservePercentRaw) ? (float) $rebarReservePercentRaw : null;
-            $formworkHeightM = $this->isNumericValue($formworkHeightMRaw) ? (float) $formworkHeightMRaw : null;
-            $formworkReservePercent = $this->isNumericValue($formworkReservePercentRaw) ? (float) $formworkReservePercentRaw : null;
-            $totalLengthM = $this->isNumericValue($totalLengthMRaw) ? (float) $totalLengthMRaw : null;
-            $widthM = $this->isNumericValue($widthMRaw) ? (float) $widthMRaw : null;
-            $heightM = $this->isNumericValue($heightMRaw) ? (float) $heightMRaw : null;
-            $houseLengthM = $this->isNumericValue($houseLengthMRaw) ? (float) $houseLengthMRaw : null;
-            $houseWidthM = $this->isNumericValue($houseWidthMRaw) ? (float) $houseWidthMRaw : null;
-            $segments = is_array($segmentsRaw) ? $segmentsRaw : null;
-            $longitudinalBarsCount = $this->isNumericValue($longitudinalBarsCountRaw) ? (int) $longitudinalBarsCountRaw : null;
-            $longitudinalDiameterMm = $this->isNumericValue($longitudinalDiameterMmRaw) ? (float) $longitudinalDiameterMmRaw : null;
-            $longitudinalReservePercent = $this->isNumericValue($longitudinalReservePercentRaw) ? (float) $longitudinalReservePercentRaw : null;
-            $transverseDiameterMm = $this->isNumericValue($transverseDiameterMmRaw) ? (float) $transverseDiameterMmRaw : null;
-            $transverseStepMm = $this->isNumericValue($transverseStepMmRaw) ? (float) $transverseStepMmRaw : null;
-            $transverseReservePercent = $this->isNumericValue($transverseReservePercentRaw) ? (float) $transverseReservePercentRaw : null;
-            $pileType = $this->isNonEmptyString($pileTypeRaw) ? (string) $pileTypeRaw : null;
-            $includePiles = is_bool($includePilesRaw) ? $includePilesRaw : null;
-            $pilesCount = $this->isNumericValue($pilesCountRaw) ? (int) $pilesCountRaw : null;
-            $pileShaftDiameterM = $this->isNumericValue($pileShaftDiameterMRaw) ? (float) $pileShaftDiameterMRaw : null;
-            $pileShaftHeightM = $this->isNumericValue($pileShaftHeightMRaw) ? (float) $pileShaftHeightMRaw : null;
-            $includePileBase = is_bool($includePileBaseRaw) ? $includePileBaseRaw : null;
-            $pileBaseDiameterM = $this->isNumericValue($pileBaseDiameterMRaw) ? (float) $pileBaseDiameterMRaw : null;
-            $pileBaseHeightM = $this->isNumericValue($pileBaseHeightMRaw) ? (float) $pileBaseHeightMRaw : null;
-            $includeGrillage = is_bool($includeGrillageRaw) ? $includeGrillageRaw : null;
-            $includePileReinforcement = is_bool($includePileReinforcementRaw) ? $includePileReinforcementRaw : null;
-            $pileReinforcementBarsCount = $this->isNumericValue($pileReinforcementBarsCountRaw) ? (int) $pileReinforcementBarsCountRaw : null;
-            $pileReinforcementDiameterMm = $this->isNumericValue($pileReinforcementDiameterMmRaw) ? (float) $pileReinforcementDiameterMmRaw : null;
-            $pileReinforcementReservePercent = $this->isNumericValue($pileReinforcementReservePercentRaw) ? (float) $pileReinforcementReservePercentRaw : null;
-            $mixture = is_array($mixtureRaw) ? $mixtureRaw : null;
-            $useUnifiedConcreteMixtureSettings = is_bool($useUnifiedConcreteMixtureSettingsRaw) ? $useUnifiedConcreteMixtureSettingsRaw : null;
-            $pileMixture = is_array($pileMixtureRaw) ? $pileMixtureRaw : null;
-            $grillageMixture = is_array($grillageMixtureRaw) ? $grillageMixtureRaw : null;
-            $brickFormat = $this->isNonEmptyString($brickFormatRaw) ? (string) $brickFormatRaw : null;
-            $brickLengthMm = $this->isNumericValue($brickLengthMmRaw) ? (float) $brickLengthMmRaw : null;
-            $brickWidthMm = $this->isNumericValue($brickWidthMmRaw) ? (float) $brickWidthMmRaw : null;
-            $brickHeightMm = $this->isNumericValue($brickHeightMmRaw) ? (float) $brickHeightMmRaw : null;
-            $jointThicknessMm = $this->isNumericValue($jointThicknessMmRaw) ? (float) $jointThicknessMmRaw : null;
-            $wallThicknessType = $this->isNonEmptyString($wallThicknessTypeRaw) ? (string) $wallThicknessTypeRaw : null;
-            $wallLengthM = $this->isNumericValue($wallLengthMRaw) ? (float) $wallLengthMRaw : null;
-            $wallHeightM = $this->isNumericValue($wallHeightMRaw) ? (float) $wallHeightMRaw : null;
-            $reservePercent = $this->isNumericValue($reservePercentRaw) ? (float) $reservePercentRaw : null;
-            $includeOpenings = is_bool($includeOpeningsRaw) ? $includeOpeningsRaw : null;
-            $windows = is_array($windowsRaw) ? $windowsRaw : null;
-            $doors = is_array($doorsRaw) ? $doorsRaw : null;
-            $includeGables = is_bool($includeGablesRaw) ? $includeGablesRaw : null;
-            $gables = is_array($gablesRaw) ? $gablesRaw : null;
-            $includeMasonryMesh = is_bool($includeMasonryMeshRaw) ? $includeMasonryMeshRaw : null;
-            $masonryMeshFrequencyRows = $this->isNumericValue($masonryMeshFrequencyRowsRaw) ? (int) $masonryMeshFrequencyRowsRaw : null;
-            $useCustomMortarProportions = is_bool($useCustomMortarProportionsRaw) ? $useCustomMortarProportionsRaw : null;
-            $cementShare = $this->isNumericValue($cementShareRaw) ? (float) $cementShareRaw : null;
-            $sandShare = $this->isNumericValue($sandShareRaw) ? (float) $sandShareRaw : null;
-            $cementPurchaseUnit = $this->isNonEmptyString($cementPurchaseUnitRaw) ? (string) $cementPurchaseUnitRaw : null;
-            $cementUnitWeightKg = $this->isNumericValue($cementUnitWeightKgRaw) ? (float) $cementUnitWeightKgRaw : null;
-            $cementUnitPrice = $this->isNumericValue($cementUnitPriceRaw) ? (float) $cementUnitPriceRaw : null;
-            $sandPurchaseUnit = $this->isNonEmptyString($sandPurchaseUnitRaw) ? (string) $sandPurchaseUnitRaw : null;
-            $sandUnitWeightKg = $this->isNumericValue($sandUnitWeightKgRaw) ? (float) $sandUnitWeightKgRaw : null;
-            $sandUnitPrice = $this->isNumericValue($sandUnitPriceRaw) ? (float) $sandUnitPriceRaw : null;
-            $cementBagWeightKg = $this->isNumericValue($cementBagWeightKgRaw) ? (float) $cementBagWeightKgRaw : null;
-            $brickWeightKg = $this->isNumericValue($brickWeightKgRaw) ? (float) $brickWeightKgRaw : null;
-            $brickPricePerUnit = $this->isNumericValue($brickPricePerUnitRaw) ? (float) $brickPricePerUnitRaw : null;
-            $cementBagPrice = $this->isNumericValue($cementBagPriceRaw) ? (float) $cementBagPriceRaw : null;
-            $sandPricePerTonne = $this->isNumericValue($sandPricePerTonneRaw) ? (float) $sandPricePerTonneRaw : null;
-            $tileTarget = $this->isNonEmptyString($tileTargetRaw) ? (string) $tileTargetRaw : null;
-            $tileLengthMm = $this->isNumericValue($tileLengthMmRaw) ? (float) $tileLengthMmRaw : null;
-            $tileWidthMm = $this->isNumericValue($tileWidthMmRaw) ? (float) $tileWidthMmRaw : null;
-            $tileThicknessMm = $this->isNumericValue($tileThicknessMmRaw) ? (float) $tileThicknessMmRaw : null;
-            $tileJointMm = $this->isNumericValue($tileJointMmRaw) ? (float) $tileJointMmRaw : null;
-            $tileLayingPattern = $this->isNonEmptyString($tileLayingPatternRaw) ? (string) $tileLayingPatternRaw : null;
-            $tileOffsetPercent = $this->isNumericValue($tileOffsetPercentRaw) ? (float) $tileOffsetPercentRaw : null;
-            $tileIncludeOpenings = is_bool($tileIncludeOpeningsRaw) ? $tileIncludeOpeningsRaw : null;
-            $tileOpenings = is_array($tileOpeningsRaw) ? $tileOpeningsRaw : null;
-            $tileIncludeCutouts = is_bool($tileIncludeCutoutsRaw) ? $tileIncludeCutoutsRaw : null;
-            $tileCutouts = is_array($tileCutoutsRaw) ? $tileCutoutsRaw : null;
-            $tileIncludeAdhesive = is_bool($tileIncludeAdhesiveRaw) ? $tileIncludeAdhesiveRaw : null;
-            $tileAdhesiveConsumptionKgPerM2 = $this->isNumericValue($tileAdhesiveConsumptionKgPerM2Raw) ? (float) $tileAdhesiveConsumptionKgPerM2Raw : null;
-            $tileAdhesiveLayerMm = $this->isNumericValue($tileAdhesiveLayerMmRaw) ? (float) $tileAdhesiveLayerMmRaw : null;
-            $tileAdhesiveBagWeightKg = $this->isNumericValue($tileAdhesiveBagWeightKgRaw) ? (float) $tileAdhesiveBagWeightKgRaw : null;
-            $tileAdhesiveBagPrice = $this->isNumericValue($tileAdhesiveBagPriceRaw) ? (float) $tileAdhesiveBagPriceRaw : null;
-            $tileIncludeGrout = is_bool($tileIncludeGroutRaw) ? $tileIncludeGroutRaw : null;
-            $tileGroutDensityKgPerM3 = $this->isNumericValue($tileGroutDensityKgPerM3Raw) ? (float) $tileGroutDensityKgPerM3Raw : null;
-            $tileGroutPackWeightKg = $this->isNumericValue($tileGroutPackWeightKgRaw) ? (float) $tileGroutPackWeightKgRaw : null;
-            $tileGroutPackPrice = $this->isNumericValue($tileGroutPackPriceRaw) ? (float) $tileGroutPackPriceRaw : null;
-            $tilePricePerM2 = $this->isNumericValue($tilePricePerM2Raw) ? (float) $tilePricePerM2Raw : null;
-            $drywallTarget = $this->isNonEmptyString($drywallTargetRaw) ? (string) $drywallTargetRaw : null;
-            $drywallSheetLengthMm = $this->isNumericValue($drywallSheetLengthMmRaw) ? (float) $drywallSheetLengthMmRaw : null;
-            $drywallSheetWidthMm = $this->isNumericValue($drywallSheetWidthMmRaw) ? (float) $drywallSheetWidthMmRaw : null;
-            $drywallSheetThicknessMm = $this->isNumericValue($drywallSheetThicknessMmRaw) ? (float) $drywallSheetThicknessMmRaw : null;
-            $drywallLayers = $this->isNumericValue($drywallLayersRaw) ? (int) $drywallLayersRaw : null;
-            $drywallFrameStepMm = $this->isNumericValue($drywallFrameStepMmRaw) ? (float) $drywallFrameStepMmRaw : null;
-            $drywallProfileWidthMm = $this->isNumericValue($drywallProfileWidthMmRaw) ? (float) $drywallProfileWidthMmRaw : null;
-            $drywallFastenerReservePercent = $this->isNumericValue($drywallFastenerReservePercentRaw) ? (float) $drywallFastenerReservePercentRaw : null;
-            $drywallIncludeEndCladding = is_bool($drywallIncludeEndCladdingRaw) ? $drywallIncludeEndCladdingRaw : null;
-            $drywallIncludeFinishing = is_bool($drywallIncludeFinishingRaw) ? $drywallIncludeFinishingRaw : null;
-            $drywallIncludeCosts = is_bool($drywallIncludeCostsRaw) ? $drywallIncludeCostsRaw : null;
-            $drywallSheetPrice = $this->isNumericValue($drywallSheetPriceRaw) ? (float) $drywallSheetPriceRaw : null;
-            $drywallProfilePricePerLm = $this->isNumericValue($drywallProfilePricePerLmRaw) ? (float) $drywallProfilePricePerLmRaw : null;
-            $drywallFastenerPricePer100 = $this->isNumericValue($drywallFastenerPricePer100Raw) ? (float) $drywallFastenerPricePer100Raw : null;
-            $drywallPrimerPricePerKg = $this->isNumericValue($drywallPrimerPricePerKgRaw) ? (float) $drywallPrimerPricePerKgRaw : null;
-            $drywallJointPuttyPricePerKg = $this->isNumericValue($drywallJointPuttyPricePerKgRaw) ? (float) $drywallJointPuttyPricePerKgRaw : null;
-            $drywallFinishPuttyPricePerKg = $this->isNumericValue($drywallFinishPuttyPricePerKgRaw) ? (float) $drywallFinishPuttyPricePerKgRaw : null;
-            $drywallTapePricePerLm = $this->isNumericValue($drywallTapePricePerLmRaw) ? (float) $drywallTapePricePerLmRaw : null;
-
-            $result = $this->estimateService->calculate(
-                calculator: $calculator,
-                mode: $mode,
-                area: $area,
-                thickness: $thickness,
-                subType: $subType,
-                tileLengthCm: $tileLengthCm,
-                tileWidthCm: $tileWidthCm,
-                length: $length,
-                width: $width,
-                height: $height,
-                includeReinforcement: $includeReinforcement,
-                includeFormwork: $includeFormwork,
-                rebarDiameterMm: $rebarDiameterMm,
-                rebarStepMm: $rebarStepMm,
-                rebarLayers: $rebarLayers,
-                rebarReservePercent: $rebarReservePercent,
-                formworkHeightM: $formworkHeightM,
-                formworkReservePercent: $formworkReservePercent,
-                totalLengthM: $totalLengthM,
-                widthM: $widthM,
-                heightM: $heightM,
-                houseLengthM: $houseLengthM,
-                houseWidthM: $houseWidthM,
-                segments: $segments,
-                longitudinalBarsCount: $longitudinalBarsCount,
-                longitudinalDiameterMm: $longitudinalDiameterMm,
-                longitudinalReservePercent: $longitudinalReservePercent,
-                transverseDiameterMm: $transverseDiameterMm,
-                transverseStepMm: $transverseStepMm,
-                transverseReservePercent: $transverseReservePercent,
-                pileType: $pileType,
-                includePiles: $includePiles,
-                pilesCount: $pilesCount,
-                pileShaftDiameterM: $pileShaftDiameterM,
-                pileShaftHeightM: $pileShaftHeightM,
-                includePileBase: $includePileBase,
-                pileBaseDiameterM: $pileBaseDiameterM,
-                pileBaseHeightM: $pileBaseHeightM,
-                includeGrillage: $includeGrillage,
-                includePileReinforcement: $includePileReinforcement,
-                pileReinforcementBarsCount: $pileReinforcementBarsCount,
-                pileReinforcementDiameterMm: $pileReinforcementDiameterMm,
-                pileReinforcementReservePercent: $pileReinforcementReservePercent,
-                mixture: $mixture,
-                useUnifiedConcreteMixtureSettings: $useUnifiedConcreteMixtureSettings,
-                pileMixture: $pileMixture,
-                grillageMixture: $grillageMixture,
-                brickFormat: $brickFormat,
-                brickLengthMm: $brickLengthMm,
-                brickWidthMm: $brickWidthMm,
-                brickHeightMm: $brickHeightMm,
-                jointThicknessMm: $jointThicknessMm,
-                wallThicknessType: $wallThicknessType,
-                wallLengthM: $wallLengthM,
-                wallHeightM: $wallHeightM,
-                reservePercent: $reservePercent,
-                includeOpenings: $includeOpenings,
-                windows: $windows,
-                doors: $doors,
-                includeGables: $includeGables,
-                gables: $gables,
-                includeMasonryMesh: $includeMasonryMesh,
-                masonryMeshFrequencyRows: $masonryMeshFrequencyRows,
-                useCustomMortarProportions: $useCustomMortarProportions,
-                cementShare: $cementShare,
-                sandShare: $sandShare,
-                cementPurchaseUnit: $cementPurchaseUnit,
-                cementUnitWeightKg: $cementUnitWeightKg,
-                cementUnitPrice: $cementUnitPrice,
-                sandPurchaseUnit: $sandPurchaseUnit,
-                sandUnitWeightKg: $sandUnitWeightKg,
-                sandUnitPrice: $sandUnitPrice,
-                cementBagWeightKg: $cementBagWeightKg,
-                brickWeightKg: $brickWeightKg,
-                brickPricePerUnit: $brickPricePerUnit,
-                cementBagPrice: $cementBagPrice,
-                sandPricePerTonne: $sandPricePerTonne,
-                tileTarget: $tileTarget,
-                tileLengthMm: $tileLengthMm,
-                tileWidthMm: $tileWidthMm,
-                tileThicknessMm: $tileThicknessMm,
-                tileJointMm: $tileJointMm,
-                tileLayingPattern: $tileLayingPattern,
-                tileOffsetPercent: $tileOffsetPercent,
-                tileIncludeOpenings: $tileIncludeOpenings,
-                tileOpenings: $tileOpenings,
-                tileIncludeCutouts: $tileIncludeCutouts,
-                tileCutouts: $tileCutouts,
-                tileIncludeAdhesive: $tileIncludeAdhesive,
-                tileAdhesiveConsumptionKgPerM2: $tileAdhesiveConsumptionKgPerM2,
-                tileAdhesiveLayerMm: $tileAdhesiveLayerMm,
-                tileAdhesiveBagWeightKg: $tileAdhesiveBagWeightKg,
-                tileAdhesiveBagPrice: $tileAdhesiveBagPrice,
-                tileIncludeGrout: $tileIncludeGrout,
-                tileGroutDensityKgPerM3: $tileGroutDensityKgPerM3,
-                tileGroutPackWeightKg: $tileGroutPackWeightKg,
-                tileGroutPackPrice: $tileGroutPackPrice,
-                tilePricePerM2: $tilePricePerM2,
-                drywallTarget: $drywallTarget,
-                drywallSheetLengthMm: $drywallSheetLengthMm,
-                drywallSheetWidthMm: $drywallSheetWidthMm,
-                drywallSheetThicknessMm: $drywallSheetThicknessMm,
-                drywallLayers: $drywallLayers,
-                drywallFrameStepMm: $drywallFrameStepMm,
-                drywallProfileWidthMm: $drywallProfileWidthMm,
-                drywallFastenerReservePercent: $drywallFastenerReservePercent,
-                drywallIncludeEndCladding: $drywallIncludeEndCladding,
-                drywallIncludeFinishing: $drywallIncludeFinishing,
-                drywallIncludeCosts: $drywallIncludeCosts,
-                drywallSheetPrice: $drywallSheetPrice,
-                drywallProfilePricePerLm: $drywallProfilePricePerLm,
-                drywallFastenerPricePer100: $drywallFastenerPricePer100,
-                drywallPrimerPricePerKg: $drywallPrimerPricePerKg,
-                drywallJointPuttyPricePerKg: $drywallJointPuttyPricePerKg,
-                drywallFinishPuttyPricePerKg: $drywallFinishPuttyPricePerKg,
-                drywallTapePricePerLm: $drywallTapePricePerLm
-            );
+            $args = $this->requestMapper->coerce($request);
+            $result = $this->estimateService->calculate(...$args);
+            $calculator = $args["calculator"];
 
             $response = [
                 'calculator' => $calculator,
