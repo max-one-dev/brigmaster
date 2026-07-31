@@ -3,16 +3,16 @@ import { clearPrintParamsSummary, updatePrintParamsSummary } from "../ui/params-
 
 const MODE_HINTS_SLAB = {
         dimensions:
-            "Ввод по длине и ширине — нужен для опций арматуры и опалубки.",
+            "Ввод по размерам — нужен для опций арматуры и опалубки.",
         area:
             "Ввод по площади; арматура и опалубка — только если дополнительно указать габариты (как в форме).",
     };
 
 const MODE_HINTS_SCREED = {
         dimensions:
-            "Ввод по длине и ширине — нужен для опций арматуры.",
+            "Ввод по размерам — нужен для опций арматуры.",
         area:
-            "Ввод по площади; арматура доступна только в режиме по длине и ширине.",
+            "Ввод по площади; арматура доступна только в режиме «По размерам».",
     };
 
 const MODE_HINTS_STRIP = {
@@ -154,7 +154,7 @@ const MODE_HINTS_DRYWALL = {
             el.scrollIntoView({ behavior: "smooth", block: "start" });
             try {
                 el.focus({ preventScroll: true });
-            } catch (_e) {
+            } catch {
                 /* ignore */
             }
         }
@@ -543,198 +543,6 @@ const MODE_HINTS_DRYWALL = {
     }
 
 
-    export function isMobileTooltipViewport() {
-        return window.matchMedia("(max-width: 767px)").matches;
-    }
-
-
-    export function setTooltipBackdropVisible(form, isVisible) {
-        const backdrop = getEstimatorShell(form)?.querySelector("[data-tooltip-backdrop]");
-        if (!backdrop) {
-            return;
-        }
-        backdrop.hidden = !isVisible;
-        backdrop.classList.toggle("is-visible", isVisible);
-    }
-
-
-    export function closeAllTooltips(form) {
-        const triggers = form.querySelectorAll("[data-tooltip-trigger]");
-        triggers.forEach((trigger) => {
-            const tooltipId = trigger.getAttribute("aria-controls");
-            if (!tooltipId) {
-                return;
-            }
-            const tooltip = form.querySelector(`#${tooltipId}`);
-            if (!tooltip) {
-                return;
-            }
-            trigger.setAttribute("aria-expanded", "false");
-            tooltip.hidden = true;
-            tooltip.classList.remove("is-open");
-            tooltip.style.position = "";
-            tooltip.style.left = "";
-            tooltip.style.right = "";
-            tooltip.style.top = "";
-            tooltip.style.bottom = "";
-            tooltip.style.maxWidth = "";
-        });
-        setTooltipBackdropVisible(form, false);
-    }
-
-
-    export function positionTooltipWithinViewport(trigger, tooltip) {
-        if (isMobileTooltipViewport()) {
-            tooltip.style.position = "";
-            tooltip.style.left = "";
-            tooltip.style.right = "";
-            tooltip.style.top = "";
-            tooltip.style.bottom = "";
-            tooltip.style.maxWidth = "";
-            return;
-        }
-
-        const margin = 12;
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        const triggerRect = trigger.getBoundingClientRect();
-        tooltip.style.position = "fixed";
-        tooltip.style.right = "";
-        tooltip.style.bottom = "";
-        tooltip.style.maxWidth = `${Math.max(220, viewportWidth - margin * 2)}px`;
-        tooltip.style.top = `${Math.round(triggerRect.bottom + 8)}px`;
-        tooltip.style.left = `${Math.round(triggerRect.right - tooltip.offsetWidth)}px`;
-
-        const rect = tooltip.getBoundingClientRect();
-        let left = rect.left;
-        let top = rect.top;
-
-        if (rect.left < margin) {
-            left = margin;
-        }
-        if (rect.right > viewportWidth - margin) {
-            left = Math.max(margin, viewportWidth - margin - rect.width);
-        }
-        if (rect.bottom > viewportHeight - margin) {
-            const aboveTop = triggerRect.top - rect.height - 8;
-            top = aboveTop >= margin ? aboveTop : Math.max(margin, viewportHeight - margin - rect.height);
-        }
-        if (top < margin) {
-            top = margin;
-        }
-
-        tooltip.style.left = `${Math.round(left)}px`;
-        tooltip.style.top = `${Math.round(top)}px`;
-    }
-
-
-    export function openTooltip(form, trigger, tooltip) {
-        closeAllTooltips(form);
-        trigger.setAttribute("aria-expanded", "true");
-        tooltip.hidden = false;
-        tooltip.classList.add("is-open");
-        positionTooltipWithinViewport(trigger, tooltip);
-        setTooltipBackdropVisible(form, isMobileTooltipViewport());
-    }
-
-
-    export function toggleTooltip(form, trigger, shouldOpen) {
-        const tooltipId = trigger.getAttribute("aria-controls");
-        if (!tooltipId) {
-            return;
-        }
-        const tooltip = form.querySelector(`#${tooltipId}`);
-        if (!tooltip) {
-            return;
-        }
-
-        if (shouldOpen) {
-            openTooltip(form, trigger, tooltip);
-            return;
-        }
-
-        trigger.setAttribute("aria-expanded", "false");
-        tooltip.hidden = true;
-        tooltip.classList.remove("is-open");
-        setTooltipBackdropVisible(form, false);
-    }
-
-
-    export function initTooltips(form) {
-        const triggers = form.querySelectorAll("[data-tooltip-trigger]");
-        if (!triggers.length) {
-            return;
-        }
-
-        triggers.forEach((trigger) => {
-            if (trigger.dataset.tooltipBound === "1") {
-                return;
-            }
-            trigger.addEventListener("mouseenter", () => {
-                if (!isMobileTooltipViewport()) {
-                    toggleTooltip(form, trigger, true);
-                }
-            });
-            trigger.addEventListener("mouseleave", () => {
-                if (!isMobileTooltipViewport()) {
-                    toggleTooltip(form, trigger, false);
-                }
-            });
-            trigger.addEventListener("focus", () => toggleTooltip(form, trigger, true));
-            trigger.addEventListener("blur", () => {
-                if (!isMobileTooltipViewport()) {
-                    toggleTooltip(form, trigger, false);
-                }
-            });
-            trigger.addEventListener("click", (event) => {
-                event.preventDefault();
-                if (isMobileTooltipViewport()) {
-                    const expanded = trigger.getAttribute("aria-expanded") === "true";
-                    toggleTooltip(form, trigger, !expanded);
-                } else {
-                    toggleTooltip(form, trigger, true);
-                }
-            });
-            trigger.dataset.tooltipBound = "1";
-        });
-
-        if (form.dataset.tooltipGlobalBound !== "1") {
-            const backdrop = getEstimatorShell(form)?.querySelector("[data-tooltip-backdrop]");
-            if (backdrop) {
-                backdrop.addEventListener("click", () => {
-                    closeAllTooltips(form);
-                });
-            }
-
-            document.addEventListener("keydown", (event) => {
-                if (event.key === "Escape") {
-                    closeAllTooltips(form);
-                }
-            });
-
-            window.addEventListener("resize", () => {
-                const openTrigger = form.querySelector('[data-tooltip-trigger][aria-expanded="true"]');
-                if (!openTrigger) {
-                    return;
-                }
-                const tooltipId = openTrigger.getAttribute("aria-controls");
-                if (!tooltipId) {
-                    return;
-                }
-                const tooltip = form.querySelector(`#${tooltipId}`);
-                if (!tooltip || tooltip.hidden) {
-                    return;
-                }
-                positionTooltipWithinViewport(openTrigger, tooltip);
-                setTooltipBackdropVisible(form, isMobileTooltipViewport());
-            });
-
-            form.dataset.tooltipGlobalBound = "1";
-        }
-
-    }
-
-
     export function normalizePagePath() {
         const path = window.location.pathname || "/";
         if (path === "/") {
@@ -767,7 +575,7 @@ const MODE_HINTS_DRYWALL = {
         }
         try {
             ym(cfg.metrikaCounterId, "reachGoal", goalId, params || {});
-        } catch (_err) {
+        } catch {
             /* ignore */
         }
     }

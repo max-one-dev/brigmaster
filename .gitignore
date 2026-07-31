@@ -20,6 +20,8 @@ themes/brigmaster-theme/assets-v2/src.zip
 themes/brigmaster-theme/assets-v2/.verify-*.png
 themes/brigmaster-theme/*.zip
 themes/brigmaster-theme/*.rar
+**/.playwright-mcp/
+**/docs/tmp/
 
 debug.log
 uploads/

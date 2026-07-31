@@ -7,7 +7,6 @@ import './js/components/dropdown.js';
 import './js/components/header-menu.js';
 import './js/components/accordion.js';
 import './js/components/select.js';
-import './js/components/tooltip.js';
 import './js/components/toc.js';
 import { initRankMathFaq } from './js/components/rank-math-faq.js';
 import { wrapProseTables } from './js/components/prose-tables.js';

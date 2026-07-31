@@ -70,12 +70,21 @@ function scheduleClose() {
 
 function open(trigger) {
     const tpl = trigger.parentElement?.querySelector('.bm-tooltip-tpl');
-    if (!tpl || !(tpl instanceof HTMLTemplateElement)) return;
 
     ensureRoot();
     const body = root.querySelector('.bm-tooltip__body');
     body.innerHTML = '';
-    body.appendChild(tpl.content.cloneNode(true));
+
+    if (tpl instanceof HTMLTemplateElement) {
+        body.appendChild(tpl.content.cloneNode(true));
+    } else {
+        const text = trigger.getAttribute('data-bm-tooltip');
+        if (!text) return;
+        const p = document.createElement('p');
+        p.className = 'bm-tooltip__text';
+        p.textContent = text; // textContent — безопасно, без XSS
+        body.appendChild(p);
+    }
 
     if (isCoarse()) {
         root.setAttribute('role', 'dialog');
@@ -88,6 +97,13 @@ function open(trigger) {
         root.removeAttribute('aria-modal');
         root.classList.remove(SHEET_CLS);
         positionPanel(trigger);
+
+        const img = root.querySelector('.bm-tooltip__body img');
+        if (img && !img.complete) {
+            img.addEventListener('load', () => {
+                if (!root.hidden && !isCoarse()) positionPanel(trigger);
+            }, { once: true });
+        }
     }
 
     root.hidden = false;

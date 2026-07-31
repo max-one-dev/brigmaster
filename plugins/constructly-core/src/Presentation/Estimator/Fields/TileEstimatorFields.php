@@ -43,7 +43,6 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tileTargetFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Что облицовываем</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-target-tooltip', 'Подбирает набор полей под пол или стены. В версии v1 ориентировочная раскладка рассчитана для прямоугольной зоны.'); ?>
                 </label>
                 <select id="<?php echo esc_attr($tileTargetFieldId); ?>" name="tileTarget" data-tile-target-select>
                     <option value="floor">Пол</option>
@@ -54,7 +53,7 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tilePatternFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Способ укладки</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-pattern-tooltip', 'Прямая укладка обычно требует меньшего запаса. Смещение и диагональ повышают количество подрезки, поэтому калькулятор предлагает больший запас по умолчанию.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Способ укладки', 'Прямая – меньший запас. Смещение и диагональ повышают подрезку – калькулятор предлагает больший запас.'); ?>
                 </label>
                 <select id="<?php echo esc_attr($tilePatternFieldId); ?>" name="tileLayingPattern" data-tile-pattern-select>
                     <option value="direct">Прямая</option>
@@ -69,7 +68,6 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'tile-room-length'); ?>" class="brigmaster-estimator__label-row">
                     <span data-tile-length-label>Длина помещения (м)</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-length-tooltip', 'Для пола это длина пола, для стен это длина комнаты. При расчёте стен по размерам калькулятор строит прямоугольную развёртку по периметру.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'tile-room-length'); ?>" type="number" name="length" min="0.01" step="0.01" value="6">
                 <div class="brigmaster-estimator__error" data-field-error="length" aria-live="polite"></div>
@@ -77,7 +75,6 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'tile-room-width'); ?>" class="brigmaster-estimator__label-row">
                     <span data-tile-width-label>Ширина помещения (м)</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-width-tooltip', 'Для стен нужна ширина комнаты, чтобы получить прямоугольный периметр. Для сложной формы помещения используйте результат как ориентир по материалам.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'tile-room-width'); ?>" type="number" name="width" min="0.01" step="0.01" value="4">
                 <div class="brigmaster-estimator__error" data-field-error="width" aria-live="polite"></div>
@@ -85,7 +82,7 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field brigmaster-estimator__field-group--hidden" data-field-group="tile-wall-height">
                 <label for="<?php echo esc_attr($instanceId . 'tile-wall-height'); ?>" class="brigmaster-estimator__label-row">
                     <span>Высота стен (м)</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-height-tooltip', 'Используется только для стен. Для простой модели v1 все стены считаются как прямоугольная полоса по периметру.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Высота стен', 'Если высота стен разная по периметру, укажите среднее значение.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'tile-wall-height'); ?>" type="number" name="height" min="0.01" step="0.01" value="2.7">
                 <div class="brigmaster-estimator__error" data-field-error="height" aria-live="polite"></div>
@@ -96,7 +93,7 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'tile-area'); ?>" class="brigmaster-estimator__label-row">
                     <span>Площадь облицовки (м²)</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-area-tooltip', 'Если точные размеры неизвестны, можно считать по площади. В этом режиме калькулятор точно считает ориентир по материалам, а ориентировочная раскладка отключается.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Площадь облицовки', 'Режим по площади: считается расход материалов, но ориентировочная раскладка плитки не строится.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'tile-area'); ?>" type="number" name="area" min="0.01" step="0.01" value="24">
                 <div class="brigmaster-estimator__error" data-field-error="area" aria-live="polite"></div>
@@ -107,20 +104,23 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tileLengthFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Длина плитки (мм)</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-size-length-tooltip', 'Размер одной плитки без шва. В расчёте количества и раскладки шов учитывается отдельно.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Длина плитки', 'Длина одной плитки без шва, в мм. Шов учитывается отдельно.', 'tile-size'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tileLengthFieldId); ?>" type="number" name="tileLengthMm" min="1" step="1" value="600">
                 <div class="brigmaster-estimator__error" data-field-error="tileLengthMm" aria-live="polite"></div>
             </div>
             <div class="brigmaster-estimator__field">
-                <label for="<?php echo esc_attr($tileWidthFieldId); ?>">Ширина плитки (мм)</label>
+                <label for="<?php echo esc_attr($tileWidthFieldId); ?>" class="brigmaster-estimator__label-row">
+                    <span>Ширина плитки (мм)</span>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Ширина плитки', 'Ширина одной плитки без шва, в мм. Для квадратной – совпадает с длиной.', 'tile-width'); ?>
+                </label>
                 <input id="<?php echo esc_attr($tileWidthFieldId); ?>" type="number" name="tileWidthMm" min="1" step="1" value="600">
                 <div class="brigmaster-estimator__error" data-field-error="tileWidthMm" aria-live="polite"></div>
             </div>
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tileThicknessFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Толщина плитки (мм)</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-thickness-tooltip', 'Нужна в первую очередь для расчёта затирки. Для стен по умолчанию подставляется 8 мм, для пола 9 мм.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Толщина плитки', 'Нужна для расчёта затирки. По умолчанию: стены 8 мм, пол 9 мм.', 'tile-thickness'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tileThicknessFieldId); ?>" type="number" name="tileThicknessMm" min="1" step="1" value="9" data-tile-thickness-input>
                 <div class="brigmaster-estimator__error" data-field-error="tileThicknessMm" aria-live="polite"></div>
@@ -128,7 +128,7 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tileJointFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Ширина шва (мм)</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-joint-tooltip', 'Шов влияет и на ориентировочную раскладку, и на расход затирки. В расчёте количества плиток шов участвует как часть модуля раскладки.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Ширина шва', 'Ширина шва между плитками. Обычно 1,5–3 мм для стен и 2–5 мм для пола. Влияет на количество плиток и расход затирки.', 'grout-joint'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tileJointFieldId); ?>" type="number" name="tileJointMm" min="1" step="0.1" value="2">
                 <div class="brigmaster-estimator__error" data-field-error="tileJointMm" aria-live="polite"></div>
@@ -139,7 +139,7 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field brigmaster-estimator__field-group--hidden" data-field-group="tile-offset">
                 <label for="<?php echo esc_attr($tileOffsetFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Смещение (% длины плитки)</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-offset-tooltip', 'Нужно только для укладки со смещением. Значение 50% соответствует классическому сдвигу на половину плитки.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Смещение', 'Только для укладки со смещением. 50% – классический сдвиг на половину плитки.', 'tile-offset'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tileOffsetFieldId); ?>" type="number" name="tileOffsetPercent" min="1" step="1" value="50">
                 <div class="brigmaster-estimator__error" data-field-error="tileOffsetPercent" aria-live="polite"></div>
@@ -147,7 +147,7 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($reserveFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Запас (%)</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-reserve-tooltip', 'Рекомендуемый запас зависит от способа укладки: прямая обычно 5%, смещение 7%, диагональ 10% и выше. Значение можно изменить под свою задачу.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Запас', 'Зависит от способа укладки: прямая – 5%, смещение – 7%, диагональ – 10% и выше. Можно изменить под задачу.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($reserveFieldId); ?>" type="number" name="reservePercent" min="1" step="1" value="5" data-tile-reserve-input>
                 <div class="brigmaster-estimator__error" data-field-error="reservePercent" aria-live="polite"></div>
@@ -155,7 +155,7 @@ final class TileEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($tilePriceFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Цена плитки за м²</span>
-                    <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-price-tooltip', 'Поле необязательно. Если цена не указана, карточка стоимости по плитке не выводится.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Цена плитки за м²', 'Необязательно. Без цены карточка стоимости плитки не выводится.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($tilePriceFieldId); ?>" type="number" name="tilePricePerM2" min="0.01" step="0.01" placeholder="Укажите цену">
                 <div class="brigmaster-estimator__error" data-field-error="tilePricePerM2" aria-live="polite"></div>
@@ -166,7 +166,7 @@ final class TileEstimatorFields
             <input id="<?php echo esc_attr($tileIncludeOpeningsFieldId); ?>" type="checkbox" name="tileIncludeOpenings" value="1">
             <label for="<?php echo esc_attr($tileIncludeOpeningsFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть окна и двери</span>
-                <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-openings-toggle-tooltip', 'Проёмы уменьшают чистую площадь облицовки. Подрезка вокруг проёмов отдельно не моделируется по координатам, поэтому запас всё равно нужен.'); ?>
+                <?php echo MarkupHelpers::renderFieldTooltip('Учесть окна и двери', 'Вычитает площадь окон и дверей из облицовываемой площади. Подрезку у проёмов калькулятор не считает – запас всё равно нужен.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="tileIncludeOpenings" aria-live="polite"></div>
             <p class="brigmaster-estimator__hint">Доступно, когда выбрана облицовка стен.</p>
@@ -183,7 +183,7 @@ final class TileEstimatorFields
             <input id="<?php echo esc_attr($tileIncludeCutoutsFieldId); ?>" type="checkbox" name="tileIncludeCutouts" value="1">
             <label for="<?php echo esc_attr($tileIncludeCutoutsFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть отверстия</span>
-                <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-cutouts-toggle-tooltip', 'Вырез уменьшает площадь, но часто съедает целую плитку. Поэтому калькулятор дополнительно прибавляет ориентир по потерям на каждый вырез.'); ?>
+                <?php echo MarkupHelpers::renderFieldTooltip('Учесть отверстия', 'Вырез уменьшает площадь, но часто съедает целую плитку – добавляется ориентир по потерям на каждый вырез.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="tileIncludeCutouts" aria-live="polite"></div>
         </div>
@@ -199,7 +199,7 @@ final class TileEstimatorFields
             <input id="<?php echo esc_attr($tileIncludeAdhesiveFieldId); ?>" type="checkbox" name="tileIncludeAdhesive" value="1">
             <label for="<?php echo esc_attr($tileIncludeAdhesiveFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Рассчитать клей</span>
-                <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-adhesive-tooltip', 'Расход клея справочный. Он зависит от размера плитки, основания, размера зуба шпателя и толщины слоя.'); ?>
+                <?php echo MarkupHelpers::renderFieldTooltip('Рассчитать клей', 'Расход клея справочный: зависит от размера плитки, основания, зуба шпателя, толщины слоя и производителя смеси (см. упаковку).'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="tileIncludeAdhesive" aria-live="polite"></div>
         </div>
@@ -231,7 +231,7 @@ final class TileEstimatorFields
             <input id="<?php echo esc_attr($tileIncludeGroutFieldId); ?>" type="checkbox" name="tileIncludeGrout" value="1">
             <label for="<?php echo esc_attr($tileIncludeGroutFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Рассчитать затирку</span>
-                <?php echo MarkupHelpers::renderTileTooltip($instanceId . 'tile-grout-tooltip', 'Затирка считается ориентировочно по размерам плитки, толщине плитки, ширине шва и плотности смеси.'); ?>
+                <?php echo MarkupHelpers::renderFieldTooltip('Рассчитать затирку', 'Затирка ориентировочно: размеры плитки, толщина, ширина шва и плотность смеси; фактический расход зависит от производителя (см. упаковку).'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="tileIncludeGrout" aria-live="polite"></div>
         </div>

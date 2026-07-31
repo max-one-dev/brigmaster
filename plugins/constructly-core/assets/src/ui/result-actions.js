@@ -54,7 +54,7 @@ async function copyShareLink(form, button) {
       textarea.remove();
     }
     flashCopied(button);
-  } catch (_error) {
+  } catch {
     /* Clipboard may be unavailable; the URL is still updated for manual copy. */
   }
 }

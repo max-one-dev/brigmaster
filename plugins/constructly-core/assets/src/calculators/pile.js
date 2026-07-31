@@ -1,7 +1,7 @@
 import '../core/bm-tooltip.js';
-import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatters.js";
-import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
-import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
+import { escapeHtml, formatNumber } from "../core/formatters.js";
+import { clearErrors, finalizeSuccessfulResult, getEstimatorShell, markResultStale, readTrimmed, setFieldError, toggleVisibility } from "../core/form-state.js";
+import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField } from "../core/validation.js";
 import { buildMixturePayload } from "../core/mixture.js";
 import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
@@ -208,12 +208,7 @@ export function showPileFoundationResult(form, payload) {
               <input id="segment-${index}-use-global-rebar" type="checkbox" checked data-segment-use-global-rebar data-checkbox-key="segment-use-global-rebar">
               <label for="segment-${index}-use-global-rebar" class="brigmaster-estimator__label-row" data-label-for-checkbox="segment-use-global-rebar">
                 <span>Использовать общие параметры</span>
-                <span class="brigmaster-estimator__tooltip-anchor">
-                  <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: использовать общие параметры арматуры" aria-expanded="false" aria-controls="segment-${index}-use-global-rebar-tooltip">i</button>
-                  <div id="segment-${index}-use-global-rebar-tooltip" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                    При включении для этого участка применяются общие настройки арматуры из глобального блока ниже.
-                  </div>
-                </span>
+                <span class="bm-tooltip-anchor"><button type="button" class="bm-tooltip-trigger" data-bm-tooltip="При включении для этого участка применяются общие настройки арматуры из глобального блока ниже." aria-label="Подсказка: использовать общие параметры арматуры" aria-expanded="false">i</button></span>
               </label>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentUseGlobalRebarParams" data-field-error="segments.${index}.segmentUseGlobalRebarParams" aria-live="polite"></div>
             </div>
@@ -222,57 +217,33 @@ export function showPileFoundationResult(form, payload) {
             <div class="brigmaster-estimator__field">
               <label for="segment-${index}-longitudinal-bars-count" class="brigmaster-estimator__label-row">
                 <span>Кол-во продольных стержней</span>
-                <span class="brigmaster-estimator__tooltip-anchor">
-                  <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: количество продольных стержней" aria-expanded="false" aria-controls="segment-${index}-seg-long-bars-tooltip">i</button>
-                  <div id="segment-${index}-seg-long-bars-tooltip" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                    Число рабочих стержней в сечении этого участка. Обычно 4–6. Больше стержней — выше расход арматуры.
-                  </div>
-                </span>
+                <span class="bm-tooltip-anchor"><button type="button" class="bm-tooltip-trigger" data-bm-tooltip="Число рабочих стержней в поперечном сечении. Для частного дома обычно 4–6: 4 при сечении до 400×600 мм, 6 при большем." aria-label="Подсказка: количество продольных стержней" aria-expanded="false">i</button></span>
               </label>
               <input id="segment-${index}-longitudinal-bars-count" type="number" min="1" step="1" value="4" data-segment-input="segmentLongitudinalBarsCount">
-              <p class="brigmaster-estimator__hint">Обычно 4-6 стержней для частного дома.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalBarsCount" data-field-error="segments.${index}.segmentLongitudinalBarsCount" aria-live="polite"></div>
             </div>
             <div class="brigmaster-estimator__field">
               <label for="segment-${index}-longitudinal-diameter" class="brigmaster-estimator__label-row">
                 <span>Диаметр продольной (мм)</span>
-                <span class="brigmaster-estimator__tooltip-anchor">
-                  <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр продольной арматуры" aria-expanded="false" aria-controls="segment-${index}-seg-long-diameter-tooltip">i</button>
-                  <div id="segment-${index}-seg-long-diameter-tooltip" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                    Диаметр рабочих стержней в мм. Типично 10–14 мм. Чем больше диаметр, тем выше масса и прочность.
-                  </div>
-                </span>
+                <span class="bm-tooltip-anchor"><button type="button" class="bm-tooltip-trigger" data-bm-tooltip="Диаметр рабочих (продольных) стержней. Типично 10–14 мм. Чем больше диаметр, тем выше масса и несущая способность." aria-label="Подсказка: диаметр продольной арматуры" aria-expanded="false">i</button></span>
               </label>
               <input id="segment-${index}-longitudinal-diameter" type="number" min="1" step="1" value="12" data-segment-input="segmentLongitudinalDiameterMm">
-              <p class="brigmaster-estimator__hint">Чаще всего 10-14 мм.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalDiameterMm" data-field-error="segments.${index}.segmentLongitudinalDiameterMm" aria-live="polite"></div>
             </div>
             <div class="brigmaster-estimator__field">
               <label for="segment-${index}-transverse-diameter" class="brigmaster-estimator__label-row">
                 <span>Диаметр поперечной (мм)</span>
-                <span class="brigmaster-estimator__tooltip-anchor">
-                  <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр поперечной арматуры" aria-expanded="false" aria-controls="segment-${index}-seg-transverse-diameter-tooltip">i</button>
-                  <div id="segment-${index}-seg-transverse-diameter-tooltip" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                    Диаметр хомутов в мм. Обычно 6–10 мм. Влияет на массу поперечной арматуры.
-                  </div>
-                </span>
+                <span class="bm-tooltip-anchor"><button type="button" class="bm-tooltip-trigger" data-bm-tooltip="Диаметр хомутов. Обычно 6–10 мм: 6–8 мм для частного дома, 10 мм при повышенных требованиях." aria-label="Подсказка: диаметр поперечной арматуры" aria-expanded="false">i</button></span>
               </label>
               <input id="segment-${index}-transverse-diameter" type="number" min="1" step="1" value="8" data-segment-input="segmentTransverseDiameterMm">
-              <p class="brigmaster-estimator__hint">Обычно 6-10 мм для хомутов.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseDiameterMm" data-field-error="segments.${index}.segmentTransverseDiameterMm" aria-live="polite"></div>
             </div>
             <div class="brigmaster-estimator__field">
               <label for="segment-${index}-transverse-step" class="brigmaster-estimator__label-row">
                 <span>Шаг поперечной (мм)</span>
-                <span class="brigmaster-estimator__tooltip-anchor">
-                  <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: шаг поперечной арматуры" aria-expanded="false" aria-controls="segment-${index}-seg-transverse-step-tooltip">i</button>
-                  <div id="segment-${index}-seg-transverse-step-tooltip" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                    Расстояние между хомутами в мм. Типично 200–400 мм. Меньший шаг — больше хомутов и расход стали.
-                  </div>
-                </span>
+                <span class="bm-tooltip-anchor"><button type="button" class="bm-tooltip-trigger" data-bm-tooltip="Расстояние между хомутами. Типично 200–400 мм: у опор чаще (200–250), в пролёте реже (300–400). Меньший шаг – больше стали." aria-label="Подсказка: шаг поперечной арматуры" aria-expanded="false">i</button></span>
               </label>
               <input id="segment-${index}-transverse-step" type="number" min="10" step="10" value="300" data-segment-input="segmentTransverseStepMm">
-              <p class="brigmaster-estimator__hint">Меньше шаг = больше хомутов и расход стали.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseStepMm" data-field-error="segments.${index}.segmentTransverseStepMm" aria-live="polite"></div>
             </div>
           </div>
@@ -288,12 +259,7 @@ export function showPileFoundationResult(form, payload) {
               <input id="segment-${index}-use-global-formwork" type="checkbox" checked data-segment-use-global-formwork data-checkbox-key="segment-use-global-formwork">
               <label for="segment-${index}-use-global-formwork" class="brigmaster-estimator__label-row" data-label-for-checkbox="segment-use-global-formwork">
                 <span>Использовать общие параметры</span>
-                <span class="brigmaster-estimator__tooltip-anchor">
-                  <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: использовать общие параметры опалубки" aria-expanded="false" aria-controls="segment-${index}-use-global-formwork-tooltip">i</button>
-                  <div id="segment-${index}-use-global-formwork-tooltip" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                    При включении для этого участка применяются общие настройки опалубки из глобального блока ниже.
-                  </div>
-                </span>
+                <span class="bm-tooltip-anchor"><button type="button" class="bm-tooltip-trigger" data-bm-tooltip="При включении для этого участка применяются общие настройки опалубки из глобального блока ниже." aria-label="Подсказка: использовать общие параметры опалубки" aria-expanded="false">i</button></span>
               </label>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentUseGlobalFormworkParams" data-field-error="segments.${index}.segmentUseGlobalFormworkParams" aria-live="polite"></div>
             </div>
@@ -417,9 +383,7 @@ export function showPileFoundationResult(form, payload) {
         const formworkLocal = segmentNode.querySelector("[data-segment-formwork-local]");
 
         const includeRebarSegment = includeReinforcementGlobal && !!includeRebarNode?.checked;
-        const useGlobalRebar = !!useGlobalRebarNode?.checked;
         const includeFormworkSegment = includeFormworkGlobal && !!includeFormworkNode?.checked;
-        const useGlobalFormwork = !!useGlobalFormworkNode?.checked;
         const isFirstSegment = segmentNode.dataset.segmentIndex === "0";
 
         if (useGlobalRebarNode) {
@@ -586,7 +550,7 @@ export function showPileFoundationResult(form, payload) {
                 const nextIndex = segmentsList.querySelectorAll("[data-strip-segment-item]").length;
                 segmentsList.insertAdjacentHTML("beforeend", createStripSegmentMarkup(nextIndex));
                 refresh();
-                initTooltips(form);
+
             });
 
             segmentsList.addEventListener("click", (event) => {

@@ -11,7 +11,7 @@
   margin-top: var(--bm-space-8);
   padding-block: var(--bm-space-8);
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     margin-top: var(--bm-space-10);
     padding-block: var(--bm-space-10);
   }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Brigmaster\Presentation\Estimator\Fields;
 
+use Brigmaster\Presentation\Html\MarkupHelpers;
+
 /**
  * Pure, argument-deterministic mixture field markup.
  *
@@ -60,7 +62,22 @@ final class ConcreteMixtureFields
         ?>
         <div class="brigmaster-estimator__mixture-block" data-mixture-scope="<?php echo esc_attr($scopeSlug); ?>" data-mixture-has-gravel="<?php echo $includeGravel ? '1' : '0'; ?>">
             <div class="brigmaster-estimator__field-group brigmaster-estimator__field">
-                <label for="<?php echo esc_attr($typeFieldId); ?>"><?php echo esc_html($title); ?></label>
+                <label for="<?php echo esc_attr($typeFieldId); ?>" class="brigmaster-estimator__label-row">
+                    <span><?php echo esc_html($title); ?></span>
+                    <?php
+                    if ($allowDryReady) {
+                        echo MarkupHelpers::renderFieldTooltip(
+                            'Тип смеси',
+                            '«Готовая» – товарный раствор, цена за м³. «Готовая сухая» – смесь в мешках, укажите вес мешка. «Самомесная» – компоненты по долям (Ц:П).'
+                        );
+                    } else {
+                        echo MarkupHelpers::renderFieldTooltip(
+                            'Тип смеси',
+                            '«Готовая» – заказываете миксер, цена за м³. «Самомесная» – компоненты по объёмным долям (Ц:П:Щ).'
+                        );
+                    }
+                    ?>
+                </label>
                 <select id="<?php echo esc_attr($typeFieldId); ?>" name="<?php echo esc_attr($buildName('mixtureType')); ?>" data-mixture-type-select>
                     <option value="ready">Готовая</option>
                     <?php if ($allowDryReady) : ?>
@@ -176,6 +193,11 @@ final class ConcreteMixtureFields
                     </div>
                 <?php endif; ?>
 
+                <?php if ($includeGravel) : ?>
+                    <p class="brigmaster-estimator__hint"><?php echo esc_html('Объёмное соотношение цемента, песка и щебня. Типично Ц:П:Щ = 1:2:4 (~В15) или 1:1,5:3 (~В20–В25). По объёму, не по массе.'); ?></p>
+                <?php else : ?>
+                    <p class="brigmaster-estimator__hint"><?php echo esc_html('Объёмное соотношение цемента и песка. Для стяжки типично Ц:П = 1:3. По объёму, не по массе.'); ?></p>
+                <?php endif; ?>
                 <p class="brigmaster-estimator__hint">В расчёте используются справочные насыпные плотности: цемент 1300 кг/м³, песок 1600 кг/м³, щебень 1400 кг/м³. Вода считается по В/Ц = 0.5.</p>
             </div>
         </div>

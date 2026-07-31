@@ -33,9 +33,7 @@ final class ScreedResultTemplate
                                 <div class="bm-calculator-result__material">
                                     <span class="bm-calculator-result__material-head">
                                         <span>Объём смеси
-                                            <button class="bm-tooltip" type="button" data-tooltip="Объём раствора с учётом технологического запаса." aria-label="Подсказка: объём смеси">
-                                                <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-info-circle"></use></svg>
-                                            </button>
+                                            <button type="button" class="bm-tooltip-trigger" data-bm-tooltip="<?php echo esc_attr('Объём раствора с учётом технологического запаса.'); ?>" aria-label="<?php echo esc_attr('Подсказка: объём смеси'); ?>" aria-expanded="false">i</button>
                                         </span>
                                         <strong><span data-result-volume>-</span> м³</strong>
                                     </span>

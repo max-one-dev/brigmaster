@@ -121,7 +121,6 @@ export async function exportEstimateToPdf(form, button) {
       jsPdf.save(buildFileName(form));
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error("PDF export failed", error);
     if (viewer && !viewer.closed) {
       viewer.close();

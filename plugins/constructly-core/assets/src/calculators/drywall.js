@@ -1,8 +1,6 @@
 import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatters.js";
-import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
+import { clearErrors, finalizeSuccessfulResult, getEstimatorShell, markResultStale, readTrimmed, setFieldError, toggleVisibility } from "../core/form-state.js";
 import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
-import { buildMixturePayload, syncPileMixtureBlocks } from "../core/mixture.js";
-import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 

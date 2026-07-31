@@ -1,5 +1,4 @@
 import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatters.js";
-import { getEstimatorShell } from "../core/form-state.js";
 
 
     export function buildMixtureResultHtml(mixture, title, options = {}) {
@@ -29,7 +28,7 @@ import { getEstimatorShell } from "../core/form-state.js";
 
         const item = (label, value, tooltip, modifier) => {
             const labelHtml = tooltip
-                ? `${escapeHtml(label)} <button class="bm-tooltip" type="button" data-tooltip="${escapeHtml(tooltip)}" aria-label="Подсказка: ${escapeHtml(label)}"><svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-info-circle"></use></svg></button>`
+                ? `${escapeHtml(label)} <button type="button" class="bm-tooltip-trigger" data-bm-tooltip="${escapeHtml(tooltip)}" aria-label="Подсказка: ${escapeHtml(label)}" aria-expanded="false">i</button>`
                 : escapeHtml(label);
             const className = modifier
                 ? `bm-calculator-result__material ${modifier}`

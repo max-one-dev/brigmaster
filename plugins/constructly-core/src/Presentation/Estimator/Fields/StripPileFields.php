@@ -67,12 +67,6 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($totalLengthFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Общая длина ленты (м)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: общая длина" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'total-length-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'total-length-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Суммарная длина всех участков. От нее напрямую зависит общий объем бетона и расход материалов.
-                                    </div>
-                                </span>
                             </label>
                             <input id="<?php echo esc_attr($totalLengthFieldId); ?>" type="number" name="totalLengthM" min="0.01" step="0.01" value="10">
                             <div class="brigmaster-estimator__error" data-field-error="totalLengthM" aria-live="polite"></div>
@@ -80,12 +74,6 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($widthMFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Ширина ленты (м)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: ширина" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'width-m-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'width-m-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Ширина поперечного сечения. При увеличении ширины объем бетона растет линейно.
-                                    </div>
-                                </span>
                             </label>
                             <input id="<?php echo esc_attr($widthMFieldId); ?>" type="number" name="widthM" min="0.01" step="0.01" value="0.4">
                             <div class="brigmaster-estimator__error" data-field-error="widthM" aria-live="polite"></div>
@@ -93,12 +81,6 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($heightMFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Высота ленты (м)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: высота" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'height-m-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'height-m-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Высота сечения. Вместе с шириной и длиной определяет объем бетона.
-                                    </div>
-                                </span>
                             </label>
                             <input id="<?php echo esc_attr($heightMFieldId); ?>" type="number" name="heightM" min="0.01" step="0.01" value="1">
                             <div class="brigmaster-estimator__error" data-field-error="heightM" aria-live="polite"></div>
@@ -166,57 +148,33 @@ final class StripPileFields
                                         <div class="brigmaster-estimator__field">
                                             <label for="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-bars-count'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Кол-во продольных стержней</span>
-                                                <span class="brigmaster-estimator__tooltip-anchor">
-                                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: количество продольных стержней" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-long-bars-tooltip'); ?>">i</button>
-                                                    <div id="<?php echo esc_attr($instanceId . 'segment-0-seg-long-bars-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                                        Число рабочих стержней в сечении этого участка. Обычно 4–6. Больше стержней — выше расход арматуры.
-                                                    </div>
-                                                </span>
+                                                <?php echo MarkupHelpers::renderFieldTooltip('Кол-во продольных стержней', 'Число рабочих стержней в поперечном сечении. Для частного дома обычно 4–6: 4 при сечении до 400×600 мм, 6 при большем.'); ?>
                                             </label>
                                             <input id="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-bars-count'); ?>" type="number" min="1" step="1" value="4" data-segment-input="segmentLongitudinalBarsCount">
-                                            <p class="brigmaster-estimator__hint">Обычно 4-6 стержней для частного дома.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalBarsCount" data-field-error="segments.0.segmentLongitudinalBarsCount" aria-live="polite"></div>
                                         </div>
                                         <div class="brigmaster-estimator__field">
                                             <label for="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-diameter'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Диаметр продольной (мм)</span>
-                                                <span class="brigmaster-estimator__tooltip-anchor">
-                                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр продольной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-long-diameter-tooltip'); ?>">i</button>
-                                                    <div id="<?php echo esc_attr($instanceId . 'segment-0-seg-long-diameter-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                                        Диаметр рабочих стержней в мм. Типично 10–14 мм. Чем больше диаметр, тем выше масса и прочность.
-                                                    </div>
-                                                </span>
+                                                <?php echo MarkupHelpers::renderFieldTooltip('Диаметр продольной', 'Диаметр рабочих (продольных) стержней. Типично 10–14 мм. Чем больше диаметр, тем выше масса и несущая способность.', 'rebar-diameter'); ?>
                                             </label>
                                             <input id="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-diameter'); ?>" type="number" min="1" step="1" value="12" data-segment-input="segmentLongitudinalDiameterMm">
-                                            <p class="brigmaster-estimator__hint">Чаще всего 10-14 мм.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalDiameterMm" data-field-error="segments.0.segmentLongitudinalDiameterMm" aria-live="polite"></div>
                                         </div>
                                         <div class="brigmaster-estimator__field">
                                             <label for="<?php echo esc_attr($instanceId . 'segment-0-transverse-diameter'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Диаметр поперечной (мм)</span>
-                                                <span class="brigmaster-estimator__tooltip-anchor">
-                                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр поперечной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-diameter-tooltip'); ?>">i</button>
-                                                    <div id="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-diameter-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                                        Диаметр хомутов в мм. Обычно 6–10 мм. Влияет на массу поперечной арматуры.
-                                                    </div>
-                                                </span>
+                                                <?php echo MarkupHelpers::renderFieldTooltip('Диаметр поперечной', 'Диаметр хомутов. Обычно 6–10 мм: 6–8 мм для частного дома, 10 мм при повышенных требованиях.', 'stirrup-diameter'); ?>
                                             </label>
                                             <input id="<?php echo esc_attr($instanceId . 'segment-0-transverse-diameter'); ?>" type="number" min="1" step="1" value="8" data-segment-input="segmentTransverseDiameterMm">
-                                            <p class="brigmaster-estimator__hint">Обычно 6-10 мм для хомутов.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseDiameterMm" data-field-error="segments.0.segmentTransverseDiameterMm" aria-live="polite"></div>
                                         </div>
                                         <div class="brigmaster-estimator__field">
                                             <label for="<?php echo esc_attr($instanceId . 'segment-0-transverse-step'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Шаг поперечной (мм)</span>
-                                                <span class="brigmaster-estimator__tooltip-anchor">
-                                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: шаг поперечной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-step-tooltip'); ?>">i</button>
-                                                    <div id="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-step-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                                        Расстояние между хомутами в мм. Типично 200–400 мм. Меньший шаг — больше хомутов и расход стали.
-                                                    </div>
-                                                </span>
+                                                <?php echo MarkupHelpers::renderFieldTooltip('Шаг поперечной', 'Расстояние между хомутами. Типично 200–400 мм: у опор чаще (200–250), в пролёте реже (300–400). Меньший шаг – больше стали.', 'stirrup-spacing'); ?>
                                             </label>
                                             <input id="<?php echo esc_attr($instanceId . 'segment-0-transverse-step'); ?>" type="number" min="10" step="10" value="300" data-segment-input="segmentTransverseStepMm">
-                                            <p class="brigmaster-estimator__hint">Меньше шаг = больше хомутов и расход стали.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseStepMm" data-field-error="segments.0.segmentTransverseStepMm" aria-live="polite"></div>
                                         </div>
                                     </div>
@@ -275,12 +233,6 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($totalLengthFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Общая длина <?php echo esc_html($stripLabel); ?> (м)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: общая длина" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'total-length-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'total-length-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Суммарная длина всех участков. От нее напрямую зависит общий объем бетона и расход материалов.
-                                    </div>
-                                </span>
                             </label>
                             <input id="<?php echo esc_attr($totalLengthFieldId); ?>" type="number" name="totalLengthM" min="0.01" step="0.01" value="10">
                             <div class="brigmaster-estimator__error" data-field-error="totalLengthM" aria-live="polite"></div>
@@ -288,12 +240,6 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($widthMFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Ширина <?php echo esc_html($stripLabel); ?> (м)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: ширина" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'width-m-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'width-m-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Ширина поперечного сечения. При увеличении ширины объем бетона растет линейно.
-                                    </div>
-                                </span>
                             </label>
                             <input id="<?php echo esc_attr($widthMFieldId); ?>" type="number" name="widthM" min="0.01" step="0.01" value="0.4">
                             <div class="brigmaster-estimator__error" data-field-error="widthM" aria-live="polite"></div>
@@ -301,12 +247,6 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($heightMFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Высота <?php echo esc_html($stripLabel); ?> (м)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: высота" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'height-m-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'height-m-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Высота сечения. Вместе с шириной и длиной определяет объем бетона.
-                                    </div>
-                                </span>
                             </label>
                             <input id="<?php echo esc_attr($heightMFieldId); ?>" type="number" name="heightM" min="0.01" step="0.01" value="1">
                             <div class="brigmaster-estimator__error" data-field-error="heightM" aria-live="polite"></div>
@@ -374,57 +314,33 @@ final class StripPileFields
                                         <div class="brigmaster-estimator__field">
                                             <label for="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-bars-count'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Кол-во продольных стержней</span>
-                                                <span class="brigmaster-estimator__tooltip-anchor">
-                                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: количество продольных стержней" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-long-bars-tooltip'); ?>">i</button>
-                                                    <div id="<?php echo esc_attr($instanceId . 'segment-0-seg-long-bars-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                                        Число рабочих стержней в сечении этого участка. Обычно 4–6. Больше стержней — выше расход арматуры.
-                                                    </div>
-                                                </span>
+                                                <?php echo MarkupHelpers::renderFieldTooltip('Кол-во продольных стержней', 'Число рабочих стержней в поперечном сечении. Для частного дома обычно 4–6: 4 при сечении до 400×600 мм, 6 при большем.'); ?>
                                             </label>
                                             <input id="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-bars-count'); ?>" type="number" min="1" step="1" value="4" data-segment-input="segmentLongitudinalBarsCount">
-                                            <p class="brigmaster-estimator__hint">Обычно 4-6 стержней для частного дома.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalBarsCount" data-field-error="segments.0.segmentLongitudinalBarsCount" aria-live="polite"></div>
                                         </div>
                                         <div class="brigmaster-estimator__field">
                                             <label for="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-diameter'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Диаметр продольной (мм)</span>
-                                                <span class="brigmaster-estimator__tooltip-anchor">
-                                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр продольной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-long-diameter-tooltip'); ?>">i</button>
-                                                    <div id="<?php echo esc_attr($instanceId . 'segment-0-seg-long-diameter-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                                        Диаметр рабочих стержней в мм. Типично 10–14 мм. Чем больше диаметр, тем выше масса и прочность.
-                                                    </div>
-                                                </span>
+                                                <?php echo MarkupHelpers::renderFieldTooltip('Диаметр продольной', 'Диаметр рабочих (продольных) стержней. Типично 10–14 мм. Чем больше диаметр, тем выше масса и несущая способность.', 'rebar-diameter'); ?>
                                             </label>
                                             <input id="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-diameter'); ?>" type="number" min="1" step="1" value="12" data-segment-input="segmentLongitudinalDiameterMm">
-                                            <p class="brigmaster-estimator__hint">Чаще всего 10-14 мм.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalDiameterMm" data-field-error="segments.0.segmentLongitudinalDiameterMm" aria-live="polite"></div>
                                         </div>
                                         <div class="brigmaster-estimator__field">
                                             <label for="<?php echo esc_attr($instanceId . 'segment-0-transverse-diameter'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Диаметр поперечной (мм)</span>
-                                                <span class="brigmaster-estimator__tooltip-anchor">
-                                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр поперечной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-diameter-tooltip'); ?>">i</button>
-                                                    <div id="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-diameter-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                                        Диаметр хомутов в мм. Обычно 6–10 мм. Влияет на массу поперечной арматуры.
-                                                    </div>
-                                                </span>
+                                                <?php echo MarkupHelpers::renderFieldTooltip('Диаметр поперечной', 'Диаметр хомутов. Обычно 6–10 мм: 6–8 мм для частного дома, 10 мм при повышенных требованиях.', 'stirrup-diameter'); ?>
                                             </label>
                                             <input id="<?php echo esc_attr($instanceId . 'segment-0-transverse-diameter'); ?>" type="number" min="1" step="1" value="8" data-segment-input="segmentTransverseDiameterMm">
-                                            <p class="brigmaster-estimator__hint">Обычно 6-10 мм для хомутов.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseDiameterMm" data-field-error="segments.0.segmentTransverseDiameterMm" aria-live="polite"></div>
                                         </div>
                                         <div class="brigmaster-estimator__field">
                                             <label for="<?php echo esc_attr($instanceId . 'segment-0-transverse-step'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Шаг поперечной (мм)</span>
-                                                <span class="brigmaster-estimator__tooltip-anchor">
-                                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: шаг поперечной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-step-tooltip'); ?>">i</button>
-                                                    <div id="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-step-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                                        Расстояние между хомутами в мм. Типично 200–400 мм. Меньший шаг — больше хомутов и расход стали.
-                                                    </div>
-                                                </span>
+                                                <?php echo MarkupHelpers::renderFieldTooltip('Шаг поперечной', 'Расстояние между хомутами. Типично 200–400 мм: у опор чаще (200–250), в пролёте реже (300–400). Меньший шаг – больше стали.', 'stirrup-spacing'); ?>
                                             </label>
                                             <input id="<?php echo esc_attr($instanceId . 'segment-0-transverse-step'); ?>" type="number" min="10" step="10" value="300" data-segment-input="segmentTransverseStepMm">
-                                            <p class="brigmaster-estimator__hint">Меньше шаг = больше хомутов и расход стали.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseStepMm" data-field-error="segments.0.segmentTransverseStepMm" aria-live="polite"></div>
                                         </div>
                                     </div>
@@ -472,12 +388,7 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($longitudinalBarsCountFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Кол-во продольных стержней</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: количество продольных стержней" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'strip-long-bars-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'strip-long-bars-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Число рабочих стержней в поперечном сечении ленты. Для частного дома обычно 4–6. Больше стержней — выше расход арматуры.
-                                    </div>
-                                </span>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Кол-во продольных стержней', 'Число рабочих стержней в поперечном сечении. Для частного дома обычно 4–6: 4 при сечении до 400×600 мм, 6 при большем.'); ?>
                             </label>
                             <input id="<?php echo esc_attr($longitudinalBarsCountFieldId); ?>" type="number" name="longitudinalBarsCount" min="1" step="1" value="4">
                             <div class="brigmaster-estimator__error" data-field-error="longitudinalBarsCount" aria-live="polite"></div>
@@ -485,12 +396,7 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($longitudinalDiameterFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Диаметр продольной (мм)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр продольной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'strip-long-diameter-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'strip-long-diameter-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Диаметр рабочих стержней в мм. Типично 10–14 мм. Чем больше диаметр, тем выше масса и прочность.
-                                    </div>
-                                </span>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Диаметр продольной', 'Диаметр рабочих (продольных) стержней. Типично 10–14 мм. Чем больше диаметр, тем выше масса и несущая способность.', 'rebar-diameter'); ?>
                             </label>
                             <input id="<?php echo esc_attr($longitudinalDiameterFieldId); ?>" type="number" name="longitudinalDiameterMm" min="1" step="1" value="12">
                             <div class="brigmaster-estimator__error" data-field-error="longitudinalDiameterMm" aria-live="polite"></div>
@@ -498,12 +404,7 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($longitudinalReserveFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Запас продольной (%)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: запас продольной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'strip-long-reserve-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'strip-long-reserve-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Процент запаса на нахлёсты и подрезку. Рекомендуется 5–15%.
-                                    </div>
-                                </span>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Запас продольной', '5–10% для простой формы без нахлёстов; 10–15% при большом числе стыков и подрезки. Покрывает нахлёсты, отходы и брак.'); ?>
                             </label>
                             <input id="<?php echo esc_attr($longitudinalReserveFieldId); ?>" type="number" name="longitudinalReservePercent" min="1" step="1" value="10">
                             <div class="brigmaster-estimator__error" data-field-error="longitudinalReservePercent" aria-live="polite"></div>
@@ -511,12 +412,7 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($transverseDiameterFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Диаметр поперечной (мм)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр поперечной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'strip-transverse-diameter-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'strip-transverse-diameter-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Диаметр хомутов в мм. Обычно 6–10 мм. Влияет на массу поперечной арматуры.
-                                    </div>
-                                </span>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Диаметр поперечной', 'Диаметр хомутов. Обычно 6–10 мм: 6–8 мм для частного дома, 10 мм при повышенных требованиях.', 'stirrup-diameter'); ?>
                             </label>
                             <input id="<?php echo esc_attr($transverseDiameterFieldId); ?>" type="number" name="transverseDiameterMm" min="1" step="1" value="8">
                             <div class="brigmaster-estimator__error" data-field-error="transverseDiameterMm" aria-live="polite"></div>
@@ -524,12 +420,7 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($transverseStepFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Шаг поперечной (мм)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: шаг поперечной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'strip-transverse-step-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'strip-transverse-step-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Расстояние между хомутами в мм. Типично 200–400 мм. Меньший шаг — больше хомутов и расход стали.
-                                    </div>
-                                </span>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Шаг поперечной', 'Расстояние между хомутами. Типично 200–400 мм: у опор чаще (200–250), в пролёте реже (300–400). Меньший шаг – больше стали.', 'stirrup-spacing'); ?>
                             </label>
                             <input id="<?php echo esc_attr($transverseStepFieldId); ?>" type="number" name="transverseStepMm" min="10" step="10" value="300">
                             <div class="brigmaster-estimator__error" data-field-error="transverseStepMm" aria-live="polite"></div>
@@ -537,12 +428,7 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($transverseReserveFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Запас поперечной (%)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: запас поперечной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'strip-transverse-reserve-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'strip-transverse-reserve-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Процент запаса на монтаж и отходы. Рекомендуется 5–15%.
-                                    </div>
-                                </span>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Запас поперечной', '5–10% для простой формы без нахлёстов; 10–15% при большом числе стыков и подрезки. Покрывает нахлёсты, отходы и брак.'); ?>
                             </label>
                             <input id="<?php echo esc_attr($transverseReserveFieldId); ?>" type="number" name="transverseReservePercent" min="1" step="1" value="10">
                             <div class="brigmaster-estimator__error" data-field-error="transverseReservePercent" aria-live="polite"></div>
@@ -556,12 +442,7 @@ final class StripPileFields
                             <input id="<?php echo esc_attr($instanceId . 'strip-include-formwork'); ?>" type="checkbox" name="includeFormwork" value="1">
                             <label for="<?php echo esc_attr($instanceId . 'strip-include-formwork'); ?>" class="brigmaster-estimator__label-row">
                                 <span><?php echo $calculator === 'pile_foundation' ? 'Учитывать опалубку ростверка' : 'Учитывать опалубку'; ?></span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: учитывать опалубку" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'strip-formwork-height-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'strip-formwork-height-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        В расчёт попадают только боковые щиты ленты (высота задаётся ниже). Распорки, подкосы и крепёж не учитываются.
-                                    </div>
-                                </span>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Учитывать опалубку', 'В расчёт попадают только боковые щиты. Распорки, подкосы и крепёж не учитываются.'); ?>
                             </label>
                         </div>
                         <?php if ($calculator !== 'pile_foundation') : ?>
@@ -581,12 +462,7 @@ final class StripPileFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($formworkReserveFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Запас опалубки (%)</span>
-                                <span class="brigmaster-estimator__tooltip-anchor">
-                                    <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: запас опалубки ленты" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'strip-formwork-reserve-tooltip'); ?>">i</button>
-                                    <div id="<?php echo esc_attr($instanceId . 'strip-formwork-reserve-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                        Запас учитывает подрезку и стыки щитов. В расчет входят только боковые поверхности.
-                                    </div>
-                                </span>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Запас опалубки', '5–10% на подрезку досок/фанеры и стыки щитов. Учитывает только материал щитов – распорки и крепёж отдельно.'); ?>
                             </label>
                             <input id="<?php echo esc_attr($formworkReserveFieldId); ?>" type="number" name="formworkReservePercent" min="1" step="1" value="10">
                             <div class="brigmaster-estimator__error" data-field-error="formworkReservePercent" aria-live="polite"></div>
@@ -610,65 +486,6 @@ final class StripPileFields
                         </label>
                         <div class="brigmaster-estimator__error" data-field-error="includePiles" aria-live="polite"></div>
                     </div>
-<?php
-// Схема геометрии буронабивной сваи (используется в тултипах полей геометрии).
-$bmPileDiagramSvg = <<<'SVG'
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Схема: геометрия буронабивной сваи с уширением — Ø ствола, Ø уширения, высота H, шаг" viewBox="0 0 320 220" class="bm-diagram-demo__svg">
-  <defs>
-    <marker id="bm-arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0.5 L6,3 L0,5.5 Z" fill="#64748B"/></marker>
-    <marker id="bm-arr-rev" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth"><path d="M0,0.5 L6,3 L0,5.5 Z" fill="#64748B"/></marker>
-  </defs>
-  <g aria-hidden="true">
-    <rect x="195" y="28" width="60" height="134" fill="none" stroke="#93C5FD" stroke-width="1.2" stroke-dasharray="5,3"/>
-    <polygon points="195,162 171,190 279,190 255,162" fill="none" stroke="#93C5FD" stroke-width="1.2" stroke-dasharray="5,3"/>
-    <line x1="225" y1="20" x2="225" y2="198" stroke="#93C5FD" stroke-width="0.8" stroke-dasharray="3,2"/>
-  </g>
-  <g>
-    <rect x="70" y="28" width="60" height="134" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
-    <polygon points="70,162 46,190 154,190 130,162" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
-    <line x1="46" y1="190" x2="154" y2="190" stroke="#2563EB" stroke-width="1.6"/>
-  </g>
-  <g aria-hidden="true">
-    <line x1="0" y1="55" x2="320" y2="55" stroke="#94A3B8" stroke-width="1" stroke-dasharray="6,4"/>
-    <line x1="4" y1="55" x2="-2" y2="62" stroke="#CBD5E1" stroke-width="0.7"/>
-    <line x1="24" y1="55" x2="18" y2="62" stroke="#CBD5E1" stroke-width="0.7"/>
-    <line x1="44" y1="55" x2="38" y2="62" stroke="#CBD5E1" stroke-width="0.7"/>
-    <line x1="64" y1="55" x2="58" y2="62" stroke="#CBD5E1" stroke-width="0.7"/>
-    <line x1="84" y1="55" x2="78" y2="62" stroke="#CBD5E1" stroke-width="0.7"/>
-    <line x1="104" y1="55" x2="98" y2="62" stroke="#CBD5E1" stroke-width="0.7"/>
-    <line x1="124" y1="55" x2="118" y2="62" stroke="#CBD5E1" stroke-width="0.7"/>
-    <line x1="144" y1="55" x2="138" y2="62" stroke="#CBD5E1" stroke-width="0.7"/>
-    <text x="4" y="51" font-size="9" fill="#94A3B8" font-family="sans-serif">Ур. З.</text>
-  </g>
-  <line aria-hidden="true" x1="100" y1="20" x2="100" y2="198" stroke="#CBD5E1" stroke-width="0.8" stroke-dasharray="4,3"/>
-  <g aria-hidden="true">
-    <line x1="70" y1="33" x2="70" y2="43" stroke="#64748B" stroke-width="0.8"/>
-    <line x1="130" y1="33" x2="130" y2="43" stroke="#64748B" stroke-width="0.8"/>
-    <line x1="70" y1="38" x2="130" y2="38" stroke="#64748B" stroke-width="0.8" marker-start="url(#bm-arr-rev)" marker-end="url(#bm-arr)"/>
-    <text x="100" y="30" text-anchor="middle" font-size="10" font-weight="600" fill="#0EA5E9" font-family="sans-serif">Ø ствола</text>
-  </g>
-  <g aria-hidden="true">
-    <line x1="46" y1="199" x2="46" y2="209" stroke="#64748B" stroke-width="0.8"/>
-    <line x1="154" y1="199" x2="154" y2="209" stroke="#64748B" stroke-width="0.8"/>
-    <line x1="46" y1="204" x2="154" y2="204" stroke="#64748B" stroke-width="0.8" marker-start="url(#bm-arr-rev)" marker-end="url(#bm-arr)"/>
-    <text x="100" y="215" text-anchor="middle" font-size="10" font-weight="600" fill="#0EA5E9" font-family="sans-serif">Ø уширения</text>
-  </g>
-  <g aria-hidden="true">
-    <line x1="168" y1="28" x2="176" y2="28" stroke="#64748B" stroke-width="0.8"/>
-    <line x1="168" y1="190" x2="176" y2="190" stroke="#64748B" stroke-width="0.8"/>
-    <line x1="172" y1="28" x2="172" y2="190" stroke="#64748B" stroke-width="0.8" marker-start="url(#bm-arr-rev)" marker-end="url(#bm-arr)"/>
-    <line x1="172" y1="109" x2="180" y2="109" stroke="#64748B" stroke-width="0.6"/>
-    <text x="182" y="113" font-size="10" font-weight="600" fill="#0EA5E9" font-family="sans-serif">H (высота)</text>
-  </g>
-  <g aria-hidden="true">
-    <line x1="100" y1="11" x2="100" y2="21" stroke="#64748B" stroke-width="0.8"/>
-    <line x1="225" y1="11" x2="225" y2="21" stroke="#64748B" stroke-width="0.8"/>
-    <line x1="100" y1="16" x2="225" y2="16" stroke="#64748B" stroke-width="0.8" marker-start="url(#bm-arr-rev)" marker-end="url(#bm-arr)"/>
-    <text x="162" y="12" text-anchor="middle" font-size="10" font-weight="600" fill="#0EA5E9" font-family="sans-serif">Шаг</text>
-  </g>
-</svg>
-SVG;
-?>
                         <details class="brigmaster-estimator__accordion" open data-pile-panel="piles">
                             <summary class="brigmaster-estimator__accordion-summary">Сваи<?php echo MarkupHelpers::accordionChevronMarkup(); ?></summary>
                             <div class="brigmaster-estimator__accordion-body">
@@ -707,14 +524,7 @@ SVG;
                                 <div class="brigmaster-estimator__field" data-pile-primary-cell="shaft-diameter">
                                     <label for="<?php echo esc_attr($pileShaftDiameterFieldId); ?>" class="brigmaster-estimator__label-row">
                                         <span>Диаметр ствола сваи (м)</span>
-                                        <span class="bm-tooltip-anchor">
-                                            <button type="button" class="bm-tooltip-trigger" data-bm-tooltip aria-label="Подсказка: диаметр ствола сваи" aria-expanded="false">i</button>
-                                            <template class="bm-tooltip-tpl">
-                                                <h4 class="bm-tooltip__title">Схема размеров сваи</h4>
-                                                <div class="bm-tooltip__media"><?php echo $bmPileDiagramSvg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static inline SVG ?></div>
-                                                <p class="bm-tooltip__text">Толщина сваи по всей длине. Для частного дома обычно 0,2–0,4 м; чем тяжелее дом и слабее грунт, тем больше диаметр.</p>
-                                            </template>
-                                        </span>
+                                        <?php echo MarkupHelpers::renderFieldTooltip('Диаметр ствола сваи', 'Толщина сваи по всей длине. Для частного дома обычно 0,2–0,4 м; тяжелее дом и слабее грунт – больше диаметр.', 'pile-shaft-diameter', 'Ø ствола'); ?>
                                     </label>
                                     <input id="<?php echo esc_attr($pileShaftDiameterFieldId); ?>" type="number" name="pileShaftDiameterM" min="0.01" step="0.01" value="0.3">
                                     <div class="brigmaster-estimator__error" data-field-error="pileShaftDiameterM" aria-live="polite"></div>
@@ -722,14 +532,7 @@ SVG;
                                 <div class="brigmaster-estimator__field" data-pile-primary-cell="shaft-height">
                                     <label for="<?php echo esc_attr($pileShaftHeightFieldId); ?>" class="brigmaster-estimator__label-row">
                                         <span>Высота ствола сваи (м)</span>
-                                        <span class="bm-tooltip-anchor">
-                                            <button type="button" class="bm-tooltip-trigger" data-bm-tooltip aria-label="Подсказка: высота ствола сваи" aria-expanded="false">i</button>
-                                            <template class="bm-tooltip-tpl">
-                                                <h4 class="bm-tooltip__title">Схема размеров сваи</h4>
-                                                <div class="bm-tooltip__media"><?php echo $bmPileDiagramSvg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static inline SVG ?></div>
-                                                <p class="bm-tooltip__text">Длина сваи от верха до пяты. Подбирается так, чтобы опереться на плотный грунт ниже глубины промерзания; для частного дома чаще 2–4 м.</p>
-                                            </template>
-                                        </span>
+                                        <?php echo MarkupHelpers::renderFieldTooltip('Высота ствола сваи', 'Длина сваи от верха до пяты. Подбирается так, чтобы опереться на плотный грунт ниже глубины промерзания; для частного дома чаще 2–4 м.', 'pile-shaft-length', 'Длина сваи'); ?>
                                     </label>
                                     <input id="<?php echo esc_attr($pileShaftHeightFieldId); ?>" type="number" name="pileShaftHeightM" min="0.01" step="0.01" value="2">
                                     <div class="brigmaster-estimator__error" data-field-error="pileShaftHeightM" aria-live="polite"></div>
@@ -748,14 +551,7 @@ SVG;
                             <div class="brigmaster-estimator__field">
                                 <label for="<?php echo esc_attr($pileBaseDiameterFieldId); ?>" class="brigmaster-estimator__label-row">
                                     <span>Диаметр уширения (м)</span>
-                                    <span class="bm-tooltip-anchor">
-                                        <button type="button" class="bm-tooltip-trigger" data-bm-tooltip aria-label="Подсказка: диаметр уширения" aria-expanded="false">i</button>
-                                        <template class="bm-tooltip-tpl">
-                                            <h4 class="bm-tooltip__title">Схема размеров сваи</h4>
-                                            <div class="bm-tooltip__media"><?php echo $bmPileDiagramSvg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static inline SVG ?></div>
-                                            <p class="bm-tooltip__text">Размер расширенной «пяты» внизу буронабивной сваи. Увеличивает опору на грунт; обычно в 1,5–2 раза больше диаметра ствола.</p>
-                                        </template>
-                                    </span>
+                                    <?php echo MarkupHelpers::renderFieldTooltip('Диаметр уширения', 'Размер расширенной «пяты». Увеличивает опору на грунт; обычно в 1,5–2 раза больше диаметра ствола.', 'pile-bulb-diameter', 'Ø уширения'); ?>
                                 </label>
                                 <input id="<?php echo esc_attr($pileBaseDiameterFieldId); ?>" type="number" name="pileBaseDiameterM" min="0.01" step="0.01" value="0.5">
                                 <div class="brigmaster-estimator__error" data-field-error="pileBaseDiameterM" aria-live="polite"></div>
@@ -763,14 +559,7 @@ SVG;
                             <div class="brigmaster-estimator__field">
                                 <label for="<?php echo esc_attr($pileBaseHeightFieldId); ?>" class="brigmaster-estimator__label-row">
                                     <span>Высота уширения (м)</span>
-                                    <span class="bm-tooltip-anchor">
-                                        <button type="button" class="bm-tooltip-trigger" data-bm-tooltip aria-label="Подсказка: высота уширения" aria-expanded="false">i</button>
-                                        <template class="bm-tooltip-tpl">
-                                            <h4 class="bm-tooltip__title">Схема размеров сваи</h4>
-                                            <div class="bm-tooltip__media"><?php echo $bmPileDiagramSvg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static inline SVG ?></div>
-                                            <p class="bm-tooltip__text">Высота самой расширенной части (пяты) у основания сваи. Обычно 0,2–0,4 м.</p>
-                                        </template>
-                                    </span>
+                                    <?php echo MarkupHelpers::renderFieldTooltip('Высота уширения', 'Высота расширенной части (пяты) у основания. Обычно 0,2–0,4 м.', 'pile-bulb-height', 'Высота уширения'); ?>
                                 </label>
                                 <input id="<?php echo esc_attr($pileBaseHeightFieldId); ?>" type="number" name="pileBaseHeightM" min="0.01" step="0.01" value="0.3">
                                 <div class="brigmaster-estimator__error" data-field-error="pileBaseHeightM" aria-live="polite"></div>
@@ -789,12 +578,7 @@ SVG;
                             <div class="brigmaster-estimator__field">
                                 <label for="<?php echo esc_attr($pileReinforcementBarsCountFieldId); ?>" class="brigmaster-estimator__label-row">
                                     <span>Кол-во стержней в свае</span>
-                                    <span class="brigmaster-estimator__tooltip-anchor">
-                                        <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: количество стержней в свае" aria-expanded="false" aria-controls="<?php echo esc_attr($pileReinforcementBarsCountFieldId . '-tooltip'); ?>">i</button>
-                                        <div id="<?php echo esc_attr($pileReinforcementBarsCountFieldId . '-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                            Сколько продольных прутков арматуры ставится в одну сваю. Для частного дома чаще всего 3–4.
-                                        </div>
-                                    </span>
+                                    <?php echo MarkupHelpers::renderFieldTooltip('Кол-во стержней в свае', 'Продольных прутков в одной свае. Для частного дома чаще всего 3–4.'); ?>
                                 </label>
                                 <input id="<?php echo esc_attr($pileReinforcementBarsCountFieldId); ?>" type="number" name="pileReinforcementBarsCount" min="1" step="1" value="4">
                                 <div class="brigmaster-estimator__error" data-field-error="pileReinforcementBarsCount" aria-live="polite"></div>
@@ -802,12 +586,7 @@ SVG;
                             <div class="brigmaster-estimator__field">
                                 <label for="<?php echo esc_attr($pileReinforcementDiameterFieldId); ?>" class="brigmaster-estimator__label-row">
                                     <span>Диаметр арматуры свай (мм)</span>
-                                    <span class="brigmaster-estimator__tooltip-anchor">
-                                        <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр арматуры свай" aria-expanded="false" aria-controls="<?php echo esc_attr($pileReinforcementDiameterFieldId . '-tooltip'); ?>">i</button>
-                                        <div id="<?php echo esc_attr($pileReinforcementDiameterFieldId . '-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                            Толщина продольных прутков. Обычно 10–14 мм.
-                                        </div>
-                                    </span>
+                                    <?php echo MarkupHelpers::renderFieldTooltip('Диаметр арматуры свай', 'Толщина продольных прутков. Для буронабивной сваи частного дома обычно 10–14 мм.', 'rebar-diameter'); ?>
                                 </label>
                                 <input id="<?php echo esc_attr($pileReinforcementDiameterFieldId); ?>" type="number" name="pileReinforcementDiameterMm" min="1" step="1" value="12">
                                 <div class="brigmaster-estimator__error" data-field-error="pileReinforcementDiameterMm" aria-live="polite"></div>
@@ -815,12 +594,7 @@ SVG;
                             <div class="brigmaster-estimator__field">
                                 <label for="<?php echo esc_attr($pileReinforcementReserveFieldId); ?>" class="brigmaster-estimator__label-row">
                                     <span>Запас арматуры свай (%)</span>
-                                    <span class="brigmaster-estimator__tooltip-anchor">
-                                        <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: запас арматуры свай" aria-expanded="false" aria-controls="<?php echo esc_attr($pileReinforcementReserveFieldId . '-tooltip'); ?>">i</button>
-                                        <div id="<?php echo esc_attr($pileReinforcementReserveFieldId . '-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                            Добавка к расчётному количеству на нахлёсты и отходы при резке. Обычно 5–15%.
-                                        </div>
-                                    </span>
+                                    <?php echo MarkupHelpers::renderFieldTooltip('Запас арматуры свай', 'Запас на нахлёсты стержней и отходы при резке. Для свай обычно 5–10%; ближе к 10%, если много стыков по длине.'); ?>
                                 </label>
                                 <input id="<?php echo esc_attr($pileReinforcementReserveFieldId); ?>" type="number" name="pileReinforcementReservePercent" min="1" step="1" value="10">
                                 <div class="brigmaster-estimator__error" data-field-error="pileReinforcementReservePercent" aria-live="polite"></div>
@@ -838,12 +612,7 @@ SVG;
                                     <input id="<?php echo esc_attr($instanceId . 'use-unified-concrete-mixture'); ?>" type="checkbox" name="useUnifiedConcreteMixtureSettings" value="1" checked>
                                     <label for="<?php echo esc_attr($instanceId . 'use-unified-concrete-mixture'); ?>" class="brigmaster-estimator__label-row">
                                         <span>Использовать один тип смеси для свай и ростверка</span>
-                                        <span class="brigmaster-estimator__tooltip-anchor">
-                                            <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: единый тип смеси" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'use-unified-concrete-mixture-tooltip'); ?>">i</button>
-                                            <div id="<?php echo esc_attr($instanceId . 'use-unified-concrete-mixture-tooltip'); ?>" class="brigmaster-estimator__tooltip" role="tooltip" hidden>
-                                                Опция доступна, только когда включены оба расчёта — и сваи, и ростверк. Если выбран один расчёт, используется единый тип смеси.
-                                            </div>
-                                        </span>
+                                        <?php echo MarkupHelpers::renderFieldTooltip('Один тип смеси', 'Снимите галочку, если сваи и ростверк заливаются разными марками бетона. Опция доступна, только когда включены оба расчёта – и сваи, и ростверк. Если выбран один расчёт, используется единый тип смеси.'); ?>
                                     </label>
                                     <div class="brigmaster-estimator__error" data-field-error="useUnifiedConcreteMixtureSettings" aria-live="polite"></div>
                                 </div>

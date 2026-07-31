@@ -1,6 +1,6 @@
 import { normalizePurchaseWeight } from "./formatters.js";
-import { buildPrefixedFieldName, clearErrors, getMixtureErrorPrefix, markResultStale, readTrimmed, setFieldError, toggleVisibility } from "./form-state.js";
-import { validatePositiveField, validatePositiveValue, validateSelectedValue } from "./validation.js";
+import { buildPrefixedFieldName, clearErrors, getMixtureErrorPrefix, markResultStale, readTrimmed, toggleVisibility } from "./form-state.js";
+import { validatePositiveValue, validateSelectedValue } from "./validation.js";
 
 
     export function buildMixturePayload(form, formData, prefix = "", options = {}) {

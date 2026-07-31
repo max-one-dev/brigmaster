@@ -131,7 +131,7 @@ final class EstimateShortcode
                         <label for="<?php echo esc_attr($modeFieldId); ?>">Режим расчета</label>
                         <select id="<?php echo esc_attr($modeFieldId); ?>" name="mode" required aria-describedby="<?php echo esc_attr($modeHintId); ?>">
                             <?php if (in_array($calculator, ['slab_foundation', 'screed', 'brick', 'tile', 'drywall'], true)) : ?>
-                                <option value="dimensions">По длине и ширине</option>
+                                <option value="dimensions">По размерам</option>
                                 <option value="area">По площади</option>
                             <?php elseif ($calculator === 'strip_foundation') : ?>
                                 <option value="perimeter">По общей длине ленты</option>
@@ -189,7 +189,6 @@ final class EstimateShortcode
                     <?php echo DrywallResultTemplate::render(); ?>
                 <?php endif; ?>
             </div>
-            <div class="brigmaster-estimator__tooltip-backdrop" data-tooltip-backdrop hidden></div>
         </div>
         <?php
 

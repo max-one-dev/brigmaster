@@ -44,7 +44,7 @@ final class DrywallEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($targetFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Тип конструкции</span>
-                    <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-target-tooltip', 'Стена — облицовка по одной плоскости. Потолок — подвесной каркас. Перегородка — двусторонняя конструкция из профиля и листов.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Тип конструкции', 'Стена и потолок – облицовка по одной плоскости. Перегородка – двусторонняя из профиля и листов.'); ?>
                 </label>
                 <select id="<?php echo esc_attr($targetFieldId); ?>" name="drywallTarget" data-drywall-target-select>
                     <option value="wall">Стена</option>
@@ -56,7 +56,7 @@ final class DrywallEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($sheetFormatFieldId); ?>" class="brigmaster-estimator__label-row">
                     <span>Формат листа</span>
-                    <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-sheet-format-tooltip', 'Можно выбрать стандартный размер листа или задать свой. Это влияет на количество листов и количество поперечных перемычек.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Формат листа', 'Стандартный размер подставляется автоматически. Влияет на число листов и поперечных перемычек.'); ?>
                 </label>
                 <select id="<?php echo esc_attr($sheetFormatFieldId); ?>" data-drywall-sheet-format-select>
                     <option value="2500x1200" data-sheet-length="2500" data-sheet-width="1200">2500×1200 мм</option>
@@ -71,10 +71,9 @@ final class DrywallEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'drywall-length'); ?>" class="brigmaster-estimator__label-row">
                     <span data-drywall-length-label>Длина стены (м)</span>
-                    <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-length-tooltip', 'Если нужно посчитать комнату целиком, сложите длины всех стен и введите общую сумму.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Длина стены', 'Сложите длины всех стен. Например: 7+7+8+8 = 30 м.'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'drywall-length'); ?>" type="number" name="drywallLength" min="0.01" step="0.01" value="6">
-                <p class="brigmaster-estimator__hint" data-drywall-length-hint>Для комнаты можно указать суммарную длину всех стен.</p>
                 <div class="brigmaster-estimator__error" data-field-error="length" aria-live="polite"></div>
             </div>
             <div class="brigmaster-estimator__field">
@@ -101,7 +100,7 @@ final class DrywallEstimatorFields
             <div class="brigmaster-estimator__field">
                 <label for="<?php echo esc_attr($instanceId . 'drywall-area'); ?>" class="brigmaster-estimator__label-row">
                     <span>Площадь конструкции (м²)</span>
-                    <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-area-tooltip', 'В режиме по площади калькулятор точно считает листы и отделку, но не считает профили и крепёж по каркасу.'); ?>
+                    <?php echo MarkupHelpers::renderFieldTooltip('Площадь конструкции', 'Площадь готовой обшивки, а не помещения. В этом режиме считаются листы, крепёж к листам и отделка, но не профили каркаса и его крепёж (подвесы, дюбели, саморезы по металлу).'); ?>
                 </label>
                 <input id="<?php echo esc_attr($instanceId . 'drywall-area'); ?>" type="number" name="drywallArea" min="0.01" step="0.01" value="20">
                 <div class="brigmaster-estimator__error" data-field-error="area" aria-live="polite"></div>
@@ -134,7 +133,7 @@ final class DrywallEstimatorFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($layersFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Слоёв обшивки</span>
-                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-layers-tooltip', 'Для перегородки значение применяется к каждой стороне. Один слой подходит для простых задач, два — когда нужна более жёсткая конструкция.'); ?>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Слоёв обшивки', 'Число слоёв ГКЛ на одной стороне; для перегородки – на каждую сторону. 1 слой – для жилых помещений, 2 слоя – под звуко-/огнезащиту или тяжёлую отделку.'); ?>
                             </label>
                             <select id="<?php echo esc_attr($layersFieldId); ?>" name="drywallLayers">
                                 <option value="1">1 слой</option>
@@ -145,7 +144,7 @@ final class DrywallEstimatorFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($stepFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Шаг профиля (мм)</span>
-                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-step-tooltip', 'Чем меньше шаг, тем жёстче каркас и выше расход профиля. Для большинства бытовых конструкций берут 400 или 600 мм.'); ?>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Шаг профиля', 'Меньше шаг – жёстче каркас и выше расход профиля. Обычно 400 или 600 мм.', 'profile-spacing'); ?>
                             </label>
                             <select id="<?php echo esc_attr($stepFieldId); ?>" name="drywallFrameStepMm">
                                 <option value="600">600</option>
@@ -156,7 +155,7 @@ final class DrywallEstimatorFields
                         <div class="brigmaster-estimator__field brigmaster-estimator__field-group--hidden" data-field-group="drywall-profile-width">
                             <label for="<?php echo esc_attr($profileWidthFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Ширина профиля перегородки (мм)</span>
-                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-profile-width-tooltip', 'Профиль определяет базовую толщину каркаса. В результате калькулятор также покажет ориентировочную итоговую толщину перегородки с учётом слоёв ГКЛ.'); ?>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Ширина профиля перегородки', '50 мм – для ненагруженных перегородок; 75/100 мм – при большей высоте или нагрузке. В результате калькулятор покажет итоговую толщину перегородки с учётом слоёв ГКЛ.', 'profile-width'); ?>
                             </label>
                             <select id="<?php echo esc_attr($profileWidthFieldId); ?>" name="drywallProfileWidthMm">
                                 <option value="50">50</option>
@@ -168,7 +167,7 @@ final class DrywallEstimatorFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($reserveFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Запас на листы и профиль (%)</span>
-                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-reserve-tooltip', 'Запас компенсирует подрезку, подгонку листов и добор профиля на сложных участках.'); ?>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Запас на листы и профиль', 'Компенсирует подрезку, подгонку листов и добор профиля на сложных участках.'); ?>
                             </label>
                             <input id="<?php echo esc_attr($reserveFieldId); ?>" type="number" name="reservePercent" min="1" step="1" value="10">
                             <div class="brigmaster-estimator__error" data-field-error="reservePercent" aria-live="polite"></div>
@@ -176,7 +175,7 @@ final class DrywallEstimatorFields
                         <div class="brigmaster-estimator__field">
                             <label for="<?php echo esc_attr($fastenerReserveFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Запас на метизы (%)</span>
-                                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-fastener-reserve-tooltip', 'Запас применяется ко всем штучным позициям: саморезам, дюбелям, подвесам и соединителям.'); ?>
+                                <?php echo MarkupHelpers::renderFieldTooltip('Запас на метизы', 'Применяется ко всем штучным позициям: саморезам, дюбелям, подвесам и соединителям.'); ?>
                             </label>
                             <input id="<?php echo esc_attr($fastenerReserveFieldId); ?>" type="number" name="drywallFastenerReservePercent" min="1" step="1" value="10">
                             <div class="brigmaster-estimator__error" data-field-error="drywallFastenerReservePercent" aria-live="polite"></div>
@@ -190,7 +189,7 @@ final class DrywallEstimatorFields
             <input id="<?php echo esc_attr($includeFinishingFieldId); ?>" type="checkbox" name="drywallIncludeFinishing" value="1">
             <label for="<?php echo esc_attr($includeFinishingFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть отделку</span>
-                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-finishing-tooltip', 'Добавляет ориентир по грунтовке, шпатлёвке для швов, финишной шпатлёвке и армирующей ленте. Эти материалы появляются отдельными строками в результате расчёта.'); ?>
+                <?php echo MarkupHelpers::renderFieldTooltip('Учесть отделку', 'Добавляет ориентир по грунтовке, шпатлёвке швов, финишной шпатлёвке и ленте – отдельными строками.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="drywallIncludeFinishing" aria-live="polite"></div>
         </div>
@@ -199,7 +198,7 @@ final class DrywallEstimatorFields
             <input id="<?php echo esc_attr($includeOpeningsFieldId); ?>" type="checkbox" name="includeOpenings" value="1">
             <label for="<?php echo esc_attr($includeOpeningsFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть проёмы</span>
-                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-openings-tooltip', 'Проёмы уменьшают чистую площадь обшивки. Для потолка блок скрывается, потому что геометрия там другая.'); ?>
+                <?php echo MarkupHelpers::renderFieldTooltip('Учесть проёмы', 'Проёмы уменьшают чистую площадь обшивки.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="includeOpenings" aria-live="polite"></div>
         </div>
@@ -208,7 +207,7 @@ final class DrywallEstimatorFields
             <input id="<?php echo esc_attr($includeEndCladdingFieldId); ?>" type="checkbox" name="drywallIncludeEndCladding" value="1">
             <label for="<?php echo esc_attr($includeEndCladdingFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Учесть облицовку торцов проёмов</span>
-                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-end-cladding-tooltip', 'Актуально для перегородок. В расчёт добавляются полосы ГКЛ по толщине перегородки на боковые и верхние откосы.'); ?>
+                <?php echo MarkupHelpers::renderFieldTooltip('Учесть облицовку торцов проёмов', 'Для перегородок: добавляются полосы ГКЛ по толщине перегородки на боковые и верхние откосы.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="drywallIncludeEndCladding" aria-live="polite"></div>
         </div>
@@ -221,7 +220,7 @@ final class DrywallEstimatorFields
             <input id="<?php echo esc_attr($includeCostsFieldId); ?>" type="checkbox" name="drywallIncludeCosts" value="1">
             <label for="<?php echo esc_attr($includeCostsFieldId); ?>" class="brigmaster-estimator__label-row">
                 <span>Посчитать стоимость</span>
-                <?php echo MarkupHelpers::renderEstimatorTooltip($instanceId . 'drywall-costs-tooltip', 'Все ценовые поля необязательны. Если заполнить только часть из них, в результате появятся только эти строки.'); ?>
+                <?php echo MarkupHelpers::renderFieldTooltip('Посчитать стоимость', 'В расчёте будут только те цены, которые вы заполнили.'); ?>
             </label>
             <div class="brigmaster-estimator__error" data-field-error="drywallIncludeCosts" aria-live="polite"></div>
         </div>

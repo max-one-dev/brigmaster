@@ -1,3 +1,4 @@
+import "./bm-tooltip.js";
 import { postEstimate } from "./api.js";
 import {
   buildMetrikaBaseParams,
@@ -6,7 +7,6 @@ import {
   handleValidationErrors,
   initModeScenarioUi,
   initStaleOnFormChange,
-  initTooltips,
   safeReachGoal,
   setFieldError,
   setLoadingState,
@@ -67,7 +67,7 @@ async function onSubmit(event, calculatorModule) {
 
     try {
       data = await response.json();
-    } catch (_parseError) {
+    } catch {
       safeReachGoal("brigmaster_calc_fail_api", {
         ...baseParams,
         error_kind: "api_other",
@@ -100,7 +100,7 @@ async function onSubmit(event, calculatorModule) {
       failApiParams.api_error_code = data.code;
     }
     safeReachGoal("brigmaster_calc_fail_api", failApiParams);
-  } catch (_error) {
+  } catch {
     safeReachGoal("brigmaster_calc_fail_network", {
       ...baseParams,
       error_kind: "network",
@@ -119,7 +119,6 @@ function initForm(form, calculatorModule) {
   initModeScenarioUi(form);
   initStaleOnFormChange(form);
   initMixtureFields(form);
-  initTooltips(form);
   form.addEventListener("submit", (event) => onSubmit(event, calculatorModule));
   initResultActions(form);
 }

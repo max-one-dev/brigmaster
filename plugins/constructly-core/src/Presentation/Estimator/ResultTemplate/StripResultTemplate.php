@@ -33,9 +33,7 @@ final class StripResultTemplate
                                 <div class="bm-calculator-result__material">
                                     <span class="bm-calculator-result__material-head">
                                         <span>Объём бетона
-                                            <button class="bm-tooltip" type="button" data-tooltip="Объём с учётом технологического запаса на потери при заливке." aria-label="Подсказка: объём бетона">
-                                                <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-info-circle"></use></svg>
-                                            </button>
+                                            <button type="button" class="bm-tooltip-trigger" data-bm-tooltip="<?php echo esc_attr('Объём с учётом технологического запаса на потери при заливке.'); ?>" aria-label="<?php echo esc_attr('Подсказка: объём бетона'); ?>" aria-expanded="false">i</button>
                                         </span>
                                         <strong><span data-result-strip-concrete-volume>-</span> м³</strong>
                                     </span>
@@ -50,9 +48,7 @@ final class StripResultTemplate
                                 <div class="bm-calculator-result__material">
                                     <span class="bm-calculator-result__material-head">
                                         <span>Суммарная площадь щитов
-                                            <button class="bm-tooltip" type="button" data-tooltip="Площадь боковых поверхностей ленты с запасом на раскрой пиломатериала." aria-label="Подсказка: площадь опалубки">
-                                                <svg class="bm-icon" aria-hidden="true"><use href="#bm-icon-info-circle"></use></svg>
-                                            </button>
+                                            <button type="button" class="bm-tooltip-trigger" data-bm-tooltip="<?php echo esc_attr('Площадь боковых поверхностей ленты с запасом на раскрой пиломатериала.'); ?>" aria-label="<?php echo esc_attr('Подсказка: площадь опалубки'); ?>" aria-expanded="false">i</button>
                                         </span>
                                         <strong><span data-result-strip-formwork-area>-</span> м²</strong>
                                     </span>

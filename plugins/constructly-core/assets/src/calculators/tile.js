@@ -1,8 +1,6 @@
 import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatters.js";
-import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
+import { clearErrors, finalizeSuccessfulResult, getEstimatorShell, markResultStale, readTrimmed, setFieldError, toggleVisibility } from "../core/form-state.js";
 import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
-import { buildMixturePayload, syncPileMixtureBlocks } from "../core/mixture.js";
-import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 
@@ -35,7 +33,7 @@ export function showTileResult(form, payload) {
 
     const infoRow = (label, tooltipText, value, note) => {
         const noteHtml = note ? `<span class="bm-calculator-result__material-note">${escapeHtml(String(note))}</span>` : '';
-        const labelHtml = `<span class="bm-result-info">${escapeHtml(String(label))}<button type="button" class="bm-result-info__trigger" aria-label="Пояснение">?</button><span class="bm-result-info__popup">${escapeHtml(String(tooltipText))}</span></span>`;
+        const labelHtml = `${escapeHtml(String(label))} <button type="button" class="bm-tooltip-trigger" data-bm-tooltip="${escapeHtml(String(tooltipText))}" aria-label="Подсказка: ${escapeHtml(String(label))}" aria-expanded="false">i</button>`;
         return `<div class="bm-calculator-result__material"><span class="bm-calculator-result__material-head">${labelHtml}<strong>${value}</strong></span>${noteHtml}</div>`;
     };
 
@@ -478,7 +476,7 @@ export function showTileResult(form, payload) {
                 clearErrors(form);
                 markResultStale(form);
                 refresh();
-                initTooltips(form);
+
             });
         });
 

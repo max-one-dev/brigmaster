@@ -1,8 +1,8 @@
-import { escapeHtml, formatNumber, hasMeaningfulNumber } from "../core/formatters.js";
-import { clearErrors, closeAllTooltips, finalizeSuccessfulResult, getEstimatorShell, initTooltips, isMobileTooltipViewport, markResultStale, openTooltip, positionTooltipWithinViewport, readTrimmed, setFieldError, setModeLockState, setTooltipBackdropVisible, toggleTooltip, toggleVisibility } from "../core/form-state.js";
-import { isPositiveInteger, isPositiveNumber, validateBaseFields, validatePositiveField, validateSelectedValue } from "../core/validation.js";
-import { buildMixturePayload, syncPileMixtureBlocks } from "../core/mixture.js";
-import { renderMixtureCard, renderStripReinforcementCard } from "../ui/result-panel.js";
+import { formatNumber } from "../core/formatters.js";
+import { clearErrors, finalizeSuccessfulResult, getEstimatorShell, markResultStale, readTrimmed, setFieldError, setModeLockState, toggleVisibility } from "../core/form-state.js";
+import { validateBaseFields, validatePositiveField } from "../core/validation.js";
+import { buildMixturePayload } from "../core/mixture.js";
+import { renderMixtureCard } from "../ui/result-panel.js";
 import { initEstimateForms } from "../core/bootstrap.js";
 
 
@@ -62,7 +62,7 @@ import { initEstimateForms } from "../core/bootstrap.js";
         if (calculator !== "screed") {
             return;
         }
-        closeAllTooltips(form);
+
         const mode = form.querySelector('[name="mode"]')?.value || "dimensions";
         const isAreaMode = mode === "area";
         setModeLockState(form, isAreaMode);

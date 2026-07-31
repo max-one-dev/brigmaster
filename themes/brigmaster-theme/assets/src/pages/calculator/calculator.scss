@@ -11,7 +11,6 @@
 @use '../../styles/components/link';
 @use '../../styles/components/section-toolbar';
 @use '../../styles/components/select';
-@use '../../styles/components/tooltip';
 @use '../../styles/components/bm-tooltip-panel';
 @use '../../styles/abstracts/media' as media;
 
@@ -236,8 +235,7 @@
 
 .brigmaster-estimator__toggle {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   gap: var(--bm-space-3);
   align-items: center;
 }
@@ -339,7 +337,7 @@
   min-width: 0;
 }
 
-.brigmaster-estimator__field-group:not(.brigmaster-estimator__field-grid):not(.brigmaster-estimator__field):not(.brigmaster-estimator__field-group--hidden) {
+.brigmaster-estimator__field-group:not(.brigmaster-estimator__field-grid, .brigmaster-estimator__field, .brigmaster-estimator__field-group--hidden) {
   display: flex;
   flex-direction: column;
   gap: var(--bm-space-5);
@@ -481,68 +479,12 @@
   display: inline-flex;
 }
 
-/* Mode-lock tooltip anchors: hidden by default, shown only when row is locked (area mode) */
 .brigmaster-estimator__tooltip-anchor--mode-lock {
   display: none;
 }
 
 .is-disabled .brigmaster-estimator__tooltip-anchor--mode-lock {
   display: inline-flex;
-}
-
-.brigmaster-estimator__tooltip-trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.125rem;
-  height: 1.125rem;
-  padding: 0;
-  border: 1px solid var(--bm-color-border-strong);
-  border-radius: var(--bm-radius-full);
-  font-size: 0.6875rem;
-  font-weight: var(--bm-font-bold);
-  line-height: 1;
-  color: var(--bm-color-text-muted);
-  cursor: pointer;
-  background: var(--bm-color-surface);
-  transition:
-    color var(--bm-transition-fast),
-    border-color var(--bm-transition-fast);
-}
-
-.brigmaster-estimator__tooltip-trigger:hover,
-.brigmaster-estimator__tooltip-trigger[aria-expanded='true'] {
-  border-color: var(--bm-color-brand);
-  color: var(--bm-color-brand-emphasis);
-}
-
-.brigmaster-estimator__tooltip {
-  position: absolute;
-  bottom: calc(100% + var(--bm-space-2));
-  left: 50%;
-  z-index: 20;
-  width: max-content;
-  max-width: 16rem;
-  padding: var(--bm-space-3) var(--bm-space-4);
-  border-radius: var(--bm-radius-md);
-  font-size: var(--bm-text-xs);
-  font-weight: var(--bm-font-regular);
-  line-height: 1.45;
-  color: var(--bm-color-surface);
-  background: var(--bm-color-cta-dark);
-  box-shadow: var(--bm-shadow-md);
-  transform: translateX(-50%);
-
-  &.is-open {
-    bottom: auto;
-    transform: none;
-  }
-}
-
-.brigmaster-estimator__tooltip-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 15;
 }
 
 .brigmaster-estimator__segment-list {
@@ -689,11 +631,6 @@
   color: var(--bm-color-text-strong);
 }
 
-@media (width <= 767px) {
-  .brigmaster-estimator__tooltip-backdrop {
-    background: rgb(28 36 48 / 0.45);
-  }
-}
 
 .bm-calculator-result {
   display: grid;
@@ -845,56 +782,6 @@
   background: var(--bm-color-surface-muted);
 }
 
-.bm-result-info {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--bm-space-1);
-}
-
-.bm-result-info__trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1rem;
-  height: 1rem;
-  padding: 0;
-  border: 1px solid var(--bm-color-border-strong);
-  border-radius: var(--bm-radius-full);
-  font-size: 0.625rem;
-  font-weight: var(--bm-font-bold);
-  line-height: 1;
-  color: var(--bm-color-text-muted);
-  cursor: help;
-  background: var(--bm-color-surface);
-  vertical-align: middle;
-  flex-shrink: 0;
-}
-
-.bm-result-info__popup {
-  display: none;
-  position: absolute;
-  bottom: calc(100% + var(--bm-space-2));
-  left: 50%;
-  z-index: 20;
-  width: max-content;
-  max-width: 14rem;
-  padding: var(--bm-space-3) var(--bm-space-4);
-  border-radius: var(--bm-radius-md);
-  font-size: var(--bm-text-xs);
-  font-weight: var(--bm-font-regular);
-  line-height: 1.45;
-  color: var(--bm-color-surface);
-  background: var(--bm-color-cta-dark);
-  box-shadow: var(--bm-shadow-md);
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-
-.bm-result-info__trigger:hover + .bm-result-info__popup,
-.bm-result-info__trigger:focus + .bm-result-info__popup {
-  display: block;
-}
 
 .bm-calculator-result__note-icon {
   display: inline-flex;
@@ -1521,6 +1408,7 @@
 }
 
 /* On-screen snapshot state used by the html2canvas-based "Скачать результат" PDF export. */
+
 /* The body-level resets must be on body.bm-pdf-export directly — nested body { } inside
    .bm-pdf-export { } would compile to .bm-pdf-export body { } which never matches since
    body cannot be a descendant of itself. */
@@ -1536,10 +1424,6 @@ body.bm-pdf-export {
   .bm-section {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-  }
-
-  .bm-result-info__trigger {
-    display: none !important;
   }
 
   /* html2canvas cannot resolve <use href="#sprite"> SVG icons, so the note's info-circle
