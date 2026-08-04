@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Foundation_Hub_Migration
 {
-    private const MIGRATION_VERSION = 'foundation-hub-v3';
+    private const MIGRATION_VERSION = 'foundation-hub-v5';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -50,9 +50,9 @@ final class Constructly_Foundation_Hub_Migration
                     ['label' => 'Фундамент'],
                 ],
                 'title' => 'Калькулятор фундамента',
-                'lead' => 'Подберите подходящий тип фундамента, рассчитайте количество материалов и получите ориентировочные параметры для вашего проекта.',
+                'lead' => 'Подберите подходящий тип фундамента, рассчитайте количество материалов и получите параметры для вашего проекта.',
                 'features' => [
-                    ['icon' => 'calculator', 'title' => 'Точные расчёты', 'text' => 'на основе форм и формул'],
+                    ['icon' => 'calculator', 'title' => 'Нормативные формулы', 'text' => 'на основе ГОСТ и СП'],
                     ['icon' => 'book', 'title' => 'Прозрачная методика', 'text' => 'понятная логика расчётов'],
                     ['icon' => 'clock-check', 'title' => 'Быстрый результат', 'text' => 'за несколько минут'],
                 ],
@@ -72,8 +72,8 @@ final class Constructly_Foundation_Hub_Migration
                     ],
                     [
                         'icon' => 'reload',
-                        'title' => 'Реконструкция дома',
-                        'text' => 'Хочу усилить или заменить существующий фундамент',
+                        'title' => 'Замена фундамента',
+                        'text' => 'Планируете заменить старый фундамент? Рассчитайте материалы для нового — ленточного, плитного или свайного.',
                         'label' => 'Подобрать и рассчитать',
                         'url' => '#hub-calculators',
                     ],
@@ -144,7 +144,7 @@ final class Constructly_Foundation_Hub_Migration
                     [
                         'icon' => 'briefcase',
                         'title' => 'Бюджет и сроки',
-                        'text' => 'Ленточный — оптимален по цене, плитный — дороже, но быстрее, свайный — компромиссный вариант.',
+                        'text' => 'Ленточный — оптимален по цене на устойчивых грунтах. Плитный — дороже, но лучше распределяет нагрузку. Свайный — для слабых грунтов.',
                     ],
                     [
                         'icon' => 'target',
@@ -182,7 +182,7 @@ final class Constructly_Foundation_Hub_Migration
                     ],
                     [
                         'question' => 'Как часто обновляются данные?',
-                        'answer' => 'Мы регулярно обновляем справочные данные и проверяем расчётную логику по мере развития сервиса.',
+                        'answer' => 'Нормативные данные актуализируем при выходе новых редакций ГОСТ и СП. Дата последнего обновления — в «<a href="/metodologiya/">Методологии</a>».',
                     ],
                 ],
             ]),

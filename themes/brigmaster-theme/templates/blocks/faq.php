@@ -75,7 +75,7 @@ foreach ($items as $item) {
                         <div id="<?php echo esc_attr($panel_id); ?>" class="bm-accordion__panel">
                             <div class="bm-accordion__panel-inner">
                                 <div class="bm-accordion__content">
-                                    <p class="bm-accordion__text"><?php echo esc_html($answer); ?></p>
+                                    <p class="bm-accordion__text"><?php echo wp_kses( $answer, [ 'a' => [ 'href' => true, 'rel' => true, 'title' => true, 'target' => true ] ] ); ?></p>
                                 </div>
                             </div>
                         </div>

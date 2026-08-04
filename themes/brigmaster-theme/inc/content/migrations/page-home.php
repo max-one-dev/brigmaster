@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Homepage_Migration
 {
-    private const MIGRATION_VERSION = 'homepage-v9';
+    private const MIGRATION_VERSION = 'homepage-v10';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -52,7 +52,7 @@ final class Constructly_Homepage_Migration
         $blocks = [
             Constructly_Migration_Helpers::block('constructly/home-hero', [
                 'title' => 'Онлайн-калькуляторы материалов для строительства и ремонта',
-                'lead' => 'Точные ориентировочные расчёты по проверенным формулам. Понятная логика, прозрачные допущения и результаты, которым можно доверять.',
+                'lead' => 'Расчёт материалов по строительным нормам. Понятные формулы, открытая методика, результат за пару минут.',
                 'primaryLabel' => 'Открыть калькуляторы',
                 'primaryUrl' => '#calculators',
                 'secondaryLabel' => 'Как это работает?',
@@ -104,7 +104,7 @@ final class Constructly_Homepage_Migration
                         ['name' => 'Вода', 'amount' => '≈648 л'],
                     ],
                 ],
-                'note' => 'Используются проверенные строительные нормы и справочные данные',
+                'note' => 'В основе — действующие ГОСТ и СП. Методику и источники смотрите на странице «<a href="/metodologiya/">Методология</a>».',
             ]),
             Constructly_Migration_Helpers::block('constructly/popular-calculators', [
                 'anchor' => 'calculators',
@@ -168,13 +168,13 @@ final class Constructly_Homepage_Migration
                     ],
                     [
                         'title' => 'Делаю ремонт в квартире',
-                        'text' => 'Расчёт стяжки, штукатурки, плитки, отделки и электромонтажа.',
+                        'text' => 'Расчёт стяжки, штукатурки, плитки и отделки.',
                         'url' => '#calculators',
                         'label' => 'Подобрать расчёты',
                         'image' => 'assets/src/images/illustrations/task-renovate-apartment.jpg',
                     ],
                     [
-                        'title' => 'Ремонт в комнате',
+                        'title' => 'Делаю ремонт в комнате',
                         'text' => 'Рассчитайте материалы для пола, стен, потолка и отделки.',
                         'url' => '#calculators',
                         'label' => 'Подобрать расчёты',
@@ -209,7 +209,7 @@ final class Constructly_Homepage_Migration
                 ],
             ]),
             Constructly_Migration_Helpers::block('constructly/trust', [
-                'title' => 'Почему нам можно доверять',
+                'title' => 'Как устроены расчёты',
                 'items' => [
                     [
                         'title' => 'Проверенные формулы',
@@ -223,12 +223,12 @@ final class Constructly_Homepage_Migration
                     ],
                     [
                         'title' => 'Практичность',
-                        'text' => 'Сервис создан строителями для строителей и частных пользователей.',
+                        'text' => 'Инструмент проверен на типовых строительных задачах и сверен с действующими нормами.',
                         'icon' => 'target',
                     ],
                     [
-                        'title' => 'Постоянное развитие',
-                        'text' => 'Мы обновляем данные и добавляем новые расчёты.',
+                        'title' => 'Регулярные обновления',
+                        'text' => 'Следим за изменениями ГОСТ и СП.',
                         'icon' => 'reload',
                     ],
                 ],
@@ -307,7 +307,7 @@ final class Constructly_Homepage_Migration
                     ],
                     [
                         'question' => 'Как часто обновляются данные?',
-                        'answer' => 'Мы регулярно обновляем справочные данные и проверяем расчётную логику по мере развития сервиса.',
+                        'answer' => 'Нормативные данные актуализируем при выходе новых редакций ГОСТ и СП. Дата последнего обновления — в «<a href="/metodologiya/">Методологии</a>».',
                     ],
                 ],
             ]),

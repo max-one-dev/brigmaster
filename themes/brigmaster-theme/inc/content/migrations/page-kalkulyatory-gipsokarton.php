@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Drywall_Migration
 {
-    private const MIGRATION_VERSION = 'drywall-v5';
+    private const MIGRATION_VERSION = 'drywall-v6';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -61,7 +61,7 @@ final class Constructly_Drywall_Migration
             ]),
             Constructly_Migration_Helpers::block('constructly/context-intro', [
                 'title' => 'Когда применяют гипсокартон',
-                'body' => '<p>Гипсокартон выбирают для выравнивания стен и потолков, возведения перегородок и встроенных конструкций в жилых, коммерческих и офисных помещениях. Он подходит для сухих условий монтажа: там, где важна скорость работ, минимальный «мокрый» процесс и возможность скрыть инженерные коммуникации. Влагостойкий ГКЛ используют в кухнях и ванных комнатах с нормальным уровнем влажности.</p>',
+                'body' => '<p>Гипсокартон выбирают для выравнивания стен и потолков, возведения перегородок и встроенных конструкций в жилых, коммерческих и офисных помещениях. Он подходит для сухих условий монтажа: там, где важна скорость работ, минимальный «мокрый» процесс и возможность скрыть инженерные коммуникации. Влагостойкий ГКЛВ применяют в помещениях с повышенной влажностью — кухнях, санузлах, ванных.</p>',
             ]),
             Constructly_Migration_Helpers::block('constructly/calculator-estimator', [
                 'shortcodeTag' => 'brigmaster_drywall_estimator',
@@ -83,7 +83,7 @@ final class Constructly_Drywall_Migration
                     . '<tr><td><span class="bm-tooltip" data-tooltip="Площадь с запасом 10 % ÷ 3,0 м²; для перегородки ×2 стороны × число слоёв" tabindex="0">Лист ГКЛ 2500×1200×12,5 мм (3,0 м²)</span></td><td>≈ 0,37 листа</td></tr>'
                     . '<tr><td><span class="bm-tooltip" data-tooltip="Шаг стоек 600 или 400 мм; длина = число стоек × высота" tabindex="0">Профиль стоечный ПП 60×27 (стена/потолок)</span></td><td>зависит от шага и высоты</td></tr>'
                     . '<tr><td><span class="bm-tooltip" data-tooltip="Верхняя и нижняя обвязка; покупается с округлением до 1 м" tabindex="0">Профиль направляющий ПН 28×27 (стена/потолок)</span></td><td>длина стены × 2</td></tr>'
-                    . '<tr><td><span class="bm-tooltip" data-tooltip="Для перегородки ×2 (обе стороны); запас 10 %" tabindex="0">Саморезы для ГКЛ</span></td><td>34 шт. (1 слой) / 50 шт. (2 слоя)</td></tr>'
+                    . '<tr><td><span class="bm-tooltip" data-tooltip="Саморезы для крепления листов к каркасу: 34 шт/м² при одном слое ГКЛ, 50 шт/м² при двух. Запас на брак задаётся отдельным полем." tabindex="0">Саморезы для ГКЛ</span></td><td>34 шт. (1 слой) / 50 шт. (2 слоя)</td></tr>'
                     . '<tr><td><span class="bm-tooltip" data-tooltip="Потолок: 2 на подвес + 8 на «краб»; запас 10 %" tabindex="0">Саморезы по металлу</span></td><td>4 шт. на стойку (стена/перегородка)</td></tr>'
                     . '<tr><td><span class="bm-tooltip" data-tooltip="Крепление направляющих и прямых подвесов; запас 10 %" tabindex="0">Дюбель-гвозди</span></td><td>шаг направляющих 0,5 м + 2 на каждый подвес</td></tr>'
                     . '<tr><td><span class="bm-tooltip" data-tooltip="Число рядов по высоте задаётся шагом 0,8 м; запас 10 %" tabindex="0">Прямые подвесы</span></td><td>шаг 0,8 м по стойке</td></tr>'

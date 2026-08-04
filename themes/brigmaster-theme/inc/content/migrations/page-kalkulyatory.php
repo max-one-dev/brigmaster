@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Calculators_Index_Migration
 {
-    private const MIGRATION_VERSION = 'calculators-index-v3';
+    private const MIGRATION_VERSION = 'calculators-index-v5';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -135,7 +135,7 @@ final class Constructly_Calculators_Index_Migration
                 'titleId' => 'calc-how-title',
                 'themeVariant' => 'bg',
                 'title' => 'Как это работает',
-                'subtitle' => 'Три шага от параметров до сметы материалов',
+                'subtitle' => 'Четыре шага от параметров до сметы материалов.',
                 'linkLabel' => 'Методика расчётов',
                 'linkUrl' => '/metodologiya/',
                 'items' => [
@@ -156,7 +156,7 @@ final class Constructly_Calculators_Index_Migration
                     ],
                     [
                         'icon' => 'shield-check',
-                        'title' => 'Проверьте перед закупкой',
+                        'title' => 'Покупайте материалы с запасом',
                         'text' => 'Результат ориентировочный — сверьте его с проектом и условиями объекта.',
                     ],
                 ],
@@ -178,7 +178,7 @@ final class Constructly_Calculators_Index_Migration
                 'titleId' => 'calc-cta-title',
                 'variant' => 'soft',
                 'title' => 'Не знаете, с чего начать?',
-                'text' => 'Начните с расчёта фундамента — это основа сметы для большинства проектов.',
+                'text' => 'Строите дом? Начните с фундамента — он задаёт объём первичной закупки.',
                 'buttonLabel' => 'Перейти к фундаментам',
                 'buttonUrl' => '/kalkulyatory/fundament/',
                 'image' => 'assets/src/images/illustrations/cta-about-light.jpg',

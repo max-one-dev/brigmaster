@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Contacts_Migration
 {
-    private const MIGRATION_VERSION = 'contacts-v3';
+    private const MIGRATION_VERSION = 'contacts-v4';
 
     private const CONTACT_FORM_SHORTCODE = '[contact-form-7 id="3b0d792" title="Контактная форма"]';
 
@@ -53,12 +53,12 @@ final class Constructly_Contacts_Migration
                     ['label' => 'Контакты'],
                 ],
                 'title' => 'Контакты',
-                'lead' => 'Мы всегда рады вашим вопросам, предложениям и сотрудничеству.',
+                'lead' => 'Нашли ошибку в расчёте, есть идея калькулятора или вопрос по методике — напишите.',
             ]),
             Constructly_Migration_Helpers::block('constructly/contact-form', [
                 'titleId' => 'contacts-form-title',
                 'sectionTitle' => 'Свяжитесь с нами',
-                'text' => 'Напишите, если хотите уточнить расчёт, предложить улучшение или обсудить сотрудничество. Мы отвечаем по рабочим каналам и стараемся быстро возвращаться с понятным ответом.',
+                'text' => 'Напишите, если хотите уточнить расчёт, предложить улучшение или обсудить сотрудничество. Мы отвечаем по указанным контактам и стараемся быстро возвращаться с понятным ответом.',
                 'shortcode' => self::CONTACT_FORM_SHORTCODE,
                 'channels' => [
                     [

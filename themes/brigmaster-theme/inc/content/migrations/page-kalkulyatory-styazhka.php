@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Screed_Migration
 {
-    private const MIGRATION_VERSION = 'screed-v3';
+    private const MIGRATION_VERSION = 'screed-v4';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -60,7 +60,7 @@ final class Constructly_Screed_Migration
                 ],
             ]),
             Constructly_Migration_Helpers::block('constructly/context-intro', [
-                'title' => 'Когда устраивают стяжку пола',
+                'title' => 'Когда нужна стяжка пола',
                 'body' => '<p>Стяжку пола используют для выравнивания основания под финишное покрытие, повышения жёсткости конструкции пола и размещения систем тёплого пола. Она актуальна в новостройках с неровными плитами перекрытия, при капитальном ремонте с заменой покрытия, а также в помещениях с перепадами высот более 5 мм. Мокрая и полусухая стяжки применяются в жилых и коммерческих помещениях; наливной состав — там, где требуется минимальная толщина слоя.</p>',
             ]),
             Constructly_Migration_Helpers::block('constructly/calculator-estimator', [

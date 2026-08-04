@@ -110,7 +110,7 @@ $note = (string) ($attributes['note'] ?? '');
                         <svg class="bm-icon bm-home-hero__note-icon" aria-hidden="true">
                             <use href="#bm-icon-info-circle"></use>
                         </svg>
-                        <span class="bm-home-hero__note-text"><?php echo esc_html($note); ?></span>
+                        <span class="bm-home-hero__note-text"><?php echo wp_kses( $note, [ 'a' => [ 'href' => true, 'rel' => true, 'title' => true, 'target' => true ] ] ); ?></span>
                     </p>
                 <?php endif; ?>
             </div>
