@@ -94,7 +94,7 @@ final class ScreedFields
                                         <span>Диаметр арматуры (мм)</span>
                                         <?php echo MarkupHelpers::renderFieldTooltip('Диаметр арматуры', 'Для бытовой стяжки – сварная сетка Ø3–5 мм (Вр-I, ГОСТ 23279); Ø6–8 мм (A400/A500) для нагруженных полов и стяжек от 80 мм.', 'rebar-diameter'); ?>
                                     </label>
-                                    <input id="<?php echo esc_attr($rebarDiameterFieldId); ?>" type="number" name="rebarDiameterMm" min="1" step="1" value="12">
+                                    <input id="<?php echo esc_attr($rebarDiameterFieldId); ?>" type="number" name="rebarDiameterMm" min="1" step="1" value="4">
                                     <div class="brigmaster-estimator__error" data-field-error="rebarDiameterMm" aria-live="polite"></div>
                                 </div>
                                 <div class="brigmaster-estimator__field">
@@ -111,8 +111,8 @@ final class ScreedFields
                                         <?php echo MarkupHelpers::renderFieldTooltip('Слои арматуры', 'До 80 мм – 1 слой сетки в нижней трети (15–20 мм от низа). 2 слоя – только для стяжек от 100 мм при значительных нагрузках.'); ?>
                                     </label>
                                     <select id="<?php echo esc_attr($rebarLayersFieldId); ?>" name="rebarLayers">
-                                        <option value="1">1 слой</option>
-                                        <option value="2" selected>2 слоя</option>
+                                        <option value="1" selected>1 слой</option>
+                                        <option value="2">2 слоя</option>
                                     </select>
                                     <div class="brigmaster-estimator__error" data-field-error="rebarLayers" aria-live="polite"></div>
                                 </div>

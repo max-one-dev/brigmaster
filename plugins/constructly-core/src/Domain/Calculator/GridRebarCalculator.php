@@ -12,9 +12,9 @@ use InvalidArgumentException;
  */
 final class GridRebarCalculator
 {
-    private const DEFAULT_REBAR_DIAMETER_MM = 12.0;
+    private const DEFAULT_REBAR_DIAMETER_MM = 4.0;
     private const DEFAULT_REBAR_STEP_MM = 200.0;
-    private const DEFAULT_REBAR_LAYERS = 2;
+    private const DEFAULT_REBAR_LAYERS = 1;
     private const DEFAULT_REBAR_RESERVE_PERCENT = 10.0;
 
     /** @var array<int> */
