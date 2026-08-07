@@ -1,5 +1,13 @@
 @use '../abstracts/media' as media;
 
+.bm-article-criteria__heading {
+  margin: 0 0 var(--bm-space-6);
+  font-size: var(--bm-text-xl);
+  font-weight: var(--bm-font-bold);
+  line-height: 1.3;
+  color: var(--bm-color-text-strong);
+}
+
 .bm-article-criteria {
   display: grid;
   gap: var(--bm-space-6);

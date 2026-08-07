@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Foundation_Slab_Migration
 {
-    private const MIGRATION_VERSION = 'foundation-slab-v3';
+    private const MIGRATION_VERSION = 'foundation-slab-v4';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -115,6 +115,13 @@ final class Constructly_Foundation_Slab_Migration
                 'resultTitle' => 'Результаты расчёта',
                 'resultStatus' => 'Заполните форму',
                 'resultText' => 'После расчёта здесь появится сводка по бетону, арматуре и материалам плиты.',
+            ]),
+            Constructly_Migration_Helpers::block('constructly/articles', [
+                'title'     => 'Полезные статьи',
+                'linkLabel' => 'Все статьи →',
+                'linkUrl'   => home_url('/baza-znaniy/fundament/'),
+                'category'  => 'fundament',
+                'count'     => 3,
             ]),
             Constructly_Migration_Helpers::block('constructly/faq', [
                 'sectionId' => 'calculator-faq',

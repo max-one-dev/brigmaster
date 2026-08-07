@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Brick_Migration
 {
-    private const MIGRATION_VERSION = 'brick-v5';
+    private const MIGRATION_VERSION = 'brick-v6';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -132,6 +132,13 @@ final class Constructly_Brick_Migration
                     ['question' => 'Учитываются ли потери и бой?', 'answer' => 'Да, если в дополнительных параметрах указан процент запаса на бой и подрезку.'],
                     ['question' => 'Нужна ли регистрация для использования?', 'answer' => 'Нет, расчёт можно выполнить без регистрации.'],
                 ],
+            ]),
+            Constructly_Migration_Helpers::block('constructly/articles', [
+                'title'     => 'Полезные статьи',
+                'linkLabel' => 'Все статьи →',
+                'linkUrl'   => home_url('/baza-znaniy/steny/'),
+                'category'  => 'steny',
+                'count'     => 3,
             ]),
             Constructly_Migration_Helpers::block('constructly/foundation-hub-type-cards', [
                 'anchorId' => 'related-calculators',

@@ -100,6 +100,21 @@
   margin: 0 0 var(--bm-space-6);
 }
 
+// Gutenberg wp:image blocks inside article body — constrain width, preserve ratio, centre.
+// Scoped to .bm-prose so hero and archive cards are unaffected.
+.bm-prose .wp-block-image {
+  text-align: center;
+  margin-block: 1.5rem;
+}
+
+.bm-prose .wp-block-image img {
+  max-width: 680px;
+  width: 100%;
+  height: auto;
+  margin-inline: auto;
+  display: block;
+}
+
 .bm-prose :where(figcaption) {
   margin-top: var(--bm-space-2);
   font-size: var(--bm-text-sm);

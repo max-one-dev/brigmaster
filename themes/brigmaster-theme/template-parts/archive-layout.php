@@ -18,6 +18,9 @@ $current_sort = isset($_GET['sort']) ? sanitize_key(wp_unslash((string) $_GET['s
 $current_search = get_search_query();
 $found = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
 
+// Breadcrumb data: resolved once, used in the hero nav and (via schema.php) in JSON-LD.
+$bm_archive_cat = is_category() ? get_queried_object() : null;
+
 $hero_features = [
     ['icon' => 'shield-check', 'title' => 'Проверенная информация', 'text' => 'от экспертов отрасли'],
     ['icon' => 'briefcase', 'title' => 'Практические советы', 'text' => 'и рекомендации'],
@@ -41,12 +44,24 @@ $sort_options = [
             <nav class="bm-breadcrumbs bm-breadcrumbs--chevron bm-breadcrumbs--link-brand bm-page-hero__breadcrumbs" aria-label="Хлебные крошки">
                 <ol class="bm-breadcrumbs__list">
                     <li class="bm-breadcrumbs__item"><a href="<?php echo esc_url(home_url('/')); ?>">Главная</a></li>
-                    <li class="bm-breadcrumbs__item" aria-current="page">База знаний</li>
+                    <?php if ($bm_archive_cat instanceof WP_Term) : ?>
+                        <li class="bm-breadcrumbs__item"><a href="<?php echo esc_url((string) $posts_page_url); ?>">База знаний</a></li>
+                        <li class="bm-breadcrumbs__item" aria-current="page"><?php echo esc_html($bm_archive_cat->name); ?></li>
+                    <?php else : ?>
+                        <li class="bm-breadcrumbs__item" aria-current="page">База знаний</li>
+                    <?php endif; ?>
                 </ol>
             </nav>
             <div class="bm-hero">
-                <h1 id="archive-hero-title" class="bm-hero__title">База знаний</h1>
-                <p class="bm-hero__lead">Полезные статьи, инструкции и рекомендации по строительству и ремонту — от выбора материалов до практических расчётов.</p>
+                <?php if ($bm_archive_cat instanceof WP_Term) : ?>
+                    <h1 id="archive-hero-title" class="bm-hero__title"><?php echo esc_html($bm_archive_cat->name); ?></h1>
+                    <?php if ($bm_archive_cat->description !== '') : ?>
+                        <p class="bm-hero__lead"><?php echo esc_html($bm_archive_cat->description); ?></p>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <h1 id="archive-hero-title" class="bm-hero__title">База знаний</h1>
+                    <p class="bm-hero__lead">Полезные статьи, инструкции и рекомендации по строительству и ремонту — от выбора материалов до практических расчётов.</p>
+                <?php endif; ?>
                 <ul class="bm-hero__features bm-hero__features--cols-4">
                     <?php foreach ($hero_features as $f) : ?>
                         <li class="bm-hero__feature">
@@ -116,9 +131,19 @@ $sort_options = [
                         <div class="bm-sidebar-card">
                             <h3 class="bm-sidebar-card__title">Темы</h3>
                             <ul class="bm-tag-list">
+                                <li class="bm-tag-list__item">
+                                    <a class="bm-tag-list__link<?php echo $current_topic === '' ? ' is-active' : ''; ?>"
+                                       href="<?php echo esc_url($posts_page_url); ?>"
+                                       <?php echo $current_topic === '' ? 'aria-current="page"' : ''; ?>>
+                                        <span>Все темы</span>
+                                        <span class="bm-tag-list__count"><?php echo esc_html((string) array_sum(wp_list_pluck($topics, 'count'))); ?></span>
+                                    </a>
+                                </li>
                                 <?php foreach ($topics as $topic) : ?>
                                     <li class="bm-tag-list__item">
-                                        <a class="bm-tag-list__link" href="<?php echo esc_url(add_query_arg('topic', $topic->slug, $posts_page_url)); ?>">
+                                        <a class="bm-tag-list__link<?php echo $current_topic === $topic->slug ? ' is-active' : ''; ?>"
+                                           href="<?php echo esc_url(add_query_arg('topic', $topic->slug, $posts_page_url)); ?>"
+                                           <?php echo $current_topic === $topic->slug ? 'aria-current="page"' : ''; ?>>
                                             <span><?php echo esc_html($topic->name); ?></span>
                                             <span class="bm-tag-list__count"><?php echo esc_html((string) $topic->count); ?></span>
                                         </a>

@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Tile_Migration
 {
-    private const MIGRATION_VERSION = 'tile-v4';
+    private const MIGRATION_VERSION = 'tile-v5';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -129,6 +129,13 @@ final class Constructly_Tile_Migration
                     ['question' => 'Учитываются ли потери материалов?', 'answer' => 'Да, если в дополнительных параметрах указан процент запаса.'],
                     ['question' => 'Нужна ли регистрация для использования?', 'answer' => 'Нет, расчёт можно выполнить без регистрации.'],
                 ],
+            ]),
+            Constructly_Migration_Helpers::block('constructly/articles', [
+                'title'     => 'Полезные статьи',
+                'linkLabel' => 'Все статьи →',
+                'linkUrl'   => home_url('/baza-znaniy/otdelka/'),
+                'category'  => 'otdelka',
+                'count'     => 3,
             ]),
             Constructly_Migration_Helpers::block('constructly/foundation-hub-type-cards', [
                 'anchorId' => 'related-calculators',

@@ -30,6 +30,20 @@
   color: var(--bm-color-brand);
 }
 
+.bm-tag-list__link.is-active {
+  color: var(--bm-color-brand);
+  font-weight: 600;
+
+  .bm-tag-list__count {
+    color: var(--bm-color-brand);
+  }
+}
+
+.bm-tag-list__link.is-active:hover,
+.bm-tag-list__link.is-active:focus-visible {
+  color: var(--bm-color-brand-hover);
+}
+
 .bm-tag-list__count {
   flex-shrink: 0;
   font-size: var(--bm-text-sm);

@@ -5,10 +5,83 @@ if ( apply_filters( 'constructly_hide_articles_block', false ) ) {
     return;
 }
 
-$title = (string) ($attributes['title'] ?? '');
+$title      = (string) ($attributes['title']     ?? '');
 $link_label = (string) ($attributes['linkLabel'] ?? '');
-$link_url = (string) ($attributes['linkUrl'] ?? '');
-$items = is_array($attributes['items'] ?? null) ? $attributes['items'] : [];
+$link_url   = (string) ($attributes['linkUrl']   ?? '');
+$category   = (string) ($attributes['category']  ?? '');
+$count      = max(1, (int) ($attributes['count']  ?? 4));
+$items      = is_array($attributes['items'] ?? null) ? $attributes['items'] : [];
+$slugs      = is_array($attributes['slugs']  ?? null) ? array_filter(array_map('strval', $attributes['slugs'])) : [];
+
+// Shared helper: convert a WP_Post object into a card item array.
+$bm_post_to_item = static function (WP_Post $post): array {
+    $post_id  = $post->ID;
+    $thumb_id = (int) get_post_thumbnail_id($post_id);
+    $cat      = bm_primary_category($post_id);
+    return [
+        'title'    => get_the_title($post_id),
+        'text'     => wp_trim_words(get_the_excerpt($post), 16, '…'),
+        'url'      => (string) get_permalink($post_id),
+        'image'    => $thumb_id ? (string) wp_get_attachment_image_url($thumb_id, 'large') : '',
+        'imageAlt' => $thumb_id ? (string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true) : '',
+        'tag'      => $cat instanceof WP_Term ? $cat->name : '',
+        'readTime' => (string) bm_reading_time_label($post_id),
+        'date'     => (string) get_post_time('d.m.Y', false, $post_id),
+    ];
+};
+
+// Dynamic query — only when no static items are provided.
+if ($items === []) {
+    if ($slugs !== []) {
+        // Slugs mode: fetch exactly these posts in the declared order.
+        $slug_posts = get_posts([
+            'post_type'        => 'post',
+            'post_status'      => 'publish',
+            'post_name__in'    => array_values($slugs),
+            'posts_per_page'   => count($slugs),
+            'orderby'          => 'post_name__in',
+        ]);
+        foreach ($slug_posts as $slug_post) {
+            $items[] = $bm_post_to_item($slug_post);
+        }
+        // get_posts does not call setup_postdata; no reset needed.
+        // Re-sort to match original $slugs order (WP may not guarantee it).
+        $slug_order = array_flip(array_values($slugs));
+        usort($items, static function (array $a, array $b) use ($slug_order): int {
+            // derive slug from url for ordering
+            $slug_a = rtrim(basename(rtrim((string) ($a['url'] ?? ''), '/')), '/');
+            $slug_b = rtrim(basename(rtrim((string) ($b['url'] ?? ''), '/')), '/');
+            return ($slug_order[$slug_a] ?? 999) <=> ($slug_order[$slug_b] ?? 999);
+        });
+    } else {
+        // Category / recent mode.
+        $query_args = [
+            'post_type'           => 'post',
+            'post_status'         => 'publish',
+            'posts_per_page'      => $count,
+            'ignore_sticky_posts' => true,
+            'orderby'             => 'date',
+            'order'               => 'DESC',
+        ];
+        if ($category !== '') {
+            $query_args['category_name'] = $category;
+        }
+
+        $dyn_query = new WP_Query($query_args);
+
+        if ($dyn_query->have_posts()) {
+            while ($dyn_query->have_posts()) {
+                $dyn_query->the_post();
+                $items[] = $bm_post_to_item(get_post());
+            }
+        }
+
+        wp_reset_postdata();
+    }
+}
+
+// Auto-columns: clamp to 3–4 based on actual item count.
+$columns = max(3, min(4, count($items)));
 ?>
 <section class="bm-section" aria-labelledby="articles-title">
     <div class="bm-container">
@@ -24,7 +97,7 @@ $items = is_array($attributes['items'] ?? null) ? $attributes['items'] : [];
         </header>
 
         <?php if ($items !== []) : ?>
-            <div class="bm-card-grid bm-card-grid--cols-4">
+            <div class="bm-card-grid bm-card-grid--cols-<?php echo $columns; ?>">
                 <?php foreach ($items as $item) : ?>
                     <?php
                     if (!is_array($item)) {
@@ -44,7 +117,7 @@ $items = is_array($attributes['items'] ?? null) ? $attributes['items'] : [];
                         <a class="bm-card-article__link" href="<?php echo constructly_esc_block_href($item_url); ?>" aria-label="<?php echo esc_attr($item_title); ?>">
                             <?php if ($item_image !== '') : ?>
                                 <div class="bm-card-article__media">
-                                    <img src="<?php echo constructly_esc_block_image_src($item_image); ?>" alt="<?php echo esc_attr($item_image_alt); ?>" width="400" height="240" loading="lazy" decoding="async">
+                                    <img src="<?php echo (str_starts_with($item_image, 'http') || str_starts_with($item_image, '//')) ? esc_url($item_image) : constructly_esc_block_image_src($item_image); ?>" alt="<?php echo esc_attr($item_image_alt); ?>" width="400" height="240" loading="lazy" decoding="async">
                                 </div>
                             <?php endif; ?>
                             <div class="bm-card-article__body">

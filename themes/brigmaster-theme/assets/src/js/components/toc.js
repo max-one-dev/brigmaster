@@ -1,5 +1,8 @@
 import { registerComponent } from '../core/bootstrap.js';
 
+// Headings whose normalised text must never appear in the TOC.
+const TOC_EXCLUDE = ['читайте также'];
+
 function slugify(text) {
   return text
     .trim()
@@ -9,11 +12,14 @@ function slugify(text) {
     .replace(/-+/g, '-');
 }
 
-// Content headings only — exclude the feedback widget's heading ("Статья была
-// полезна?"), which lives inside the prose column but is not part of the article.
+// Content headings only — exclude:
+//   • the feedback widget's heading ("Статья была полезна?")
+//   • headings whose normalised text matches TOC_EXCLUDE (e.g. "Читайте также")
 function contentHeadings(prose, selector) {
   return Array.from(prose.querySelectorAll(selector)).filter(
-    (h) => !h.closest('.bm-article-feedback'),
+    (h) =>
+      !h.closest('.bm-article-feedback') &&
+      !TOC_EXCLUDE.includes((h.textContent || '').trim().toLowerCase()),
   );
 }
 

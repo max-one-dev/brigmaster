@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Homepage_Migration
 {
-    private const MIGRATION_VERSION = 'homepage-v10';
+    private const MIGRATION_VERSION = 'homepage-v12';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -237,47 +237,11 @@ final class Constructly_Homepage_Migration
                 'title' => 'Полезные статьи',
                 'linkLabel' => 'Все статьи →',
                 'linkUrl' => home_url('/baza-znaniy/'),
-                'items' => [
-                    [
-                        'title' => 'Как выбрать тип фундамента для частного дома',
-                        'text' => 'Разбираем основные типы фундаментов и критерии выбора под разные условия.',
-                        'url' => home_url('/baza-znaniy/'),
-                        'image' => 'assets/src/images/illustrations/article-cover-1.svg',
-                        'imageAlt' => '',
-                        'tag' => 'Фундамент',
-                        'readTime' => '12 мин',
-                        'date' => '15.04.2024',
-                    ],
-                    [
-                        'title' => 'Толщина стяжки пола: какая должна быть и почему',
-                        'text' => 'Рекомендации по выбору толщины для разных видов оснований.',
-                        'url' => home_url('/baza-znaniy/'),
-                        'image' => 'assets/src/images/illustrations/article-cover-2.svg',
-                        'imageAlt' => '',
-                        'tag' => 'Стяжка',
-                        'readTime' => '8 мин',
-                        'date' => '10.04.2024',
-                    ],
-                    [
-                        'title' => 'Как рассчитать плитку на пол и стены без ошибок',
-                        'text' => 'Пошаговая инструкция и примеры расчётов с учётом подрезки.',
-                        'url' => home_url('/baza-znaniy/'),
-                        'image' => 'assets/src/images/illustrations/article-cover-3.svg',
-                        'imageAlt' => '',
-                        'tag' => 'Плитка',
-                        'readTime' => '10 мин',
-                        'date' => '05.04.2024',
-                    ],
-                    [
-                        'title' => 'С чего начать ремонт в новостройке',
-                        'text' => 'План работ, этапы и полезные советы для новичков.',
-                        'url' => home_url('/baza-znaniy/'),
-                        'image' => 'assets/src/images/illustrations/article-cover-4.svg',
-                        'imageAlt' => '',
-                        'tag' => 'Ремонт',
-                        'readTime' => '15 мин',
-                        'date' => '01.04.2024',
-                    ],
+                'slugs' => [
+                    'lentochnyj-ili-plitnyj-fundament',
+                    'tolshchina-styazhki-pola',
+                    'rashod-plitki-na-pol-i-steny',
+                    'rashod-kirpicha',
                 ],
             ]),
             Constructly_Migration_Helpers::block('constructly/faq', [

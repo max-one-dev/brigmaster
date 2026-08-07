@@ -12,45 +12,55 @@ if (!defined('ABSPATH')) {
  */
 final class Constructly_Articles_Seed
 {
-    private const DEMO_FLAG_META = '_bm_demo_post';
     private const POSTS_PAGE_SLUG = 'baza-znaniy';
 
     /**
-     * @var list<array{name:string, slug:string}>
+     * @var list<array{name:string, slug:string, description:string}>
      */
     private const CATEGORIES = [
-        ['name' => 'Фундамент', 'slug' => 'fundament'],
-        ['name' => 'Стены', 'slug' => 'steny'],
-        ['name' => 'Полы', 'slug' => 'poly'],
-        ['name' => 'Кровля', 'slug' => 'krovlya'],
-        ['name' => 'Отделка', 'slug' => 'otdelka'],
-        ['name' => 'Материалы', 'slug' => 'materialy'],
-        ['name' => 'Ремонт', 'slug' => 'remont'],
-        ['name' => 'Стяжка', 'slug' => 'styazhka'],
-        ['name' => 'Плитка', 'slug' => 'plitka'],
-    ];
-
-    private const HERO_IMAGES = [
-        'assets/src/images/illustrations/hero-article.jpg',
-        'assets/src/images/illustrations/hero-archive.jpg',
-        'assets/src/images/illustrations/hero-hub-foundation.jpg',
-        'assets/src/images/illustrations/cta-about-light.jpg',
+        ['name' => 'Фундамент',      'slug' => 'fundament',       'description' => 'Типы фундаментов, расчёт, армирование, гидроизоляция.'],
+        ['name' => 'Полы',           'slug' => 'poly',            'description' => 'Стяжка, наливные полы, плитка и напольные покрытия.'],
+        ['name' => 'Отделка',        'slug' => 'otdelka',         'description' => 'Штукатурка, покраска, гипсокартон, финишная отделка стен.'],
+        ['name' => 'Стены',          'slug' => 'steny',           'description' => 'Кирпичная и блочная кладка: материалы, расход и расчёт стен.'],
     ];
 
     /**
-     * @return array{categories:int, posts_page_id:int, posts:int}
+     * @return array{categories:int, posts_page_id:int, articles:int, articles_created:int, articles_updated:int, articles_skipped:int}
      */
     public static function seed(): array
     {
-        $cat_ids = self::ensure_categories();
+        $cat_ids       = self::ensure_categories();
         $posts_page_id = self::ensure_posts_page();
         self::ensure_menu_links($posts_page_id);
-        $posts = self::ensure_posts($cat_ids);
+
+        $created = 0;
+        $updated = 0;
+        $skipped = 0;
+
+        foreach (Constructly_Article_Registry::all() as $article_data) {
+            $result = Constructly_Article_Seeder::seed_article($article_data, $cat_ids);
+            if ($result['id'] > 0) {
+                switch ($result['status']) {
+                    case 'created':
+                        ++$created;
+                        break;
+                    case 'updated':
+                        ++$updated;
+                        break;
+                    case 'skipped':
+                        ++$skipped;
+                        break;
+                }
+            }
+        }
 
         return [
-            'categories' => count($cat_ids),
-            'posts_page_id' => $posts_page_id,
-            'posts' => $posts,
+            'categories'       => count($cat_ids),
+            'posts_page_id'    => $posts_page_id,
+            'articles'         => $created + $updated,
+            'articles_created' => $created,
+            'articles_updated' => $updated,
+            'articles_skipped' => $skipped,
         ];
     }
 
@@ -58,6 +68,11 @@ final class Constructly_Articles_Seed
      * Ensures a "База знаний" link to the posts page exists in the primary nav and the
      * footer "Информация" column. Skips locations without an assigned menu, and never
      * duplicates an existing link to the same page/URL.
+     *
+     * For the primary menu the item is inserted immediately AFTER the item whose URL
+     * contains /kalkulyatory/. All items with a higher menu_order are shifted up by 1
+     * to make room. Idempotent: if "База знаний" already exists it is repositioned
+     * (and siblings re-sorted) but not duplicated.
      */
     private static function ensure_menu_links(int $posts_page_id): void
     {
@@ -65,7 +80,7 @@ final class Constructly_Articles_Seed
             return;
         }
 
-        $url = (string) get_permalink($posts_page_id);
+        $url       = (string) get_permalink($posts_page_id);
         $locations = get_nav_menu_locations();
 
         foreach (['primary', 'footer-column-2'] as $location) {
@@ -74,31 +89,107 @@ final class Constructly_Articles_Seed
             }
 
             $menu_id = (int) $locations[$location];
-            $items = wp_get_nav_menu_items($menu_id) ?: [];
+            $items   = wp_get_nav_menu_items($menu_id) ?: [];
 
-            $exists = false;
+            // Check whether "База знаний" item already exists in this menu.
+            $existing_item_id = 0;
             foreach ($items as $item) {
                 if ((int) $item->object_id === $posts_page_id && $item->object === 'page') {
-                    $exists = true;
+                    $existing_item_id = (int) $item->db_id;
                     break;
                 }
                 if (untrailingslashit((string) $item->url) === untrailingslashit($url)) {
-                    $exists = true;
+                    $existing_item_id = (int) $item->db_id;
                     break;
                 }
             }
 
-            if ($exists) {
+            if ($location !== 'primary') {
+                // Footer: keep existing behaviour — add if absent, ignore order.
+                if ($existing_item_id > 0) {
+                    continue;
+                }
+                wp_update_nav_menu_item($menu_id, 0, [
+                    'menu-item-title'     => 'База знаний',
+                    'menu-item-object'    => 'page',
+                    'menu-item-object-id' => $posts_page_id,
+                    'menu-item-type'      => 'post_type',
+                    'menu-item-status'    => 'publish',
+                ]);
                 continue;
             }
 
-            wp_update_nav_menu_item($menu_id, 0, [
-                'menu-item-title' => 'База знаний',
-                'menu-item-object' => 'page',
-                'menu-item-object-id' => $posts_page_id,
-                'menu-item-type' => 'post_type',
-                'menu-item-status' => 'publish',
-            ]);
+            // ----------------------------------------------------------------
+            // Primary menu: place "База знаний" right after /kalkulyatory/.
+            // ----------------------------------------------------------------
+
+            // Find the /kalkulyatory/ anchor item.
+            $kalkulyatory_order = 0;
+            foreach ($items as $item) {
+                if (strpos((string) $item->url, '/kalkulyatory/') !== false) {
+                    $kalkulyatory_order = (int) $item->menu_order;
+                    break;
+                }
+            }
+
+            // Target menu_order for "База знаний".
+            $target_order = $kalkulyatory_order > 0 ? $kalkulyatory_order + 1 : 0;
+
+            if ($existing_item_id > 0) {
+                // Item already exists — check whether it already sits at the
+                // correct position; if so, nothing to do.
+                $current_order = 0;
+                foreach ($items as $item) {
+                    if ((int) $item->db_id === $existing_item_id) {
+                        $current_order = (int) $item->menu_order;
+                        break;
+                    }
+                }
+                if ($target_order > 0 && $current_order === $target_order) {
+                    continue; // Already in the right place.
+                }
+            }
+
+            // Shift all items at or above target_order (excluding our own item)
+            // using wp_update_post on menu_order only — never wp_update_nav_menu_item
+            // on foreign items, which would wipe their title/object data.
+            if ($target_order > 0) {
+                foreach ($items as $item) {
+                    $db_id = (int) $item->db_id;
+                    if ($db_id === $existing_item_id) {
+                        continue; // Will be placed explicitly below.
+                    }
+                    if ((int) $item->menu_order >= $target_order) {
+                        wp_update_post([
+                            'ID'         => $db_id,
+                            'menu_order' => (int) $item->menu_order + 1,
+                        ]);
+                    }
+                }
+            }
+
+            if ($existing_item_id > 0) {
+                // Reposition existing item without touching any other fields.
+                if ($target_order > 0) {
+                    wp_update_post([
+                        'ID'         => $existing_item_id,
+                        'menu_order' => $target_order,
+                    ]);
+                }
+            } else {
+                // Create new item only when it does not yet exist.
+                $item_args = [
+                    'menu-item-title'     => 'База знаний',
+                    'menu-item-object'    => 'page',
+                    'menu-item-object-id' => $posts_page_id,
+                    'menu-item-type'      => 'post_type',
+                    'menu-item-status'    => 'publish',
+                ];
+                if ($target_order > 0) {
+                    $item_args['menu-item-position'] = $target_order;
+                }
+                wp_update_nav_menu_item($menu_id, 0, $item_args);
+            }
         }
     }
 
@@ -115,26 +206,79 @@ final class Constructly_Articles_Seed
                 continue;
             }
 
-            $result = wp_insert_term($cat['name'], 'category', ['slug' => $cat['slug']]);
+            $result = wp_insert_term($cat['name'], 'category', [
+                'slug'        => $cat['slug'],
+                'description' => $cat['description'] ?? '',
+            ]);
             if (!is_wp_error($result)) {
                 $ids[$cat['slug']] = (int) $result['term_id'];
             }
         }
 
+        // Route category archives under /baza-znaniy/<slug>/ to match the posts
+        // page URL prefix. Idempotent: only writes when value differs.
+        self::ensure_category_base();
+
         return $ids;
+    }
+
+    /**
+     * Neutralises the legacy category_base = 'baza-zaniy' / 'baza-znaniy' that
+     * was previously set here.
+     *
+     * WHY THE OLD VALUE BREAKS ARTICLES:
+     * When category_base is set, WordPress generates a greedy rewrite rule of the
+     * form  ^baza-zaniy/(.+?)/?$  (a single rule that matches ANY depth).  That
+     * pattern catches two-segment URLs like /baza-zaniy/fundament/moj-post/ before
+     * the per-post rule fires, resolves them as a category archive request, finds
+     * no matching term, and returns 404.  Category archives (one segment) happened
+     * to work because the greedy capture still matched one token, but posts (two
+     * segments) were silently eaten.
+     *
+     * FIX:
+     * Leave category_base empty (WordPress default).  Custom rewrite rules in
+     * inc/class-constructly-articles-rewrite.php add ONE-SEGMENT rules for the
+     * /baza-znaniy/<cat>/ archives; those rules do NOT match two-segment URLs, so
+     * the standard per-post rule (generated from the permalink structure
+     * /baza-znaniy/%category%/%postname%/) resolves articles correctly.
+     *
+     * Safe to call repeatedly: only writes option when the stored value is the
+     * legacy slug.  Does NOT flush rewrite rules here.
+     */
+    private static function ensure_category_base(): void
+    {
+        // Reset any legacy value that would generate a conflicting greedy rule.
+        // Both spellings ('baza-zaniy' and 'baza-znaniy') were used historically.
+        $current = (string) get_option('category_base', '');
+        if ($current !== '') {
+            update_option('category_base', '');
+        }
     }
 
     private static function ensure_posts_page(): int
     {
+        // Look up by correct slug first; fall back to old typo slug so we rename
+        // the existing page in-place instead of creating a duplicate.
         $page = get_page_by_path(self::POSTS_PAGE_SLUG);
+        if (!($page instanceof WP_Post)) {
+            $page = get_page_by_path('baza-zaniy'); // legacy typo slug
+        }
+
         if ($page instanceof WP_Post) {
             $page_id = (int) $page->ID;
+            // Rename slug if it still carries the typo.
+            if ($page->post_name !== self::POSTS_PAGE_SLUG) {
+                wp_update_post([
+                    'ID'        => $page_id,
+                    'post_name' => self::POSTS_PAGE_SLUG,
+                ]);
+            }
         } else {
             $page_id = (int) wp_insert_post([
-                'post_type' => 'page',
-                'post_status' => 'publish',
-                'post_title' => 'База знаний',
-                'post_name' => self::POSTS_PAGE_SLUG,
+                'post_type'    => 'page',
+                'post_status'  => 'publish',
+                'post_title'   => 'База знаний',
+                'post_name'    => self::POSTS_PAGE_SLUG,
                 'post_content' => '',
             ]);
         }
@@ -148,245 +292,4 @@ final class Constructly_Articles_Seed
         return $page_id;
     }
 
-    /**
-     * Resolves an author for the demo posts: the current user, or the first admin.
-     */
-    private static function author_id(): int
-    {
-        $current = get_current_user_id();
-        if ($current > 0) {
-            return $current;
-        }
-
-        $admins = get_users(['role' => 'administrator', 'number' => 1, 'fields' => 'ids']);
-
-        return !empty($admins) ? (int) $admins[0] : 1;
-    }
-
-    /**
-     * @param array<string, int> $cat_ids
-     */
-    private static function ensure_posts(array $cat_ids): int
-    {
-        $author_id = self::author_id();
-        $count = 0;
-        foreach (self::posts() as $index => $data) {
-            $existing = get_page_by_path($data['slug'], OBJECT, 'post');
-
-            $postarr = [
-                'post_type' => 'post',
-                'post_status' => 'publish',
-                'post_title' => $data['title'],
-                'post_name' => $data['slug'],
-                'post_excerpt' => $data['excerpt'],
-                'post_content' => $data['content'],
-                'post_author' => $author_id,
-                'post_date' => $data['date'] . ' 10:00:00',
-                'edit_date' => true,
-            ];
-
-            if ($existing instanceof WP_Post) {
-                $postarr['ID'] = (int) $existing->ID;
-                $post_id = (int) wp_update_post(wp_slash($postarr));
-            } else {
-                $post_id = (int) wp_insert_post(wp_slash($postarr));
-            }
-
-            if ($post_id <= 0) {
-                continue;
-            }
-            $count++;
-
-            update_post_meta($post_id, self::DEMO_FLAG_META, '1');
-            update_post_meta($post_id, BM_POST_VIEWS_META, (int) $data['views']);
-
-            $cat_slug = $data['category'];
-            if (isset($cat_ids[$cat_slug])) {
-                wp_set_post_categories($post_id, [$cat_ids[$cat_slug]], false);
-            }
-
-            if (!has_post_thumbnail($post_id)) {
-                $img = self::HERO_IMAGES[$index % count(self::HERO_IMAGES)];
-                $attachment_id = Constructly_Migration_Helpers::sideload_theme_image($img);
-                if ($attachment_id > 0) {
-                    set_post_thumbnail($post_id, $attachment_id);
-                }
-            }
-        }
-
-        return $count;
-    }
-
-    /**
-     * @return list<array{slug:string, title:string, category:string, excerpt:string, views:int, date:string, content:string}>
-     */
-    private static function posts(): array
-    {
-        $simple = static function (string $lead, array $points): string {
-            $items = '';
-            foreach ($points as $p) {
-                $items .= '<!-- wp:list-item --><li>' . $p . '</li><!-- /wp:list-item -->';
-            }
-
-            return "<!-- wp:paragraph -->\n<p>{$lead}</p>\n<!-- /wp:paragraph -->\n\n"
-                . "<!-- wp:list -->\n<ul class=\"wp-block-list\">{$items}</ul>\n<!-- /wp:list -->";
-        };
-
-        return [
-            [
-                'slug' => 'kak-vybrat-tip-fundamenta',
-                'title' => 'Как выбрать тип фундамента для частного дома',
-                'category' => 'fundament',
-                'views' => 5432,
-                'date' => '2024-04-15',
-                'excerpt' => 'Правильный выбор фундамента влияет на долговечность дома, бюджет строительства и безопасность конструкции. Разбираем основные типы и критерии подбора.',
-                'content' => self::rich_article_content(),
-            ],
-            [
-                'slug' => 'armirovanie-fundamenta-rukovodstvo',
-                'title' => 'Армирование фундамента: полное руководство',
-                'category' => 'fundament',
-                'views' => 3120,
-                'date' => '2024-04-12',
-                'excerpt' => 'Схемы армирования, выбор арматуры и правила вязки каркаса для надёжного основания.',
-                'content' => $simple('Армирование принимает на себя растягивающие нагрузки и удерживает бетон от трещин.', ['Выбор диаметра арматуры', 'Шаг и нахлёст стержней', 'Защитный слой бетона']),
-            ],
-            [
-                'slug' => 'tolshchina-styazhki-pola',
-                'title' => 'Толщина стяжки пола: как не ошибиться',
-                'category' => 'styazhka',
-                'views' => 2890,
-                'date' => '2024-04-10',
-                'excerpt' => 'От чего зависит толщина стяжки и как рассчитать оптимальный слой под разные основания.',
-                'content' => $simple('Толщина зависит от типа основания, нагрузки и наличия коммуникаций в полу.', ['Минимальная толщина по основанию', 'Стяжка по утеплителю', 'Армирование стяжки']),
-            ],
-            [
-                'slug' => 'ukladka-plitki-na-pol',
-                'title' => 'Укладка плитки на пол: пошаговая инструкция',
-                'category' => 'plitka',
-                'views' => 4210,
-                'date' => '2024-03-28',
-                'excerpt' => 'Подготовка основания, выбор клея и технология укладки плитки без типичных ошибок.',
-                'content' => $simple('Качество укладки зависит от ровности основания и правильного клея.', ['Подготовка и грунтовка основания', 'Выбор клеевой смеси', 'Затирка швов']),
-            ],
-            [
-                'slug' => 'kirpichnaya-kladka-raschet',
-                'title' => 'Кирпичная кладка: расчёт материалов на стену',
-                'category' => 'steny',
-                'views' => 1980,
-                'date' => '2024-03-15',
-                'excerpt' => 'Как посчитать количество кирпича и раствора на стену с учётом толщины и проёмов.',
-                'content' => $simple('Расход зависит от типа кладки, размера кирпича и толщины шва.', ['Площадь стен за вычетом проёмов', 'Тип кладки и толщина', 'Запас на бой и подрезку']),
-            ],
-            [
-                'slug' => 's-chego-nachat-remont-v-novostrojke',
-                'title' => 'С чего начать ремонт в новостройке',
-                'category' => 'remont',
-                'views' => 3670,
-                'date' => '2024-02-20',
-                'excerpt' => 'Порядок работ, на чём не стоит экономить и как спланировать бюджет ремонта.',
-                'content' => $simple('Ремонт начинают с черновых работ и инженерных систем.', ['Замеры и проект', 'Черновые работы', 'Чистовая отделка']),
-            ],
-            [
-                'slug' => 'gidroizolyaciya-fundamenta',
-                'title' => 'Гидроизоляция фундамента: способы и материалы',
-                'category' => 'fundament',
-                'views' => 1450,
-                'date' => '2024-02-05',
-                'excerpt' => 'Обзор способов гидроизоляции и как защитить основание от влаги и пучения.',
-                'content' => $simple('Гидроизоляция защищает бетон и арматуру от разрушения влагой.', ['Обмазочная изоляция', 'Рулонная изоляция', 'Дренаж по периметру']),
-            ],
-            [
-                'slug' => 'vybor-krovelnogo-materiala',
-                'title' => 'Выбор кровельного материала: что учесть',
-                'category' => 'krovlya',
-                'views' => 1120,
-                'date' => '2024-01-22',
-                'excerpt' => 'Сравнение популярных кровельных материалов по цене, сроку службы и монтажу.',
-                'content' => $simple('Материал выбирают по уклону кровли, бюджету и сроку службы.', ['Металлочерепица', 'Мягкая кровля', 'Профнастил']),
-            ],
-            [
-                'slug' => 'shtukaturka-sten-svoimi-rukami',
-                'title' => 'Штукатурка стен своими руками: основы',
-                'category' => 'otdelka',
-                'views' => 2310,
-                'date' => '2024-01-10',
-                'excerpt' => 'Подготовка стен, выбор смеси и техника нанесения штукатурки для ровных стен.',
-                'content' => $simple('Ровность стен определяется подготовкой и установкой маяков.', ['Грунтовка основания', 'Установка маяков', 'Нанесение и затирка']),
-            ],
-        ];
-    }
-
-    /**
-     * Full body for the flagship demo article, matching the article design reference.
-     * Prose is core blocks; the styled components are registered constructly blocks
-     * (criteria / foundation-cards / mistakes / info-block) and the shared faq block —
-     * no raw Custom HTML. h2 headings (incl. the faq title) feed the article TOC.
-     */
-    private static function rich_article_content(): string
-    {
-        $h2 = static fn (string $id, string $title): string =>
-            "<!-- wp:heading {\"anchor\":\"{$id}\"} -->\n<h2 class=\"wp-block-heading\" id=\"{$id}\">{$title}</h2>\n<!-- /wp:heading -->";
-        $p = static fn (string $text): string =>
-            "<!-- wp:paragraph -->\n<p>{$text}</p>\n<!-- /wp:paragraph -->";
-        $table = static fn (string $figure): string =>
-            "<!-- wp:table -->\n{$figure}\n<!-- /wp:table -->";
-
-        $blocks = [
-            $h2('section-1', 'От чего зависит выбор фундамента'),
-            $p('Тип фундамента выбирают с учётом грунта, нагрузки от здания, рельефа участка и бюджета. Ниже — четыре ключевых фактора, которые стоит учесть до проектирования.'),
-            Constructly_Migration_Helpers::block('constructly/article-criteria', [
-                'columns' => '4',
-                'items' => [
-                    ['icon' => 'measurement', 'title' => 'Тип грунта', 'text' => 'Несущая способность, уровень грунтовых вод, пучинистость.'],
-                    ['icon' => 'briefcase', 'title' => 'Нагрузка от дома', 'text' => 'Материал стен, этажность, площадь и вес перекрытий.'],
-                    ['icon' => 'interface', 'title' => 'Рельеф участка', 'text' => 'Уклон, перепады высот, необходимость подпорных стен.'],
-                    ['icon' => 'calculator', 'title' => 'Бюджет строительства', 'text' => 'Стоимость материалов, работ и сроки реализации.'],
-                ],
-            ]),
-
-            $h2('section-2', 'Основные типы фундаментов'),
-            $p('Для частного домостроения чаще всего используют ленточный, свайный и плитный фундамент. Кратко — особенности каждого типа.'),
-            Constructly_Migration_Helpers::block('constructly/foundation-cards', [
-                'cards' => [
-                    ['image' => 'assets/src/images/cards/calc-cover-strip.jpg', 'title' => 'Ленточный', 'text' => 'Лента по контуру несущих стен. Оптимален для домов из кирпича и газобетона на устойчивых грунтах.'],
-                    ['image' => 'assets/src/images/cards/calc-cover-pile.jpg', 'title' => 'Свайный', 'text' => 'Передаёт нагрузку на плотные слои грунта. Подходит для слабых и пучинистых грунтов, высокого УГВ.'],
-                    ['image' => 'assets/src/images/cards/calc-cover-slab.jpg', 'title' => 'Плитный', 'text' => 'Монолитная плита под всем зданием. Надёжен при неравномерной нагрузке и сложных грунтах.'],
-                ],
-            ]),
-
-            $h2('section-3', 'Сравнение фундаментов'),
-            $table('<figure class="wp-block-table"><table><thead><tr><th scope="col">Тип фундамента</th><th scope="col">Несущая способность</th><th scope="col">Устойчивость к пучению</th><th scope="col">Стоимость</th><th scope="col">Сроки строительства</th></tr></thead><tbody><tr><td>Ленточный</td><td>Высокая</td><td>Средняя</td><td>Средняя</td><td>2–4 недели</td></tr><tr><td>Свайный</td><td>Высокая</td><td>Высокая</td><td>Выше средней</td><td>1–3 недели</td></tr><tr><td>Плитный</td><td>Очень высокая</td><td>Высокая</td><td>Высокая</td><td>3–5 недель</td></tr><tr><td>Столбчатый</td><td>Средняя</td><td>Низкая</td><td>Низкая</td><td>1–2 недели</td></tr></tbody></table></figure>'),
-            Constructly_Migration_Helpers::block('constructly/info-block', [
-                'text' => 'Перед окончательным выбором закажите геологию участка и согласуйте решение с проектировщиком — это снизит риск перерасхода и переделок.',
-            ]),
-
-            $h2('section-4', 'Какой фундамент выбрать для разных условий'),
-            $table('<figure class="wp-block-table"><table><thead><tr><th scope="col">Условия</th><th scope="col">Рекомендуемый тип</th></tr></thead><tbody><tr><td>Слабые грунты</td><td>Свайный или плитный</td></tr><tr><td>Высокий уровень грунтовых вод</td><td>Свайный</td></tr><tr><td>Лёгкий каркасный дом</td><td>Столбчатый</td></tr><tr><td>Кирпич / газобетон, 1–2 этажа</td><td>Ленточный или плитный</td></tr></tbody></table></figure>'),
-
-            $h2('section-5', 'Частые ошибки при выборе фундамента'),
-            Constructly_Migration_Helpers::block('constructly/article-mistakes', [
-                'items' => [
-                    ['text' => 'Выбор типа фундамента без геологии участка'],
-                    ['text' => 'Недооценка пучинистости грунта и глубины промерзания'],
-                    ['text' => 'Экономия на глубине заложения и армировании'],
-                    ['text' => 'Игнорирование уровня грунтовых вод при проектировании'],
-                ],
-            ]),
-
-            Constructly_Migration_Helpers::block('constructly/faq', [
-                'sectionId' => 'article-faq',
-                'titleId' => 'section-6',
-                'title' => 'Часто задаваемые вопросы',
-                'items' => [
-                    ['question' => 'Можно ли менять тип фундамента после начала строительства?', 'answer' => 'Практически нет — тип фундамента закладывают на этапе проекта. Смена решения потребует нового расчёта и часто полной переделки основания.'],
-                    ['question' => 'Нужна ли геология участка обязательно?', 'answer' => 'Для надёжного выбора — да. Без данных о грунте расчёт остаётся ориентировочным и может не учесть пучение или просадку.'],
-                    ['question' => 'Какой фундамент дешевле для небольшого дома?', 'answer' => 'Чаще всего столбчатый — при условии, что грунт позволяет такую схему. На слабых грунтах экономия оборачивается рисками.'],
-                    ['question' => 'Чем отличается плитный фундамент от ленточного?', 'answer' => 'Ленточный передаёт нагрузку по контуру стен; плитный — по всей площади основания, что выгодно при неравномерной нагрузке и слабых грунтах.'],
-                ],
-            ]),
-        ];
-
-        return implode("\n\n", $blocks);
-    }
 }

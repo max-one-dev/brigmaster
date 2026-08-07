@@ -48,10 +48,10 @@ final class Constructly_Content_Cli
 
         WP_CLI::success(
             sprintf(
-                'Seeded %d categories, posts page ID %d, %d demo posts.',
+                'Seeded %d categories, posts page ID %d, %d articles.',
                 $result['categories'],
                 $result['posts_page_id'],
-                $result['posts']
+                $result['articles'] ?? 0
             )
         );
     }

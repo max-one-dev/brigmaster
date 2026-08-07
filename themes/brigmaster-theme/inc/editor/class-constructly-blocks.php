@@ -153,6 +153,11 @@ final class Constructly_Blocks
                 'title' => 'Constructly Context Intro',
                 'template' => 'context-intro',
             ],
+            'calc-cta' => [
+                'name' => 'constructly/calc-cta',
+                'title' => 'Constructly Calc CTA',
+                'template' => 'calc-cta',
+            ],
         ];
     }
 
@@ -262,6 +267,7 @@ final class Constructly_Blocks
             'linkUrl' => ['type' => 'string'],
             'buttonLabel' => ['type' => 'string'],
             'buttonUrl' => ['type' => 'string'],
+            'url' => ['type' => 'string'],
             'image' => ['type' => 'string'],
             'note' => ['type' => 'string'],
             'quickLinksLabel' => ['type' => 'string'],

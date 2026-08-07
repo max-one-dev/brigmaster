@@ -37,6 +37,7 @@ export const blockAttributes = {
   linkUrl: { type: 'string' },
   buttonLabel: { type: 'string' },
   buttonUrl: { type: 'string' },
+  url: { type: 'string' },
   image: { type: 'string' },
   note: { type: 'string' },
   quickLinksLabel: { type: 'string' },
@@ -482,6 +483,17 @@ export const blockDefinitions = [
           textareaField('answer', 'Ответ'),
         ],
       },
+    ],
+  },
+  {
+    name: 'constructly/calc-cta',
+    title: 'Constructly Calc CTA',
+    fields: [
+      textField('title', 'Название калькулятора'),
+      textareaField('text', 'Короткое описание'),
+      textField('buttonLabel', 'Текст кнопки'),
+      textField('url', 'URL калькулятора'),
+      imageField('image', 'Обложка (basename, напр. calc-cover-strip)'),
     ],
   },
   {

@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Calculators_Index_Migration
 {
-    private const MIGRATION_VERSION = 'calculators-index-v5';
+    private const MIGRATION_VERSION = 'calculators-index-v6';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -159,6 +159,17 @@ final class Constructly_Calculators_Index_Migration
                         'title' => 'Покупайте материалы с запасом',
                         'text' => 'Результат ориентировочный — сверьте его с проектом и условиями объекта.',
                     ],
+                ],
+            ]),
+            Constructly_Migration_Helpers::block('constructly/articles', [
+                'title' => 'Полезные статьи',
+                'linkLabel' => 'Все статьи →',
+                'linkUrl' => home_url('/baza-znaniy/'),
+                'slugs' => [
+                    'raschet-betona-lentochnyj-fundament',
+                    'tolshchina-styazhki-pola',
+                    'rashod-plitki-na-pol-i-steny',
+                    'rashod-kirpicha',
                 ],
             ]),
             Constructly_Migration_Helpers::block('constructly/faq', [

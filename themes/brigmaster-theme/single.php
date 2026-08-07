@@ -16,9 +16,21 @@ while (have_posts()) :
     <main id="main" class="site-main site-main--single-post" role="main">
         <article id="post-<?php the_ID(); ?>" <?php post_class('bm-post-single'); ?>>
             <section class="bm-page-hero bm-page-hero--article" aria-labelledby="article-hero-title">
-                <?php if (has_post_thumbnail()) : ?>
-                    <?php the_post_thumbnail('large', ['class' => 'bm-page-hero__image', 'loading' => 'eager', 'decoding' => 'async', 'alt' => '']); ?>
-                <?php endif; ?>
+                <?php
+                $bm_hero_id = (int) get_post_meta($post_id, '_bm_hero_image_id', true);
+                if ($bm_hero_id > 0) :
+                    $bm_hero_alt = trim((string) get_post_meta($bm_hero_id, '_wp_attachment_image_alt', true));
+                    echo wp_get_attachment_image($bm_hero_id, 'full', false, [
+                        'class'   => 'bm-page-hero__image',
+                        'loading' => 'eager',
+                        'decoding' => 'async',
+                        'fetchpriority' => 'high',
+                        'alt'     => esc_attr($bm_hero_alt),
+                    ]);
+                elseif (has_post_thumbnail()) :
+                    the_post_thumbnail('large', ['class' => 'bm-page-hero__image', 'loading' => 'eager', 'decoding' => 'async', 'alt' => '']);
+                endif;
+                ?>
                 <div class="bm-container bm-page-hero__container">
                     <nav class="bm-breadcrumbs bm-breadcrumbs--chevron bm-breadcrumbs--link-brand bm-page-hero__breadcrumbs" aria-label="Хлебные крошки">
                         <ol class="bm-breadcrumbs__list">

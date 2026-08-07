@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Foundation_Hub_Migration
 {
-    private const MIGRATION_VERSION = 'foundation-hub-v5';
+    private const MIGRATION_VERSION = 'foundation-hub-v7';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -152,6 +152,13 @@ final class Constructly_Foundation_Hub_Migration
                         'text' => 'Чем тяжелее конструкция, тем массивнее и надёжнее должен быть фундамент.',
                     ],
                 ],
+            ]),
+            Constructly_Migration_Helpers::block('constructly/articles', [
+                'title' => 'Полезные статьи',
+                'linkLabel' => 'Все статьи →',
+                'linkUrl' => home_url('/baza-znaniy/fundament/'),
+                'category' => 'fundament',
+                'count' => 3,
             ]),
             Constructly_Migration_Helpers::block('constructly/faq', [
                 'sectionId' => 'hub-faq',
