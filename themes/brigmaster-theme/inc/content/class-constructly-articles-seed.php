@@ -198,8 +198,21 @@ final class Constructly_Articles_Seed
      */
     private static function ensure_categories(): array
     {
+        // Collect the set of category slugs actually referenced by registered articles.
+        $used_slugs = [];
+        foreach (Constructly_Article_Registry::all() as $article_data) {
+            if (!empty($article_data['category']) && is_string($article_data['category'])) {
+                $used_slugs[$article_data['category']] = true;
+            }
+        }
+
         $ids = [];
         foreach (self::CATEGORIES as $cat) {
+            // Skip categories not used by any article in the registry.
+            if (!isset($used_slugs[$cat['slug']])) {
+                continue;
+            }
+
             $existing = get_term_by('slug', $cat['slug'], 'category');
             if ($existing instanceof WP_Term) {
                 $ids[$cat['slug']] = (int) $existing->term_id;
