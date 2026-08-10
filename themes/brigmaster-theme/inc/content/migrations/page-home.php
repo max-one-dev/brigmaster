@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Homepage_Migration
 {
-    private const MIGRATION_VERSION = 'homepage-v12';
+    private const MIGRATION_VERSION = 'homepage-v13';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -51,27 +51,27 @@ final class Constructly_Homepage_Migration
 
         $blocks = [
             Constructly_Migration_Helpers::block('constructly/home-hero', [
-                'title' => 'Онлайн-калькуляторы материалов для строительства и ремонта',
+                'title' => 'Строительные калькуляторы — расчёт материалов онлайн',
                 'lead' => 'Расчёт материалов по строительным нормам. Понятные формулы, открытая методика, результат за пару минут.',
-                'primaryLabel' => 'Открыть калькуляторы',
+                'primaryLabel' => 'Рассчитать материалы',
                 'primaryUrl' => '#calculators',
                 'secondaryLabel' => 'Как это работает?',
                 'secondaryUrl' => '#how-it-works',
                 'features' => [
                     [
-                        'icon' => 'clock-check',
-                        'title' => 'Быстро',
-                        'text' => 'Результат за <br> несколько минут',
+                        'icon' => 'shield-check',
+                        'title' => 'ГОСТ и СП',
+                        'text' => 'Расчёты по <br> действующим нормам',
                     ],
                     [
-                        'icon' => 'interface',
-                        'title' => 'Понятно',
-                        'text' => 'Простой интерфейс <br> без лишнего',
+                        'icon' => 'book',
+                        'title' => 'Открытая методика',
+                        'text' => 'Формулы и допущения <br> видны в расчёте',
                     ],
                     [
-                        'icon' => 'briefcase',
-                        'title' => 'Практично',
-                        'text' => 'Для частных и <br>проф. задач',
+                        'icon' => 'check-circle',
+                        'title' => 'Без регистрации',
+                        'text' => 'Результат сразу, <br> можно распечатать',
                     ],
                 ],
                 'demo' => [
