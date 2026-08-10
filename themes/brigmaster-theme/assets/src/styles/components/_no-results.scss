@@ -1,0 +1,36 @@
+// Empty-state block rendered by template-parts/content-none.php
+// Sits inside .bm-content-layout__main which already provides horizontal centering.
+
+.bm-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--bm-space-16) var(--bm-space-6);
+  gap: var(--bm-space-4);
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    color: var(--bm-color-text-placeholder);
+    flex-shrink: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--bm-text-xl);
+    font-weight: var(--bm-font-semibold);
+    color: var(--bm-color-text-strong);
+  }
+
+  &__text {
+    margin: 0;
+    font-size: var(--bm-text-md);
+    color: var(--bm-color-text-muted);
+    max-width: 36ch;
+  }
+
+  &__button {
+    margin-top: var(--bm-space-4);
+  }
+}
