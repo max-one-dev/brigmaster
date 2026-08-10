@@ -197,6 +197,28 @@ body:has(> .bm-header) {
   background: var(--bm-color-brand-soft);
 }
 
+// ── Active menu item (current page only) ──
+// Single link items
+.bm-nav-primary .current-menu-item:not(.menu-item-has-children) > a {
+  background: var(--bm-color-brand-soft);
+  color: var(--bm-color-brand);
+  font-weight: var(--bm-font-medium);
+}
+
+// Items with submenu: highlight the item-row row as a whole
+.bm-nav-primary .current-menu-item.menu-item-has-children > .bm-nav-primary__item-row {
+  background: var(--bm-color-brand-soft);
+  color: var(--bm-color-brand);
+}
+
+// Inner elements inherit; no nested highlight
+.bm-nav-primary .current-menu-item.menu-item-has-children > .bm-nav-primary__item-row > a,
+.bm-nav-primary .current-menu-item.menu-item-has-children > .bm-nav-primary__item-row > .bm-nav-primary__submenu-toggle {
+  background: transparent;
+  color: var(--bm-color-brand);
+  font-weight: var(--bm-font-medium);
+}
+
 .bm-nav-primary .menu-item {
   position: relative;
 }
@@ -361,16 +383,32 @@ body:has(> .bm-header) {
   }
 
   .bm-nav-primary a {
-    width: auto;
     padding: 0.625rem 0.75rem;
   }
 
   .bm-nav-primary__item-row {
     width: auto;
+    border-radius: var(--bm-radius-md);
   }
 
   .bm-nav-primary__item-row > a {
     width: auto;
+  }
+
+  // Unified hover: the whole item-row lights up as one block
+  .bm-nav-primary__item-row:hover,
+  .bm-nav-primary__item-row:focus-within {
+    background: var(--bm-color-brand-soft);
+    color: var(--bm-color-brand);
+  }
+
+  // Inner elements inherit colour; remove individual backgrounds to avoid nested highlight
+  .bm-nav-primary__item-row:hover > a,
+  .bm-nav-primary__item-row:focus-within > a,
+  .bm-nav-primary__item-row:hover > .bm-nav-primary__submenu-toggle,
+  .bm-nav-primary__item-row:focus-within > .bm-nav-primary__submenu-toggle {
+    background: transparent;
+    color: var(--bm-color-brand);
   }
 
   .bm-nav-primary .menu-item--disabled .bm-nav-primary__label {
@@ -458,8 +496,12 @@ body:has(> .bm-header) {
   }
 
   .bm-nav-primary .sub-menu a {
-    padding: 0.625rem 0.75rem;
+    padding: var(--bm-space-2);
     font-size: var(--bm-text-base);
+  }
+
+  .bm-nav-primary .sub-menu .menu-item {
+    margin-bottom: var(--bm-space-1);
   }
 
   .bm-header__actions {

@@ -1,0 +1,68 @@
+@use '../abstracts/media' as media;
+
+// 404 error page – standalone full-viewport state.
+// .bm-404 sits directly on <main>, .bm-container provides horizontal centering.
+
+.bm-404 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 8rem); // clear header + breathing room
+}
+
+.bm-404__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-block: var(--bm-space-16);
+  gap: var(--bm-space-4);
+}
+
+.bm-404__code {
+  margin: 0;
+  font-size: clamp(5rem, 20vw, 10rem);
+  font-weight: var(--bm-font-bold);
+  line-height: 1;
+  color: var(--bm-color-text-placeholder);
+  letter-spacing: -0.04em;
+}
+
+.bm-404__title {
+  margin: 0;
+  font-size: var(--bm-text-2xl);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+.bm-404__text {
+  margin: 0;
+  max-width: 42ch;
+  font-size: var(--bm-text-md);
+  color: var(--bm-color-text-muted);
+}
+
+.bm-404__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--bm-space-3);
+  margin-top: var(--bm-space-4);
+
+  @include media.bp(lg) {
+    flex-direction: row;
+  }
+}
+
+// Stack buttons on mobile
+@media (max-width: 639px) {
+  .bm-404__actions {
+    flex-direction: column;
+    width: 100%;
+
+    .bm-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
