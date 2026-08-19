@@ -42,6 +42,7 @@ final class Constructly_Assets
         add_filter('should_load_separate_core_block_assets', '__return_false');
         add_action('enqueue_block_editor_assets', [self::class, 'enqueue_block_editor_assets'], 20);
         add_filter('script_loader_tag', [self::class, 'set_module_script_type'], 10, 2);
+        add_filter('style_loader_tag', [self::class, 'inline_theme_styles'], 10, 4);
     }
 
     /**
@@ -49,6 +50,49 @@ final class Constructly_Assets
      * type="module" or the browser refuses to execute them. Scoped to handles flagged
      * in {@see self::enqueue_entry_script()}.
      */
+    public static function inline_theme_styles(string $tag, string $handle, string $href, string $media): string
+    {
+        if (is_admin()) {
+            return $tag;
+        }
+
+        if (!str_starts_with($handle, 'bm-theme') || str_contains($handle, 'editor')) {
+            return $tag;
+        }
+
+        if ($media !== '' && $media !== 'all') {
+            return $tag;
+        }
+
+        $href_clean = strtok($href, '?');
+        if ($href_clean === false) {
+            return $tag;
+        }
+
+        $theme_url = untrailingslashit(CONSTRUCTLY_THEME_URL);
+        $theme_path = untrailingslashit(CONSTRUCTLY_THEME_PATH);
+
+        if (!str_starts_with($href_clean, $theme_url)) {
+            return $tag;
+        }
+
+        $relative = substr($href_clean, strlen($theme_url));
+        $path = $theme_path . $relative;
+
+        if (!str_starts_with($path, $theme_path) || !is_readable($path)) {
+            return $tag;
+        }
+
+        $css = (string) file_get_contents($path);
+        if ($css === '') {
+            return $tag;
+        }
+
+        $css = str_replace('url(../', 'url(' . $theme_url . '/assets/dist/', $css);
+
+        return sprintf('<style id="%s-inline-css">%s</style>' . "\n", esc_attr($handle), $css);
+    }
+
     public static function set_module_script_type(string $tag, string $handle): string
     {
         if (!wp_scripts()->get_data($handle, 'bm_module_script')) {
