@@ -58,6 +58,10 @@
 }
 
 @include media.bp(lg) {
+  .bm-article-criteria--cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .bm-article-criteria--cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
