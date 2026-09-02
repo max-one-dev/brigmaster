@@ -886,7 +886,7 @@
   display: none;
 }
 
-@media (width <= 767px) {
+@media (width <= 1023px) {
   .bm-calculator-layout__aside > .brigmaster-estimator__result {
     min-height: calc(100dvh - 2.5rem);
     border-radius: var(--bm-radius-lg) var(--bm-radius-lg) 0 0;
@@ -1105,6 +1105,39 @@
     display: grid;
   }
 
+  .bm-calculator-result__actions {
+    grid-template-columns: 1fr;
+  }
+
+  /* On phones, "Распечатать" only reaches the OS print dialog whose practical use is
+     "Save as PDF" — the same outcome as "Скачать результат" — so it is desktop-only. */
+  .bm-calculator-result__actions [data-result-action="print"] {
+    display: none;
+  }
+
+  .bm-calculator-result__actions .bm-button {
+    min-height: 2.75rem;
+    padding-right: var(--bm-space-2);
+    padding-left: var(--bm-space-2);
+    font-size: var(--bm-text-xs);
+  }
+
+  .bm-calculator-result__actions .bm-button:first-child {
+    min-height: 3.25rem;
+    font-size: var(--bm-text-base);
+  }
+
+  .bm-calculator-page .bm-card-grid--cols-5 {
+    grid-template-columns: 1fr;
+    gap: var(--bm-space-4);
+  }
+
+  .bm-calculator-page .bm-card-calculator {
+    padding: var(--bm-space-4);
+  }
+}
+
+@media (width <= 1023px) {
   .bm-calculator-layout__aside {
     position: fixed;
     inset: 0;
@@ -1141,28 +1174,6 @@
     transform: translateY(0);
   }
 
-  .bm-calculator-result__actions {
-    grid-template-columns: 1fr;
-  }
-
-  /* On phones, "Распечатать" only reaches the OS print dialog whose practical use is
-     "Save as PDF" — the same outcome as "Скачать результат" — so it is desktop-only. */
-  .bm-calculator-result__actions [data-result-action="print"] {
-    display: none;
-  }
-
-  .bm-calculator-result__actions .bm-button {
-    min-height: 2.75rem;
-    padding-right: var(--bm-space-2);
-    padding-left: var(--bm-space-2);
-    font-size: var(--bm-text-xs);
-  }
-
-  .bm-calculator-result__actions .bm-button:first-child {
-    min-height: 3.25rem;
-    font-size: var(--bm-text-base);
-  }
-
   .bm-calculator-sticky-result {
     position: fixed;
     right: 0;
@@ -1186,15 +1197,6 @@
   .bm-calculator-sticky-result__button {
     width: 100%;
     min-height: 3.25rem;
-  }
-
-  .bm-calculator-page .bm-card-grid--cols-5 {
-    grid-template-columns: 1fr;
-    gap: var(--bm-space-4);
-  }
-
-  .bm-calculator-page .bm-card-calculator {
-    padding: var(--bm-space-4);
   }
 }
 

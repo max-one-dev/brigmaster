@@ -5,11 +5,12 @@ import {
   clearErrors,
   clearResult,
   handleValidationErrors,
+  initCalculatorStartTracking,
   initModeScenarioUi,
   initStaleOnFormChange,
-  safeReachGoal,
   setFieldError,
   setLoadingState,
+  trackEvent,
   updateValidationSummary,
 } from "./form-state.js";
 import { initMixtureFields } from "./mixture.js";
@@ -27,7 +28,7 @@ async function onSubmit(event, calculatorModule) {
   clearErrors(form);
 
   if (!endpoint) {
-    safeReachGoal("brigmaster_calc_fail_config", {
+    trackEvent("calculator_error", {
       ...buildMetrikaBaseParams(form, {}),
       error_kind: "config",
     });
@@ -47,7 +48,7 @@ async function onSubmit(event, calculatorModule) {
 
   if (!isValid) {
     updateValidationSummary(form);
-    safeReachGoal("brigmaster_calc_fail_client", {
+    trackEvent("calculator_error", {
       ...buildMetrikaBaseParams(form, payload),
       error_kind: "client_validation",
     });
@@ -59,7 +60,7 @@ async function onSubmit(event, calculatorModule) {
   setLoadingState(form, submitButton, true);
 
   const baseParams = buildMetrikaBaseParams(form, payload);
-  safeReachGoal("brigmaster_calc_request", { ...baseParams });
+  trackEvent("calculator_request", { ...baseParams });
 
   try {
     const response = await postEstimate(endpoint, payload);
@@ -68,7 +69,7 @@ async function onSubmit(event, calculatorModule) {
     try {
       data = await response.json();
     } catch {
-      safeReachGoal("brigmaster_calc_fail_api", {
+      trackEvent("calculator_error", {
         ...baseParams,
         error_kind: "api_other",
         http_status: response.status,
@@ -81,7 +82,7 @@ async function onSubmit(event, calculatorModule) {
       clearResult(form);
       calculatorModule.showResult(form, data);
       requestSucceeded = true;
-      safeReachGoal("brigmaster_calc_success", { ...baseParams });
+      trackEvent("calculator_success", { ...baseParams });
       return;
     }
 
@@ -99,9 +100,9 @@ async function onSubmit(event, calculatorModule) {
     if (typeof data?.code === "string" && data.code !== "") {
       failApiParams.api_error_code = data.code;
     }
-    safeReachGoal("brigmaster_calc_fail_api", failApiParams);
+    trackEvent("calculator_error", failApiParams);
   } catch {
-    safeReachGoal("brigmaster_calc_fail_network", {
+    trackEvent("calculator_error", {
       ...baseParams,
       error_kind: "network",
     });
@@ -118,6 +119,7 @@ function initForm(form, calculatorModule) {
   calculatorModule.init(form);
   initModeScenarioUi(form);
   initStaleOnFormChange(form);
+  initCalculatorStartTracking(form);
   initMixtureFields(form);
   form.addEventListener("submit", (event) => onSubmit(event, calculatorModule));
   initResultActions(form);

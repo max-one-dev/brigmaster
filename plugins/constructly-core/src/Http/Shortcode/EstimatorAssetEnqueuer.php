@@ -59,10 +59,13 @@ final class EstimatorAssetEnqueuer
             $scriptHandle,
             'brigmasterEstimateFormData',
             [
-                'endpoint' => esc_url_raw(rest_url('brigmaster/v1/estimate')),
-                'networkErrorMessage' => 'Не удалось выполнить запрос. Проверьте подключение и попробуйте снова.',
-                'metrikaCounterId' => $metrika['counterId'],
-                'metrikaEnabled' => $metrika['enabled'],
+                'endpoint'             => esc_url_raw(rest_url('brigmaster/v1/estimate')),
+                'networkErrorMessage'  => 'Не удалось выполнить запрос. Проверьте подключение и попробуйте снова.',
+                'metrikaCounterId'     => $metrika['counterId'],
+                'metrikaEnabled'       => $metrika['enabled'],
+                'ga4MeasurementId'     => $metrika['ga4MeasurementId'],
+                'ga4Enabled'           => $metrika['ga4Enabled'],
+                'isProduction'         => $metrika['isProduction'],
             ]
         );
 
@@ -79,30 +82,43 @@ final class EstimatorAssetEnqueuer
     }
 
     /**
-     * Yandex Metrika reachGoal when production (child theme {@see constructly_is_production_site()} if present)
-     * and {@see BRIGMASTER_YANDEX_METRIKA_COUNTER_ID} is set. Counter ID: wp-config constant + filter.
+     * Yandex Metrika + GA4 frontend config for localized data.
+     * Production detection delegates to brigmaster_is_production() (mu-plugin).
+     * Filter 'brigmaster_is_production_for_yandex_goals' preserved for back-compat.
      *
-     * @return array{counterId: int, enabled: bool}
+     * @return array{counterId: int, enabled: bool, ga4MeasurementId: string, ga4Enabled: bool, isProduction: bool}
      */
     private function getYandexMetrikaFrontendConfig(): array
     {
-        $isProduction = function_exists('constructly_is_production_site')
-            ? constructly_is_production_site()
+        // Single source of truth; falls back to wp_get_environment_type() if mu-plugin absent.
+        $isProduction = function_exists('brigmaster_is_production')
+            ? brigmaster_is_production()
             : wp_get_environment_type() === 'production';
+        // Back-compat filter kept intentionally.
         $isProduction = (bool) apply_filters('brigmaster_is_production_for_yandex_goals', $isProduction);
 
+        // Metrika counter.
         $counterId = 0;
         if (defined('BRIGMASTER_YANDEX_METRIKA_COUNTER_ID')) {
             $counterId = (int) BRIGMASTER_YANDEX_METRIKA_COUNTER_ID;
         }
-
         $counterId = (int) apply_filters('brigmaster_yandex_metrika_counter_id', $counterId);
-
         $enabled = $isProduction && $counterId > 0;
 
+        // GA4 measurement id.
+        $ga4Id = '';
+        if (defined('BRIGMASTER_GA4_MEASUREMENT_ID') && '' !== BRIGMASTER_GA4_MEASUREMENT_ID) {
+            $ga4Id = (string) BRIGMASTER_GA4_MEASUREMENT_ID;
+        }
+        $ga4Id     = (string) apply_filters('brigmaster_ga4_measurement_id', $ga4Id);
+        $ga4Enabled = $isProduction && '' !== $ga4Id;
+
         return [
-            'counterId' => $enabled ? $counterId : 0,
-            'enabled' => $enabled,
+            'counterId'       => $enabled ? $counterId : 0,
+            'enabled'         => $enabled,
+            'ga4MeasurementId' => $ga4Enabled ? $ga4Id : '',
+            'ga4Enabled'      => $ga4Enabled,
+            'isProduction'    => $isProduction,
         ];
     }
 }

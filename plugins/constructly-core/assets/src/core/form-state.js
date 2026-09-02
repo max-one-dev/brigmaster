@@ -565,17 +565,53 @@ const MODE_HINTS_DRYWALL = {
     }
 
 
-    export function safeReachGoal(goalId, params) {
+    export function trackEvent(name, params) {
         const cfg = window.brigmasterEstimateFormData;
-        if (!cfg?.metrikaEnabled || !cfg?.metrikaCounterId) {
+        if (cfg?.ga4Enabled && typeof gtag === "function") {
+            try {
+                gtag("event", name, params || {});
+            } catch {
+                /* ignore */
+            }
+        }
+        if (cfg?.metrikaEnabled && cfg?.metrikaCounterId && typeof ym === "function") {
+            try {
+                ym(cfg.metrikaCounterId, "reachGoal", name, params || {});
+            } catch {
+                /* ignore */
+            }
+        }
+    }
+
+
+    export function initCalculatorStartTracking(form) {
+        if (form.dataset.startTrackingBound === "1") {
             return;
         }
-        if (typeof ym !== "function") {
-            return;
-        }
-        try {
-            ym(cfg.metrikaCounterId, "reachGoal", goalId, params || {});
-        } catch {
-            /* ignore */
-        }
+        form.dataset.startTrackingBound = "1";
+
+        const fireOnce = () => {
+            if (form.dataset.startTracked === "1") {
+                return;
+            }
+            form.dataset.startTracked = "1";
+            trackEvent("calculator_start", buildMetrikaBaseParams(form, {}));
+        };
+
+        form.addEventListener("input", (event) => {
+            const target = event.target;
+            if (
+                target instanceof HTMLInputElement ||
+                target instanceof HTMLTextAreaElement
+            ) {
+                fireOnce();
+            }
+        });
+
+        form.addEventListener("change", (event) => {
+            const target = event.target;
+            if (target instanceof HTMLSelectElement) {
+                fireOnce();
+            }
+        });
     }

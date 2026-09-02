@@ -43,6 +43,7 @@ export default [
         performance: 'readonly',
         // Third-party globals
         ym: 'readonly', // Яндекс.Метрика
+        gtag: 'readonly', // Google Analytics 4 (gtag.js)
       },
     },
     rules: {
