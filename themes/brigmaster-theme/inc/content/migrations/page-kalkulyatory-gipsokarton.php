@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Drywall_Migration
 {
-    private const MIGRATION_VERSION = 'drywall-v6';
+    private const MIGRATION_VERSION = 'drywall-v7';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -31,6 +31,12 @@ final class Constructly_Drywall_Migration
         ]);
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
+
+        // Rank Math SEO meta — set only if Rank Math is active (avoids orphan meta on plain installs).
+        if (defined('RANK_MATH_VERSION')) {
+            update_post_meta($page_id, 'rank_math_title', 'Калькулятор гипсокартона: листы, профиль, крепёж онлайн');
+            update_post_meta($page_id, 'rank_math_description', 'Расчёт ГКЛ для стен, перегородок и потолка: листы, профиль, саморезы, лента. Онлайн-калькулятор с расходом на м². →');
+        }
 
         return [
             'post_id' => $page_id,

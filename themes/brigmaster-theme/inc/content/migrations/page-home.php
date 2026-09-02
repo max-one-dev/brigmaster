@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Homepage_Migration
 {
-    private const MIGRATION_VERSION = 'homepage-v13';
+    private const MIGRATION_VERSION = 'homepage-v14';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -30,13 +30,13 @@ final class Constructly_Homepage_Migration
             'post_content' => wp_slash($content),
         ]);
 
-        update_post_meta($page_id, 'rank_math_title', 'Строительные калькуляторы онлайн Brigmaster');
-        update_post_meta(
-            $page_id,
-            'rank_math_description',
-            'Онлайн-калькуляторы Brigmaster для фундамента, кирпича, стяжки, гипсокартона и плитки. Предварительная оценка материалов без обещания точной сметы.'
-        );
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
+
+        // Rank Math SEO meta — set only if Rank Math is active (avoids orphan meta on plain installs).
+        if (defined('RANK_MATH_VERSION')) {
+            update_post_meta($page_id, 'rank_math_title', 'Строительные калькуляторы онлайн — расчёт материалов');
+            update_post_meta($page_id, 'rank_math_description', 'Бесплатные калькуляторы стройматериалов: фундамент, стяжка, кирпич, гипсокартон, плитка. Расчёт по нормам СП с примерами. →');
+        }
 
         return [
             'post_id' => $page_id,

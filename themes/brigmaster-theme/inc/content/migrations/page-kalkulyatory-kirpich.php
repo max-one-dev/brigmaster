@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Brick_Migration
 {
-    private const MIGRATION_VERSION = 'brick-v6';
+    private const MIGRATION_VERSION = 'brick-v7';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -31,6 +31,12 @@ final class Constructly_Brick_Migration
         ]);
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
+
+        // Rank Math SEO meta — set only if Rank Math is active (avoids orphan meta on plain installs).
+        if (defined('RANK_MATH_VERSION')) {
+            update_post_meta($page_id, 'rank_math_title', 'Калькулятор кирпича: расчёт кладки и раствора онлайн');
+            update_post_meta($page_id, 'rank_math_description', 'Количество кирпича, кладочного раствора и сетки на стену. Онлайн-калькулятор кладки по площади с учётом толщины и швов. →');
+        }
 
         return [
             'post_id' => $page_id,

@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Foundation_Pile_Migration
 {
-    private const MIGRATION_VERSION = 'foundation-pile-v4';
+    private const MIGRATION_VERSION = 'foundation-pile-v5';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -31,6 +31,12 @@ final class Constructly_Foundation_Pile_Migration
         ]);
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
+
+        // Rank Math SEO meta — set only if Rank Math is active (avoids orphan meta on plain installs).
+        if (defined('RANK_MATH_VERSION')) {
+            update_post_meta($page_id, 'rank_math_title', 'Калькулятор свайного фундамента: бетон и арматура онлайн');
+            update_post_meta($page_id, 'rank_math_description', 'Расчёт буронабивных свай: объём бетона, арматура, число свай по нагрузке. Онлайн-калькулятор свайного фундамента с примером и нормами СП. →');
+        }
 
         return [
             'post_id' => $page_id,

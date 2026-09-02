@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Foundation_Slab_Migration
 {
-    private const MIGRATION_VERSION = 'foundation-slab-v4';
+    private const MIGRATION_VERSION = 'foundation-slab-v5';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -31,6 +31,12 @@ final class Constructly_Foundation_Slab_Migration
         ]);
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
+
+        // Rank Math SEO meta — set only if Rank Math is active (avoids orphan meta on plain installs).
+        if (defined('RANK_MATH_VERSION')) {
+            update_post_meta($page_id, 'rank_math_title', 'Калькулятор плитного фундамента: бетон и арматура');
+            update_post_meta($page_id, 'rank_math_description', 'Расчёт монолитной плиты фундамента: объём бетона, арматура, сетка по размерам. Онлайн-калькулятор плитного фундамента с примером. →');
+        }
 
         return [
             'post_id' => $page_id,

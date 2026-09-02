@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Calculators_Index_Migration
 {
-    private const MIGRATION_VERSION = 'calculators-index-v6';
+    private const MIGRATION_VERSION = 'calculators-index-v7';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -32,6 +32,12 @@ final class Constructly_Calculators_Index_Migration
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
         update_post_meta($page_id, '_wp_page_template', 'page-templates/page-hub.php');
+
+        // Rank Math SEO meta — set only if Rank Math is active (avoids orphan meta on plain installs).
+        if (defined('RANK_MATH_VERSION')) {
+            update_post_meta($page_id, 'rank_math_title', 'Строительные калькуляторы: фундамент, стяжка, кирпич, плитка');
+            update_post_meta($page_id, 'rank_math_description', 'Каталог онлайн-калькуляторов Brigmaster: фундаменты, стяжка, кирпич, гипсокартон, плитка. Расчёт материалов по нормам СП. →');
+        }
 
         return [
             'post_id' => $page_id,

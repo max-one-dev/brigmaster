@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Tile_Migration
 {
-    private const MIGRATION_VERSION = 'tile-v5';
+    private const MIGRATION_VERSION = 'tile-v6';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -31,6 +31,12 @@ final class Constructly_Tile_Migration
         ]);
 
         update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
+
+        // Rank Math SEO meta — set only if Rank Math is active (avoids orphan meta on plain installs).
+        if (defined('RANK_MATH_VERSION')) {
+            update_post_meta($page_id, 'rank_math_title', 'Калькулятор плитки: раскладка, расход на пол и стены');
+            update_post_meta($page_id, 'rank_math_description', 'Расчёт плитки и запаса на подрезку по схеме укладки. Онлайн-калькулятор для пола и стен с учётом шва и формата. →');
+        }
 
         return [
             'post_id' => $page_id,
