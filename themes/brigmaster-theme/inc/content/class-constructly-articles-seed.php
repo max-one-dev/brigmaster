@@ -236,13 +236,13 @@ final class Constructly_Articles_Seed
     }
 
     /**
-     * Neutralises the legacy category_base = 'baza-zaniy' / 'baza-znaniy' that
-     * was previously set here.
+     * Сбрасывает легаси-значение category_base, которое генерировало конфликтующее
+     * greedy-правило и ломало URL статей.
      *
      * WHY THE OLD VALUE BREAKS ARTICLES:
-     * When category_base is set, WordPress generates a greedy rewrite rule of the
-     * form  ^baza-zaniy/(.+?)/?$  (a single rule that matches ANY depth).  That
-     * pattern catches two-segment URLs like /baza-zaniy/fundament/moj-post/ before
+     * When category_base is set, WordPress generates a greedy rewrite rule that
+     * matches ANY depth.  That pattern catches two-segment URLs like
+     * /baza-znaniy/fundament/moj-post/ before
      * the per-post rule fires, resolves them as a category archive request, finds
      * no matching term, and returns 404.  Category archives (one segment) happened
      * to work because the greedy capture still matched one token, but posts (two
@@ -255,13 +255,12 @@ final class Constructly_Articles_Seed
      * the standard per-post rule (generated from the permalink structure
      * /baza-znaniy/%category%/%postname%/) resolves articles correctly.
      *
-     * Safe to call repeatedly: only writes option when the stored value is the
-     * legacy slug.  Does NOT flush rewrite rules here.
+     * Safe to call repeatedly: only writes option when the stored value is non-empty.
+     * Does NOT flush rewrite rules here.
      */
     private static function ensure_category_base(): void
     {
         // Reset any legacy value that would generate a conflicting greedy rule.
-        // Both spellings ('baza-zaniy' and 'baza-znaniy') were used historically.
         $current = (string) get_option('category_base', '');
         if ($current !== '') {
             update_option('category_base', '');
@@ -270,12 +269,7 @@ final class Constructly_Articles_Seed
 
     private static function ensure_posts_page(): int
     {
-        // Look up by correct slug first; fall back to old typo slug so we rename
-        // the existing page in-place instead of creating a duplicate.
         $page = get_page_by_path(self::POSTS_PAGE_SLUG);
-        if (!($page instanceof WP_Post)) {
-            $page = get_page_by_path('baza-zaniy'); // legacy typo slug
-        }
 
         if ($page instanceof WP_Post) {
             $page_id = (int) $page->ID;

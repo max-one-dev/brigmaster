@@ -25,6 +25,8 @@ if (!defined('ABSPATH')) {
  *     cover?: array{file:string, alt:string},           // → featured image (thumbnail).
  *     body?:  list<array{file:string, alt:string}>,     // Inserted into content via {{img:file-basename}}.
  *   },
+ *   meta_title?:       string,  // Optional. Rank Math SEO title → rank_math_title post meta.
+ *   meta_description?: string,  // Optional. Rank Math meta description → rank_math_description post meta.
  * }
  *
  * Image files live at:
@@ -51,6 +53,10 @@ final class Constructly_Article_Registry
         'f3-glubina-zalozheniya',
         's2-polusuhaya-mokraya',
         'o2-rashod-kirpicha',
+        's3-rashod-suhoy-smesi',
+        's4-tsementno-peschanaya-styazhka',
+        's5-armatura-styazhki',
+        's6-styazhka-smeta',
     ];
 
     /**

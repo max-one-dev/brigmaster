@@ -122,12 +122,25 @@ final class Constructly_Article_Seeder
         ];
 
         if ($is_new) {
-            // Set publish date only on creation; never overwrite on re-run.
             $post_args['post_date']     = $date_local;
             $post_args['post_date_gmt'] = $date_gmt;
             $result = wp_insert_post($post_args, true);
         } else {
             $post_args['ID'] = $post_id;
+
+            // Sync publish date if the data-file value differs from what is stored.
+            $existing_post = get_post($post_id);
+            if ($existing_post instanceof WP_Post) {
+                $stored_date = $existing_post->post_date; // 'Y-m-d H:i:s'
+                // Normalise to Y-m-d for comparison (ignore stored time component).
+                $stored_ymd = substr($stored_date, 0, 10);
+                $target_ymd = substr($date_local, 0, 10);
+                if ($stored_ymd !== $target_ymd) {
+                    $post_args['post_date']     = $date_local;
+                    $post_args['post_date_gmt'] = $date_gmt;
+                }
+            }
+
             $result = wp_update_post($post_args, true);
         }
 
@@ -174,6 +187,24 @@ final class Constructly_Article_Seeder
 
         if ($hero_id > 0) {
             update_post_meta($post_id, self::HERO_IMAGE_META, $hero_id);
+        }
+
+        // ------------------------------------------------------------------
+        // Rank Math SEO: rank_math_title / rank_math_description.
+        // Written only when the data-file supplies a non-empty value.
+        // Re-seeding with an updated value in the data file WILL overwrite
+        // what is saved in the database (including manual admin edits).
+        // To protect a manual admin edit, remove or leave blank the key in
+        // the data file — the seeder will then leave the meta untouched.
+        // ------------------------------------------------------------------
+        $rm_title = isset($data['meta_title']) ? sanitize_text_field((string) $data['meta_title']) : '';
+        if ($rm_title !== '') {
+            update_post_meta($post_id, 'rank_math_title', $rm_title);
+        }
+
+        $rm_desc = isset($data['meta_description']) ? sanitize_text_field((string) $data['meta_description']) : '';
+        if ($rm_desc !== '') {
+            update_post_meta($post_id, 'rank_math_description', $rm_desc);
         }
 
         return ['id' => $post_id, 'status' => $status];
