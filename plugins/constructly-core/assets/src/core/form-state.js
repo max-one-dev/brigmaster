@@ -151,11 +151,17 @@ const MODE_HINTS_DRYWALL = {
         }
         const el = shell?.querySelector("[data-result]");
         if (el && !el.hidden) {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
-            try {
-                el.focus({ preventScroll: true });
-            } catch {
-                /* ignore */
+            // On mobile (≤900 px) the result opens as a fixed bottom sheet via
+            // the theme's CSS transition; scrollIntoView conflicts with the slide
+            // animation and is skipped. On desktop the aside is static, so
+            // scroll + focus behave as expected.
+            if (!window.matchMedia("(max-width:900px)").matches) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+                try {
+                    el.focus({ preventScroll: true });
+                } catch {
+                    /* ignore */
+                }
             }
         }
 

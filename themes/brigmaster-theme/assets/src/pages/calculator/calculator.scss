@@ -888,7 +888,11 @@
 
 @media (width <= 1023px) {
   .bm-calculator-layout__aside > .brigmaster-estimator__result {
+    position: relative;
     min-height: calc(100dvh - 2.5rem);
+
+    /* Top padding clears the absolute-positioned drag pill; title starts below it. */
+    padding-top: var(--bm-space-5);
     border-radius: var(--bm-radius-lg) var(--bm-radius-lg) 0 0;
     box-shadow: var(--bm-shadow-lg);
     transform: translateY(100%);
@@ -1069,6 +1073,20 @@
   display: none;
 }
 
+/* Drag handle pill: hidden on desktop, shown inside the bottom sheet on mobile. */
+.bm-result-handle {
+  display: none;
+}
+
+/* Give focused form fields breathing room so the mobile keyboard can't cover them. */
+@media (width <= 900px) {
+  .brigmaster-estimate-form input,
+  .brigmaster-estimate-form textarea,
+  .brigmaster-estimate-form select {
+    scroll-margin-block: 5rem;
+  }
+}
+
 @media (width <= 767px) {
   .bm-calculator-hero {
     padding-top: var(--bm-space-8);
@@ -1162,10 +1180,14 @@
   }
 
   .bm-calculator-result {
-    position: static;
+    position: relative;
     min-height: calc(100dvh - 2.5rem);
     border-radius: var(--bm-radius-lg) var(--bm-radius-lg) 0 0;
     box-shadow: var(--bm-shadow-lg);
+
+    /* Allow vertical pan so inner content stays scrollable; the JS swipe handler
+       takes over via setPointerCapture only when a dismiss drag is confirmed. */
+    touch-action: pan-y;
     transform: translateY(100%);
     transition: transform var(--bm-transition-slow);
   }
@@ -1197,6 +1219,22 @@
   .bm-calculator-sticky-result__button {
     width: 100%;
     min-height: 3.25rem;
+  }
+
+  /* Visible drag pill — absolutely placed so it does not push the grid content down. */
+  .bm-result-handle {
+    position: absolute;
+    top: var(--bm-space-2);
+    left: 50%;
+    display: block;
+    width: 2.5rem;
+    height: 0.25rem;
+    margin: 0;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.18);
+    cursor: grab;
+    touch-action: none;
+    transform: translateX(-50%);
   }
 }
 

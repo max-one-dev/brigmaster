@@ -123,6 +123,21 @@ function initForm(form, calculatorModule) {
   initMixtureFields(form);
   form.addEventListener("submit", (event) => onSubmit(event, calculatorModule));
   initResultActions(form);
+
+  // On narrow screens (≤900 px) scroll the focused field to the top of the
+  // visible area. CSS scroll-margin-block:5rem provides the gap between the
+  // field and the viewport edge, avoiding overlap with sticky headers.
+  const mq900 = window.matchMedia("(max-width:900px)");
+  form.addEventListener("focusin", (event) => {
+    if (!mq900.matches) return;
+    const target = event.target;
+    if (
+      !(target instanceof HTMLInputElement) &&
+      !(target instanceof HTMLTextAreaElement) &&
+      !(target instanceof HTMLSelectElement)
+    ) return;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 }
 
 export function initEstimateForms(calculatorModule) {
