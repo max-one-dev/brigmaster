@@ -12,6 +12,11 @@ themes/*
 !/themes/brigmaster-theme/
 !/themes/brigmaster-theme/**
 
+!/mu-plugins/
+!/mu-plugins/**
+!/.github/
+!/.github/**
+
 plugins/constructly-core/.git-plugin-backup/
 
 themes/brigmaster-theme/assets/node_modules/
@@ -22,7 +27,7 @@ themes/brigmaster-theme/assets-v2/.verify-*.png
 themes/brigmaster-theme/*.zip
 themes/brigmaster-theme/*.rar
 **/.playwright-mcp/
-**/docs/tmp/
+**/docs/
 
 debug.log
 uploads/
