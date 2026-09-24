@@ -23,42 +23,88 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed components
+        id: changes
+        if: github.event_name == 'push'
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            theme:
+              - 'themes/brigmaster-theme/**'
+            plugin:
+              - 'plugins/constructly-core/**'
+            muplugins:
+              - 'mu-plugins/**'
 
       - name: Setup Node
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.theme == 'true' || steps.changes.outputs.plugin == 'true' }}
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Setup PHP
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.plugin == 'true' }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
           tools: composer
           coverage: none
 
+      - name: Cache theme node_modules
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.theme == 'true' }}
+        uses: actions/cache@v4
+        with:
+          path: themes/brigmaster-theme/assets/node_modules
+          key: theme-npm-${{ hashFiles('themes/brigmaster-theme/assets/package.json') }}
+          restore-keys: theme-npm-
+
       - name: Build theme assets
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.theme == 'true' }}
         working-directory: themes/brigmaster-theme/assets
         run: |
           npm install
           npm run build
 
+      - name: Cache plugin node_modules
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.plugin == 'true' }}
+        uses: actions/cache@v4
+        with:
+          path: plugins/constructly-core/assets/node_modules
+          key: plugin-npm-${{ hashFiles('plugins/constructly-core/assets/package.json') }}
+          restore-keys: plugin-npm-
+
       - name: Build plugin assets
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.plugin == 'true' }}
         working-directory: plugins/constructly-core/assets
         run: |
           npm install
           npm run build
 
+      - name: Cache composer packages
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.plugin == 'true' }}
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ hashFiles('plugins/constructly-core/composer.json') }}
+          restore-keys: composer-
+
       - name: Build plugin production autoloader
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.plugin == 'true' }}
         working-directory: plugins/constructly-core
         run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
       - name: Prepare SSH key
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.theme == 'true' || steps.changes.outputs.plugin == 'true' || steps.changes.outputs.muplugins == 'true' }}
         run: |
           mkdir -p ~/.ssh
           printf '%s\n' "${{ secrets.SSH_KEY }}" > ~/.ssh/id_deploy
           chmod 600 ~/.ssh/id_deploy
 
       - name: Deploy theme
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.theme == 'true' }}
         run: |
           rsync -rltz --delete $RSYNC_EXTRA \
             -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new" \
@@ -68,6 +114,7 @@ jobs:
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_WP_CONTENT }}/themes/brigmaster-theme/"
 
       - name: Deploy plugin
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.plugin == 'true' }}
         run: |
           rsync -rltz --delete $RSYNC_EXTRA \
             -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new" \
@@ -77,6 +124,7 @@ jobs:
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_WP_CONTENT }}/plugins/constructly-core/"
 
       - name: Deploy mu-plugins
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.muplugins == 'true' }}
         run: |
           rsync -rltz --delete $RSYNC_EXTRA \
             -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new" \
