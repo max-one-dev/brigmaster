@@ -1,0 +1,76 @@
+name: Deploy to production
+
+on:
+  # После успешной ручной проверки раскомментируй следующие три строки,
+  # чтобы деплой запускался автоматически при каждом пуше в ветку main:
+  # push:
+  #   branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Пробный прогон (ничего не меняет на сервере)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+env:
+  RSYNC_EXTRA: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '--dry-run --verbose' || '' }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build theme assets
+        working-directory: themes/brigmaster-theme/assets
+        run: |
+          npm install
+          npm run build
+
+      - name: Build plugin assets
+        working-directory: plugins/constructly-core/assets
+        run: |
+          npm install
+          npm run build
+
+      - name: Prepare SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+
+      - name: Deploy theme
+        run: |
+          rsync -rltz --delete $RSYNC_EXTRA \
+            -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new" \
+            --exclude '.git/' --exclude 'node_modules/' --exclude 'docs/' \
+            --exclude '.git-plugin-backup/' --exclude '*.zip' --exclude '*.rar' \
+            themes/brigmaster-theme/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_WP_CONTENT }}/themes/brigmaster-theme/"
+
+      - name: Deploy plugin
+        run: |
+          rsync -rltz --delete $RSYNC_EXTRA \
+            -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new" \
+            --exclude '.git/' --exclude 'node_modules/' --exclude 'docs/' \
+            --exclude '.git-plugin-backup/' --exclude '*.zip' --exclude '*.rar' \
+            plugins/constructly-core/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_WP_CONTENT }}/plugins/constructly-core/"
+
+      - name: Deploy mu-plugins
+        run: |
+          rsync -rltz --delete $RSYNC_EXTRA \
+            -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new" \
+            --exclude '.git/' --exclude 'docs/' --exclude '*.zip' --exclude '*.rar' \
+            mu-plugins/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_WP_CONTENT }}/mu-plugins/"
