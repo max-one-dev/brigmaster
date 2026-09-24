@@ -2,9 +2,10 @@ name: Deploy to production
 
 on:
   # После успешной ручной проверки раскомментируй следующие три строки,
-  # чтобы деплой запускался автоматически при каждом пуше в ветку main:
+  # чтобы деплой запускался автоматически при каждом пуше в ветку master
+  # (или main):
   # push:
-  #   branches: [main]
+  #   branches: [master]
   workflow_dispatch:
     inputs:
       dry_run:
@@ -31,6 +32,13 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer
+          coverage: none
+
       - name: Build theme assets
         working-directory: themes/brigmaster-theme/assets
         run: |
@@ -42,6 +50,10 @@ jobs:
         run: |
           npm install
           npm run build
+
+      - name: Build plugin production autoloader
+        working-directory: plugins/constructly-core
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
       - name: Prepare SSH key
         run: |
