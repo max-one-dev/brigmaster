@@ -120,9 +120,6 @@ require_once __DIR__ . '/content/migrations/page-methodology.php';
 require_once __DIR__ . '/content/migrations/page-privacy.php';
 require_once __DIR__ . '/content/migrations/page-user-agreement.php';
 require_once __DIR__ . '/content/class-constructly-content-migrations.php';
-require_once __DIR__ . '/content/articles/class-constructly-article-registry.php';
-require_once __DIR__ . '/content/articles/class-constructly-article-seeder.php';
-require_once __DIR__ . '/content/class-constructly-articles-seed.php';
 require_once __DIR__ . '/content/class-constructly-content-cli.php';
 require_once __DIR__ . '/class-constructly-articles-rewrite.php';
 

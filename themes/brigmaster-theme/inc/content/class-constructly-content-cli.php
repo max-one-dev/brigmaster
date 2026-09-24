@@ -28,32 +28,6 @@ final class Constructly_Content_Cli
         WP_CLI::add_command('constructly page methodology migrate', [self::class, 'migrate_methodology_page']);
         WP_CLI::add_command('constructly page privacy migrate', [self::class, 'migrate_privacy_page']);
         WP_CLI::add_command('constructly page user-agreement migrate', [self::class, 'migrate_user_agreement_page']);
-        WP_CLI::add_command('constructly seed articles', [self::class, 'seed_articles']);
-    }
-
-    /**
-     * Seeds demo knowledge-base content: categories, the /stati/ posts page and
-     * demo articles. Idempotent.
-     *
-     * ## EXAMPLES
-     *
-     *     wp constructly seed articles
-     *
-     * @param array<int, string> $args
-     * @param array<string, string|bool> $assoc_args
-     */
-    public static function seed_articles(array $args, array $assoc_args): void
-    {
-        $result = Constructly_Articles_Seed::seed();
-
-        WP_CLI::success(
-            sprintf(
-                'Seeded %d categories, posts page ID %d, %d articles.',
-                $result['categories'],
-                $result['posts_page_id'],
-                $result['articles'] ?? 0
-            )
-        );
     }
 
     private static function resolve_front_page_id(): int
