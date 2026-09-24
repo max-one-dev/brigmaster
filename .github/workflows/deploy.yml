@@ -1,11 +1,8 @@
 name: Deploy to production
 
 on:
-  # После успешной ручной проверки раскомментируй следующие три строки,
-  # чтобы деплой запускался автоматически при каждом пуше в ветку master
-  # (или main):
-  # push:
-  #   branches: [master]
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       dry_run:
