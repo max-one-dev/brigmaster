@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <a class="bm-skip-link skip-link screen-reader-text" href="#primary"><?php esc_html_e('Skip to content', 'brigmaster-theme'); ?></a>
-<header class="bm-header" role="banner" data-bm-component="header-menu">
+<header class="bm-header test-check-bad111" role="banner" data-bm-component="header-menu">
     <div class="bm-container bm-header__row">
         <a class="bm-header__brand" href="<?php echo esc_url(home_url('/')); ?>">
             <img
