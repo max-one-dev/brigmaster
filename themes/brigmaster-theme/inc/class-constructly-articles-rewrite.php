@@ -39,7 +39,7 @@ if (!defined('ABSPATH')) {
 final class Constructly_Articles_Rewrite
 {
     /** Slugs of the knowledge-base categories whose links we rewrite. */
-    private const KB_CATEGORY_SLUGS = ['fundament', 'poly', 'otdelka', 'steny'];
+    private const KB_CATEGORY_SLUGS = ['fundament', 'poly', 'otdelka', 'steny', 'gkl'];
 
     /** URL prefix for the knowledge-base section (no leading/trailing slash). */
     private const KB_PREFIX = 'baza-znaniy';
