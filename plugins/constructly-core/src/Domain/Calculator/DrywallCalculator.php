@@ -23,8 +23,10 @@ final class DrywallCalculator implements CalculatorInterface
     private const GUIDE_FIX_STEP_M = 0.5;
     private const WALL_HANGER_STEP_M = 0.8;
     private const CEILING_HANGER_STEP_M = 0.8;
-    private const SCREWS_PER_M2_SINGLE_LAYER = 34.0;
-    private const SCREWS_PER_M2_DOUBLE_LAYER = 50.0;
+    private const SCREWS_PER_M2_SINGLE_LAYER_STEP_400 = 23.0;
+    private const SCREWS_PER_M2_SINGLE_LAYER_STEP_600 = 17.0;
+    private const SCREWS_PER_M2_DOUBLE_LAYER_STEP_400 = 46.0;
+    private const SCREWS_PER_M2_DOUBLE_LAYER_STEP_600 = 34.0;
     private const LB_SCREWS_PER_VERTICAL_PROFILE = 4.0;
     private const LB_SCREWS_PER_HANGER = 2.0;
     private const LB_SCREWS_PER_CRAB = 8.0;
@@ -125,6 +127,7 @@ final class DrywallCalculator implements CalculatorInterface
             target: $target,
             netAreaM2: $netAreaM2,
             layers: $layers,
+            frameStepMm: $frameStepMm,
             profiles: $profiles,
             fastenerReservePercent: $fastenerReservePercent
         );
@@ -478,9 +481,9 @@ final class DrywallCalculator implements CalculatorInterface
      * @param array<string, mixed> $profiles
      * @return array<string, mixed>
      */
-    private function calculateFasteners(string $target, float $netAreaM2, int $layers, array $profiles, float $fastenerReservePercent): array
+    private function calculateFasteners(string $target, float $netAreaM2, int $layers, float $frameStepMm, array $profiles, float $fastenerReservePercent): array
     {
-        $screwsPerM2 = $layers === 2 ? self::SCREWS_PER_M2_DOUBLE_LAYER : self::SCREWS_PER_M2_SINGLE_LAYER;
+        $screwsPerM2 = $this->resolveScrewsPerM2($layers, $frameStepMm);
         $boardScrewsBase = $netAreaM2 * $screwsPerM2 * ($target === self::TARGET_PARTITION ? 2.0 : 1.0);
 
         $guideLengthM = (float) ($profiles['guide']['lengthM'] ?? 0.0);
@@ -504,6 +507,21 @@ final class DrywallCalculator implements CalculatorInterface
             'crabs' => $this->buildFastenerRow(self::CRAB_LABEL, $crabsBase, $fastenerReservePercent),
             'profileTotalLengthM' => $guideLengthM + $mainLengthM + $crossLengthM,
         ];
+    }
+
+    private function resolveScrewsPerM2(int $layers, float $frameStepMm): float
+    {
+        $isStep400 = (int) round($frameStepMm) === 400;
+
+        if ($layers === 2) {
+            return $isStep400
+                ? self::SCREWS_PER_M2_DOUBLE_LAYER_STEP_400
+                : self::SCREWS_PER_M2_DOUBLE_LAYER_STEP_600;
+        }
+
+        return $isStep400
+            ? self::SCREWS_PER_M2_SINGLE_LAYER_STEP_400
+            : self::SCREWS_PER_M2_SINGLE_LAYER_STEP_600;
     }
 
     /**
